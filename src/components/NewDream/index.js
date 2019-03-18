@@ -188,7 +188,7 @@ const ArchetypesButton = styled.button`
   box-shadow: 3px 6px 25px -6px rgba(0,0,0,0.75);
   &:hover{
     transition: 1s ease-in-out;
-    background-color: turquoise;;
+    background-color: turquoise;
   }
 `
 
