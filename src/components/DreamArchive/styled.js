@@ -13,14 +13,14 @@ export const BlobInputContainerS = styled.div`
 
 export const ArchiveTitle = styled.h1`
   font-family: serif;
-  color: gray;
+  color: white;
   font-size: xx-large;
   font-weight: 900;
   background: transparent;
 `
 export const DreamTitle = styled.h2`
   font-family: serif;
-  color: gray;
+  color: white;
   font-size: xx-large;
   font-weight: 900;
 `
@@ -62,7 +62,7 @@ export const TitleRowDiv = styled.div`
 
 export const ContentRowDiv = styled.div`
   font-family: serif;
-  color: gray;
+  color: white;
   font-size: x-large;
   font-weight: 900;
 `

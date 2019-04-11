@@ -2,15 +2,24 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import { SignUpS, BlobInputContainerSS, StyledDiv, ButtonS, SignUpFormS } from './styled'
-import { SignInLink } from '../SignIn'
+//styles
+import { AuthButtonS } from '../styledComponents/authButtons';
+import { AuthFormTitles } from '../styledComponents/formTitles';
+import { InputS } from '../styledComponents/inputs';
+import { SignUpS, BlobInputContainerSS, StyledDiv } from './styled'
 import ColorBlob from '../ColorBlob'
+
+import { SignInLink } from '../SignIn'
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
 
 const SignUpPage = () => (
   <StyledDiv>
-    <h1 id="test-title-signup">Sign Up</h1>
+    <AuthFormTitles
+    formTitleBottomMargin={-80}
+    formTitleTopMargin={0}
+    id="test-title-signup">
+    Sign Up</AuthFormTitles>
     <SignUpForm />
   </StyledDiv>
 );
@@ -71,7 +80,8 @@ class SignUpFormBase extends Component {
           topAlign={2}
           />
         </BlobInputContainerSS>
-        <SignUpFormS
+        <InputS
+          inputPadding={5}
           id="test-input-username"
           name="username"
           value={username}
@@ -79,8 +89,9 @@ class SignUpFormBase extends Component {
           type="text"
           placeholder="Full Name"
         />
-        <SignUpFormS
-        id="test-input-email"
+        <InputS
+          inputPadding={5}
+          id="test-input-email"
           name="email"
           value={email}
           onChange={this.onChange}
@@ -88,7 +99,7 @@ class SignUpFormBase extends Component {
           placeholder="Email Address"
         />
         <br/>
-        <SignUpFormS
+        <InputS
           id="test-input-passwordone"
           name="passwordOne"
           value={passwordOne}
@@ -96,7 +107,7 @@ class SignUpFormBase extends Component {
           type="password"
           placeholder="Password"
         />
-        <SignUpFormS
+        <InputS
           id="test-input-passwordtwo"
           name="passwordTwo"
           value={passwordTwo}
@@ -104,9 +115,9 @@ class SignUpFormBase extends Component {
           type="password"
           placeholder="Confirm Password"
         />
-        <ButtonS id="test-button-signup-submit" disabled={isInvalid} type="submit">
+        <AuthButtonS id="test-button-signup-submit" disabled={isInvalid} type="submit">
           Sign Up
-        </ButtonS>
+        </AuthButtonS>
         <SignInLink/>
         {error && <p>{error.message}</p>}
       </form>

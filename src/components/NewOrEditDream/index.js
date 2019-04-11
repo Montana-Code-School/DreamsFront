@@ -3,22 +3,18 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
 
-import { withAuthorization } from '../Session';
-import * as ROUTES from '../../Constants/routes';
+//styles
+import { DreamButtonS } from '../styledComponents/dreamButtons';
+import { InputS } from '../styledComponents/inputs';
+import { ThumbsDiv, PageStyle, DreamTextarea } from './styled';
+import { BlobInputContainerS } from '../styledComponents/Style';
 import ColorBlob from '../ColorBlob';
 
+import { withAuthorization } from '../Session';
+import * as ROUTES from '../../Constants/routes';
 import ImageContainer from './ImagesContainer';
 import { commonWords, archetypes } from './archetypes';
-import { BlobInputContainerS } from '../Style';
-import {
-  ThumbsDiv,
-  PageStyle,
-  DreamInput,
-  DreamTextarea,
-  SaveButton,
-  DeleteButton,
-  ArchetypesButton,
-} from './styled';
+
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -243,7 +239,8 @@ class NewDreamPage extends Component {
           leftAlign={-9}
           topAlign={6}
           />
-          <DreamInput
+          <InputS
+            inputPadding={10}
             type="text"
             id="DreamTitle"
             name="title"
@@ -255,11 +252,11 @@ class NewDreamPage extends Component {
         </BlobInputContainerS>
         <br />
         {this.state.content &&
-          <ArchetypesButton
+          <DreamButtonS
               id="archButton"
               onClick={ (e) => {this.archButtonHandler(e)}}
             >Interpret <br/> Dream
-          </ArchetypesButton>
+          </DreamButtonS>
         }
         <br />
         {(this.state.noKeyWordsInDream && !!this.state.content.length) &&
@@ -282,16 +279,16 @@ class NewDreamPage extends Component {
           </div>
         }
         {(!!this.state.title && !!this.state.content) &&
-          <SaveButton
+          <DreamButtonS
             type="button"
             name="addDream"
             onClick={ (e) => {this.addDream(e)}}
           >Save <br/> Dream
-          </SaveButton>
+          </DreamButtonS>
         }
         </form>
         {!this.isNew &&
-          <DeleteButton name="deleteDream" onClick={this.deleteDream}>Delete</DeleteButton>
+          <DreamButtonS name="deleteDream" onClick={this.deleteDream}>Delete</DreamButtonS>
         }
       </PageStyle>
     );

@@ -1,6 +1,5 @@
 import React from 'react';
 import { withFirebase } from '../Firebase';
-import { DropdownItem } from 'reactstrap';
 import { SignOutS } from './styled'
 
 const SignOutButton = ({ firebase }) => (

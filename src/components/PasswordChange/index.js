@@ -1,7 +1,10 @@
 import React, { Component }from 'react';
 import { Link } from 'react-router-dom';
 
-import { ButtonS, PasswordS } from './styled';
+//styles
+import { PasswordS } from './styled';
+import { AuthButtonS } from '../styledComponents/authButtons';
+
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
 
@@ -61,9 +64,9 @@ class PasswordChangeForm extends Component {
           type="password"
           placeholder="Confirm New Password"
         />
-        <ButtonS disabled={isInvalid} type="submit">
+        <AuthButtonS disabled={isInvalid} type="submit">
           Reset My Password
-        </ButtonS>
+        </AuthButtonS>
         <br />
         {this.state.submitted &&
         <h2>Your password has been successfully changed! <Link to={ROUTES.SIGN_IN}>Sign In</Link></h2>}

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const CanvasContainer = styled.div`
+export const CanvasContainerS = styled.div`
   z-index: -1;
   position: relative;
   top: ${props => props.topAlign}rem;

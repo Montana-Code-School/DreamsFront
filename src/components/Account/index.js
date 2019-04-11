@@ -1,6 +1,10 @@
 import React from 'react';
-import { PageStyle, BlobInputContainerSS } from './styled';
+
+//styles
+import { AuthFormTitles } from '../styledComponents/formTitles';
+import { PageStyleS, BlobInputContainerSS } from './styled';
 import ColorBlob from '../ColorBlob';
+
 import { AuthUserContext, withAuthorization } from '../Session';
 import PasswordChangeForm from '../PasswordChange';
 
@@ -8,13 +12,16 @@ const AccountPage = () => (
 
   <AuthUserContext.Consumer>
     {authUser => (
-      <PageStyle>
+      <PageStyleS>
         <BlobInputContainerSS>
           <ColorBlob/>
         </BlobInputContainerSS>
-        <h1>Account: {authUser.email}</h1>
+        <AuthFormTitles
+          formTitleBottomMargin={0}
+          formTitleTopMargin={-80}
+        >Account: {authUser.email}</AuthFormTitles>
         <PasswordChangeForm />
-      </PageStyle>
+      </PageStyleS>
     )}
   </AuthUserContext.Consumer>
 );

@@ -1,13 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import { ForgetLinkS, ButtonS, ForgetStyle } from './styled'
+//styles
+import { InputS } from '../styledComponents/inputs';
+import { AuthButtonS } from '../styledComponents/authButtons';
+import { ForgetLinkS, TitleForgetS } from './styled'
+
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
 
 const PasswordForgetPage = () => (
   <div>
-    <h1>PasswordForget</h1>
+    <TitleForgetS>Recover Your Password</TitleForgetS>
     <PasswordForgetForm />
   </div>
 )
@@ -50,16 +54,16 @@ class PasswordForgetFormBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        <ForgetStyle
+        <InputS
           name="email"
           value={this.state.email}
           onChange={this.onChange}
           type="text"
           placeholder="Email Address"
         />
-        <ButtonS disabled={isInvalid} type="submit">
+        <AuthButtonS disabled={isInvalid} type="submit">
           Reset My Password
-        </ButtonS>
+        </AuthButtonS>
         <br />
         {this.state.submitted &&
         <h2>Check your email to reset your password, then <Link to={ROUTES.SIGN_IN}>Sign In</Link></h2>}

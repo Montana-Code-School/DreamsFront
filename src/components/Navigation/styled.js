@@ -27,7 +27,7 @@ export const NavbarS = styled(Navbar)`
 export const ThetaFlowS = styled.div`
   font-family: serif;
   font-size: 3rem;
-  color: gray;
+  color: white;
   letter-spacing: 2rem;
 `
 export const NavDivUnderTitleS = styled.div`

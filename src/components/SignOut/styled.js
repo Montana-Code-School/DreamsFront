@@ -10,7 +10,7 @@ export const SignOutS = styled(DropdownItem)`
   align-items: center;
   text-align: center;
   font-size: small;
-  color: gray;
+  color: black;
   position: inherit;
   margin-left: 1.5rem;
   z-index: 50;

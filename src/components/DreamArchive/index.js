@@ -14,6 +14,7 @@ import {
   ImgRowDiv,
   PageStyle,
   DreamDivS } from './styled';
+
 import * as ROUTES from '../../Constants/routes';
 import { selectDream, fetchDreams } from '../../store/actions';
 import ColorBlob from '../ColorBlob';

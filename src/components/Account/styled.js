@@ -1,11 +1,17 @@
 import styled from "styled-components";
 
-export const PageStyle = styled.div`
+export const PageStyleS = styled.div`
   margin-left: 25px;
   font-family: serif;
-  color: gray;
+  color: white;
   font-size: xx-large;
   font-weight: 900;
+  background: rgba(255,255,255,0.3);
+  border-radius: 6px;
+  margin-right: 5px;
+  margin-bottom: 2rem;
+  margin-top: 1.8rem;
+  padding: 50px;
 `
 export const BlobInputContainerSS = styled.div`
   position: relative;

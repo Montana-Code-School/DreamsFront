@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { compose } from 'recompose';
+import { compose } from 'recompose'
 
-import { PageStyle, BlobInputContainerSS, SignInPageS, SignInputS, ButtonS } from './styled'
+//styled
+import { AuthFormTitles } from '../styledComponents/formTitles';
+import { InputS } from '../styledComponents/inputs';
+import { AuthButtonS } from '../styledComponents/authButtons';
+import { PageStyle, BlobInputContainerSS, SignInPageS, SignInLinkS } from './styled'
 import ColorBlob from '../ColorBlob';
+
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
@@ -12,7 +17,11 @@ import * as ROUTES from '../../Constants/routes';
 
 const SignInPage = () => (
   <SignInPageS>
-    <h1 id="test-signin-h1">Sign In</h1>
+    <AuthFormTitles
+    id="test-signin-h1"
+    formTitleBottomMargin={-80}
+    formTitleTopMargin={0}>
+    Sign In</AuthFormTitles>
     <SignInForm />
     <PasswordForgetLink />
     <SignUpLink />
@@ -62,7 +71,8 @@ class SignInFormBase extends Component {
           <ColorBlob/>
         </BlobInputContainerSS>
         <form onSubmit={this.onSubmit}>
-          <SignInputS
+          <InputS
+            inputPadding={5}
             id="test-input-email"
             name="email"
             value={email}
@@ -70,7 +80,8 @@ class SignInFormBase extends Component {
             type="text"
             placeholder="Email Address"
           />
-          <SignInputS
+          <InputS
+            inputPadding={5}
             id="test-input-password"
             name="password"
             value={password}
@@ -78,12 +89,12 @@ class SignInFormBase extends Component {
             type="password"
             placeholder="Password"
           />
-          <ButtonS
+          <AuthButtonS
             id="test-button-signin-submit"
             disabled={isInvalid}
             type="submit">
             Sign In
-          </ButtonS>
+          </AuthButtonS>
           {error && <p>{error.message}</p>}
         </form>
       </PageStyle>
@@ -92,9 +103,9 @@ class SignInFormBase extends Component {
 }
 
 const SignInLink = () => (
-  <p>
+  <SignInLinkS>
     Already have an account? <Link id="test-link-signin" to={ROUTES.SIGN_IN}>Sign In</Link>
-  </p>
+  </SignInLinkS>
 );
 
 const SignInForm = compose(

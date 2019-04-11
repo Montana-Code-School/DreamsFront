@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { throttle } from 'lodash';
 
-import { CanvasContainer, BlobOnCanvas, CanvasStitch } from './styled';
+import { CanvasContainerS, BlobOnCanvas, CanvasStitch } from './styled';
 
 let y2;
 export default class ColorBlob extends Component{
@@ -197,7 +197,7 @@ export default class ColorBlob extends Component{
   render(){
 
     return(
-      <CanvasContainer
+      <CanvasContainerS
         width={this.props.width || 200}
         height={this.props.height || 200}
         onClick={this.generate}
@@ -211,7 +211,7 @@ export default class ColorBlob extends Component{
         blobWidth={1000}
         ref={this.blob}></BlobOnCanvas>
         <CanvasStitch ref={this.stitch}></CanvasStitch>
-      </CanvasContainer>
+      </CanvasContainerS>
     )
   }
 }

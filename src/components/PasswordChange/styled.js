@@ -6,7 +6,7 @@ export const ButtonS = styled.button`
   padding: 10px;
   z-index: 20;
   font-family: serif;
-  color: gray;
+  color: white;
   font-size: x-large;
   font-weight: 900;
   text-align: left;
@@ -16,7 +16,7 @@ export const ButtonS = styled.button`
   background: rgba(255,255,255,0.3);
   border-radius: 6px;
   &::placeholder{
-    color: gray;
+    color: white;
     font-weight: 900;
     font-size: x-large;
   }
@@ -30,7 +30,7 @@ export const PasswordS = styled.input`
   z-index: 20;
   width: 350px;
   font-family: serif;
-  color: gray;
+  color: white;
   font-size: x-large;
   font-weight: 900;
   border: white;
@@ -42,7 +42,7 @@ export const PasswordS = styled.input`
   background: rgba(255,255,255,0.3);
   border-radius: 6px;
   &::placeholder{
-    color: gray;
+    color: white;
     font-weight: 900;
     font-size: x-large;
   }
