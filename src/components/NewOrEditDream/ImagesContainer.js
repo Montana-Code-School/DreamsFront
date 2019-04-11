@@ -32,11 +32,16 @@ function ImageContainer({url, removeImage, keyword, lastViewedIndex, gatherSaved
         <ButtonXS onClick={(e) => removeImage(keyword)}>X</ButtonXS>
         <ButtonRS onClick={() => setCount(count + 1)} className={`${keyword}SlideRight`} >&#x27E9;</ButtonRS>
         <ButtonLS onClick={() => setCount(count - 1)}>&#x27E8;</ButtonLS>
-        <p>{`${keyCapitalized}: ${archtypesFull[keyCapitalized]}`}</p>
+        <PS>{`${keyCapitalized}: ${archtypesFull[keyCapitalized]}`}</PS>
       </div>
     </ThumbDiv>
   )
 }
+
+const PS = styled.p`
+  color: snow;
+  margin-left: 15px;
+`
 
 const ButtonXS = styled.button`
   position: absolute;

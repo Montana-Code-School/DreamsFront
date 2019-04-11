@@ -18,6 +18,7 @@ import {
   SaveButton,
   DeleteButton,
   ArchetypesButton,
+  NoKeysH4,
 } from './styled';
 
 const { REACT_APP_BACKEND_URL } = process.env;
@@ -255,7 +256,7 @@ class NewDreamPage extends Component {
         }
         <br />
         {(this.state.noKeyWordsInDream && !!this.state.content.length) &&
-        <h4>No keywords currently present in dream -- unable to generate images.</h4>}
+        <NoKeysH4>No keywords currently present in dream -- unable to generate images.</NoKeysH4>}
         {(!this.state.noKeyWordsInDream) &&
           <div>
            <ThumbsDiv id='image-container'>

@@ -25,8 +25,8 @@ class ArchivePage extends Component {
     if(this.props.isFetchingDreams){
       return <p>Loading....</p>
     } else if (!this.props.dreams.length){
-      return <p>{`Looks like you haven't journaled any dreams yet!
-      Click New Dream to get started!`}</p>
+      return <PS>{`Looks like you haven't journaled any dreams yet!
+      Click New Dream to get started!`}</PS>
     }
   }
 
@@ -79,6 +79,10 @@ class ArchivePage extends Component {
     )
   }
 }
+
+const PS = styled.p`
+  color: snow;
+`
 
 const ArchiveDivS = styled.div`
   position: relative;

@@ -7,6 +7,10 @@ export const ThumbsDiv = styled.div`
   margin-bottom: 5px;
 `
 
+export const NoKeysH4 = styled.h4`
+  color: snow;
+`
+
 export const PageStyle = styled.div`
   margin-left: 25px;
   text-align: center;
