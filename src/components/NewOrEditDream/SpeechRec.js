@@ -15,6 +15,7 @@ const propTypes = {
 };
 
 const Dictaphone = ({
+  listening,
   textAreaOnFocus,
   initialContent,
   handleChange,
@@ -57,10 +58,6 @@ const Dictaphone = ({
 
   return (
     <div>
-      <button onClick={startListening}>Start</button>
-      <button onClick={stopListening}>Stop</button>
-      <button onClick={resetTranscript}>Reset</button>
-      <div>{interimTranscript}</div>
       <DreamTextarea
         onSubmit={ (e) => {e.preventDefault()}}
         type="textarea"
@@ -74,6 +71,9 @@ const Dictaphone = ({
         value={content}
         onChange={e => handleLocalChange(e)}
       />
+      <div>{interimTranscript}</div>
+      {!listening && <button onClick={startListening}>Start Listening</button>}
+      {listening && <button onClick={stopListening}>Stop Listening</button>}
     </div>
   );
 };
