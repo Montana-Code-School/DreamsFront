@@ -16,6 +16,7 @@
     "react-router-dom": "^4.3.1",
     "react-scripts": "2.1.5",
     "react-speech-recognition": "^2.0.1",
+    "react-textarea-autosize": "^7.1.0",
     "reactstrap": "^7.1.0",
     "recompose": "^0.30.0",
     "redux": "^4.0.1",

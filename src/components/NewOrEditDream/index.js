@@ -62,10 +62,13 @@ class NewDreamPage extends Component {
   }
 
   handleChange = (e) => {
-    console.log("newedit handle change", e.target.value);
     e.preventDefault();
     e.stopPropagation();
     this.setState({[e.target.name]: e.target.value});
+  }
+
+  handleSpeechRec = (speechRecText) => {
+    this.setState({content: speechRecText})
   }
 
   textAreaOnFocus = () => {
@@ -215,23 +218,10 @@ class NewDreamPage extends Component {
           />
           <SpeechRec 
             handleChange={this.handleChange}
+            handleSpeechRec={this.handleSpeechRec}
             textAreaOnFocus={this.textAreaOnFocus}
             initialContent={this.state.content}
           />
-          {/* <DreamTextarea
-            onSubmit={ (e) => {e.preventDefault()}}
-            type="textarea"
-            rows="3"
-            cols="25"
-            name="content"
-            id="DreamText"
-            placeholder="Enter Dream Text (required)"
-            value={this.state.content}
-            onChange={e => this.handleChange(e)}
-            onFocus={this.textAreaOnFocus}
-            onBlur={this.textAreaOnBlur}
-            onKeyUp={(e) => e.keyCode === 13 && e.target.blur()}
-          /> */}
         </BlobInputContainerS>
         <br/>
         <BlobInputContainerS>

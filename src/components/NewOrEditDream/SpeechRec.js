@@ -18,13 +18,11 @@ const Dictaphone = ({
   textAreaOnFocus,
   initialContent,
   handleChange,
-  id,
-  transcript,
+  handleSpeechRec,
   resetTranscript,
   browserSupportsSpeechRecognition,
   startListening,
   stopListening,
-  abortListening,
   finalTranscript,
   interimTranscript
 }) => {
@@ -35,10 +33,14 @@ const Dictaphone = ({
   const [content, setContent] = useState(initialContent);
   
   const handleLocalChange = (e) => {
-    console.log("speech rec handlelocalchange", e.target.value);
     e.preventDefault();
     e.stopPropagation();
     setContent(e.target.value);
+    handleChange(e);
+  }
+
+  const onLocalBlur = (e) => {
+    stopListening();
     handleChange(e);
   }
 
@@ -48,9 +50,9 @@ const Dictaphone = ({
   }
 
   useEffect(() => {
-    console.log("effect called");
     setContent(content + finalTranscript + " ");
     resetTranscript();
+    handleSpeechRec(content);
   }, [finalTranscript]);
 
   return (
@@ -67,9 +69,8 @@ const Dictaphone = ({
         name="content"
         id="DreamText"
         placeholder="Enter Dream Text (required)"
-        onChange={e => this.handleChange(e)}
         onFocus={onLocalFocus}
-        onBlur={stopListening}
+        onBlur={e => onLocalBlur(e)}
         value={content}
         onChange={e => handleLocalChange(e)}
       />
