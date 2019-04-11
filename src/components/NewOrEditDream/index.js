@@ -97,6 +97,9 @@ class NewDreamPage extends Component {
 
   archButtonHandler() {
     const keyWords = this.parseDreamContent();
+    if (!keyWords.length && !this.state.imgUrlArr.length){
+      this.setState({noKeyWordsInDream: true});
+    }
     if (!keyWords.length) {
        return; 
     }
