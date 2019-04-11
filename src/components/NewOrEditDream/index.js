@@ -7,6 +7,7 @@ import { withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
 import ColorBlob from '../ColorBlob';
 
+import SpeechRec from './SpeechRec'
 import ImageContainer from './ImagesContainer';
 import { commonWords, archetypes } from './archetypes';
 import { BlobInputContainerS } from '../Style';
@@ -61,6 +62,7 @@ class NewDreamPage extends Component {
   }
 
   handleChange = (e) => {
+    console.log("newedit handle change", e.target.value);
     e.preventDefault();
     e.stopPropagation();
     this.setState({[e.target.name]: e.target.value});
@@ -211,7 +213,12 @@ class NewDreamPage extends Component {
           leftAlign={-11}
           topAlign={4}
           />
-          <DreamTextarea
+          <SpeechRec 
+            handleChange={this.handleChange}
+            textAreaOnFocus={this.textAreaOnFocus}
+            initialContent={this.state.content}
+          />
+          {/* <DreamTextarea
             onSubmit={ (e) => {e.preventDefault()}}
             type="textarea"
             rows="3"
@@ -224,7 +231,7 @@ class NewDreamPage extends Component {
             onFocus={this.textAreaOnFocus}
             onBlur={this.textAreaOnBlur}
             onKeyUp={(e) => e.keyCode === 13 && e.target.blur()}
-          />
+          /> */}
         </BlobInputContainerS>
         <br/>
         <BlobInputContainerS>
