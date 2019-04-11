@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Textarea from 'react-textarea-autosize';
 
 export const ThumbsDiv = styled.div`
   display: flex;
@@ -40,7 +41,7 @@ export const DreamInput = styled.input`
     outline:none;
   }
 `
-export const DreamTextarea = styled.textarea`
+export const DreamTextarea = styled(Textarea)`
   z-index: 20;
   font-family: serif;
   color: gray;

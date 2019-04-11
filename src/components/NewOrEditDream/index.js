@@ -7,6 +7,7 @@ import { withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
 import ColorBlob from '../ColorBlob';
 
+import SpeechRec from './SpeechRec'
 import ImageContainer from './ImagesContainer';
 import { commonWords, archetypes } from './archetypes';
 import { BlobInputContainerS } from '../Style';
@@ -65,6 +66,10 @@ class NewDreamPage extends Component {
     e.preventDefault();
     e.stopPropagation();
     this.setState({[e.target.name]: e.target.value});
+  }
+
+  handleSpeechRec = (speechRecText) => {
+    this.setState({content: speechRecText})
   }
 
   textAreaOnFocus = () => {
@@ -215,19 +220,11 @@ class NewDreamPage extends Component {
           leftAlign={-11}
           topAlign={4}
           />
-          <DreamTextarea
-            onSubmit={ (e) => {e.preventDefault()}}
-            type="textarea"
-            rows="3"
-            cols="25"
-            name="content"
-            id="DreamText"
-            placeholder="Enter Dream Text (required)"
-            value={this.state.content}
-            onChange={e => this.handleChange(e)}
-            onFocus={this.textAreaOnFocus}
-            onBlur={this.textAreaOnBlur}
-            onKeyUp={(e) => e.keyCode === 13 && e.target.blur()}
+          <SpeechRec 
+            handleChange={this.handleChange}
+            handleSpeechRec={this.handleSpeechRec}
+            textAreaOnFocus={this.textAreaOnFocus}
+            initialContent={this.state.content}
           />
         </BlobInputContainerS>
         <br/>
