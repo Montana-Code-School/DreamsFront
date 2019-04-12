@@ -35,6 +35,7 @@ class NewDreamPage extends Component {
         imgUrlArr: [],
         editing: false,
         noKeyWordsInDream: false,
+        lemmas: {},
       }
     } else {
       const { title, content, _id, images } = this.props.currentDream
@@ -45,6 +46,7 @@ class NewDreamPage extends Component {
         imgUrlArr: images || [],
         editing: false,
         noKeyWordsInDream: false,
+        lemmas: {},
       }
     }
   }
@@ -79,7 +81,22 @@ class NewDreamPage extends Component {
   textAreaOnBlur = () => {
   }
 
-  parseDreamContent = () => {
+  stemParse = (text) => {
+    return fetch(`${REACT_APP_BACKEND_URL}/stem`, {
+      method: 'POST',
+      body: JSON.stringify({text}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then((lemmas) => {
+        console.log("fetch lemmas ", lemmas);
+        return lemmas;
+      })
+  }
+
+  parseDreamContent = async () => {
     //remove common words
     let lower = this.state.content.toLowerCase();
     lower = lower.replace(/[^\w\d ]/g, '');
@@ -87,6 +104,9 @@ class NewDreamPage extends Component {
     dreamWords = dreamWords.filter( (word) => {
       return commonWords.indexOf(word) === -1;
     });
+    let dreamWordsToStem = dreamWords.join(' ');
+    const result = await this.stemParse(dreamWordsToStem);
+    let lemmas = result.text.split(" ")
     // match against archetypes
     // skipping already existing keywords
     let currentKeywords = this.state.imgUrlArr.map( obj => obj.keyword);
@@ -97,12 +117,18 @@ class NewDreamPage extends Component {
         keysArr.push(word);
       }
     }
+    for (let i = 0; i < lemmas.length; i++){
+      let word = lemmas[i];
+      if ((archetypes.includes(word) && !keysArr.includes(word) && !currentKeywords.includes(word))){
+        keysArr.push(word);
+      }
+    }
     if (keysArr.length) this.setState({noKeyWordsInDream: false});
     return keysArr;
   };
 
-  archButtonHandler() {
-    const keyWords = this.parseDreamContent();
+  archButtonHandler= async () => {
+    const keyWords = await this.parseDreamContent();
     if (!keyWords.length && !this.state.imgUrlArr.length){
       this.setState({noKeyWordsInDream: true});
     }
