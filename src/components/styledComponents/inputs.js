@@ -17,11 +17,11 @@ export const InputS = styled.input`
   background: rgba(255,255,255,0.3);
   border-radius: 6px;
   &::placeholder{
-  color: white;
-  font-weight: 900;
-  font-size: x-large;
+    color: white;
+    font-weight: 900;
+    font-size: x-large;
   }
   &:focus{
-  outline:none;
+    outline:none;
   }
 `
