@@ -124,7 +124,9 @@ class NewDreamPage extends Component {
     const result = await this.stemParse(dreamWordsString);
     let lemmas = result.text.split(" ")
     const chunks = await this.chunkParse(dreamWordsString);
-    console.log("chunks ", chunks.text);
+    console.log(typeof chunks.text);
+    const chunksArr = chunks.text.split(" ");
+    console.log("chunksarr ", chunks.text);
 
     // match against archetypes
     // match against lemmas
