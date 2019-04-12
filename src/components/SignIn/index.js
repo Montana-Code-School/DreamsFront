@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
 import { withRouter, Link } from 'react-router-dom';
-import { compose } from 'recompose';
-import styled from "styled-components";
+import { compose } from 'recompose'
 
-import ColorBlob from "../ColorBlob";
+//styled
+import { AuthFormTitleS } from '../styledComponents/formTitles';
+import { InputS } from '../styledComponents/inputs';
+import { AuthButtonS } from '../styledComponents/authButtons';
+import { PageStyleS, BlobContainer1S, SignInPageS, SignInLinkS } from './styled'
+import ColorBlob from '../ColorBlob';
+
 import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
@@ -12,7 +17,11 @@ import * as ROUTES from '../../Constants/routes';
 
 const SignInPage = () => (
   <SignInPageS>
-    <h1 id="test-signin-h1">Sign In</h1>
+    <AuthFormTitleS
+    id="test-signin-h1"
+    formTitleBottomMargin={-80}
+    formTitleTopMargin={0}>
+    Sign In</AuthFormTitleS>
     <SignInForm />
     <PasswordForgetLink />
     <SignUpLink />
@@ -57,12 +66,13 @@ class SignInFormBase extends Component {
     const isInvalid = password === '' || email === '';
 
     return(
-      <PageStyle>
-         <BlobInputContainerSS>
+      <PageStyleS>
+         <BlobContainer1S>
           <ColorBlob/>
-        </BlobInputContainerSS>
+        </BlobContainer1S>
         <form onSubmit={this.onSubmit}>
-          <SignInputS
+          <InputS
+            inputPadding={5}
             id="test-input-email"
             name="email"
             value={email}
@@ -70,7 +80,8 @@ class SignInFormBase extends Component {
             type="text"
             placeholder="Email Address"
           />
-          <SignInputS
+          <InputS
+            inputPadding={5}
             id="test-input-password"
             name="password"
             value={password}
@@ -78,100 +89,24 @@ class SignInFormBase extends Component {
             type="password"
             placeholder="Password"
           />
-          <ButtonS
+          <AuthButtonS
             id="test-button-signin-submit"
             disabled={isInvalid}
             type="submit">
             Sign In
-          </ButtonS>
+          </AuthButtonS>
           {error && <p>{error.message}</p>}
         </form>
-      </PageStyle>
+      </PageStyleS>
     );
   }
 }
 
 const SignInLink = () => (
-  <p>
+  <SignInLinkS>
     Already have an account? <Link id="test-link-signin" to={ROUTES.SIGN_IN}>Sign In</Link>
-  </p>
+  </SignInLinkS>
 );
-
-const PageStyle = styled.div`
-  margin-left: 20px;
-  font-family: serif;
-  font-size: x-large;
-  font-weight: 900;
-`
-const BlobInputContainerSS = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: -150%;
-  height: 50%;
-  transform: scale(10);
-`
-//SignIn divs and button are child of form. Form is on same level as blob container
-const SignInPageS = styled.div`
-  padding: 50px;
-  border-radius: 10px;
-  font-family: serif;
-  color: gray;
-  font-size: x-large;
-  font-weight: 900;
-  background: rgba(255, 255, 255,.3);
-`
-const SignInputS = styled.input`
-  padding: 10px;
-  z-index: 20;
-  width: 350px;
-  font-family: serif;
-  color: gray;
-  font-size: x-large;
-  font-weight: 900;
-  border: white;
-  text-align: left;
-  margin-right: 5px;
-  margin-bottom: 2rem;
-  margin-top: 1.8rem;
-  position: relative;
-  background: rgba(255,255,255,0.3);
-  border-radius: 6px;
-  &::placeholder{
-    color: gray;
-    font-weight: 900;
-    font-size: x-large;
-  }
-  &:focus{
-    outline:none;
-  }
-`
-const ButtonS = styled.button`
-  padding: 10px;
-  z-index: 20;
-  font-family: serif;
-  color: gray;
-  font-size: x-large;
-  font-weight: 900;
-  border-style: double;
-  border-color: darkgoldenrod;
-  text-align: left;
-  margin-bottom: 2rem;
-  margin-top: 1.8rem;
-  position: relative;
-  background: rgba(255,255,255,0.3);
-  border-radius: 6px;
-  &::placeholder{
-    color: gray;
-    font-weight: 900;
-    font-size: x-large;
-  }
-  &:hover{
-    transition: 1s ease-in-out;
-    background-color: turquoise;;
-  }
-`
 
 const SignInForm = compose(
   withRouter,

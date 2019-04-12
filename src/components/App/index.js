@@ -3,9 +3,8 @@ import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
-import styled from "styled-components";
 
-import darkness from './darkness.png';
+import { AppBackgroundS, ContentS } from './styled.js';
 import Navigation from '../Navigation';
 import SignUpPage from '../SignUp';
 import SignInPage from '../SignIn';
@@ -33,18 +32,5 @@ const App = () => (
     </AppBackgroundS>
   </Router>
 );
-
-const AppBackgroundS = styled.div`
-  position: relative;
-  height: 100%;
-  background-image: url(${darkness});
-  background-repeat: repeat;
-  overflow-x: hidden;
-`
-const ContentS = styled.div`
-  padding: 1.75rem;
-  width: 100%;
-  height: 100%;
-`
 
 export default withAuthentication(App);

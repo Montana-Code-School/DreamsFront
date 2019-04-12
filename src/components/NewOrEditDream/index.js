@@ -3,24 +3,22 @@ import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
 
+//styles
+import { DreamButtonS } from '../styledComponents/dreamButtons';
+import { InputS } from '../styledComponents/inputs';
+import { BlobContainer2S } from '../styledComponents/Style';
+import ColorBlob from '../ColorBlob';
+import {
+  ThumbsDivS,
+  PageStyleS,
+  NoKeysH4
+} from './styled';
+
 import { withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
-import ColorBlob from '../ColorBlob';
-
 import SpeechRec from './SpeechRec'
 import ImageContainer from './ImagesContainer';
 import { commonWords, archetypes } from './archetypes';
-import { BlobInputContainerS } from '../Style';
-import {
-  ThumbsDiv,
-  PageStyle,
-  DreamInput,
-  DreamTextarea,
-  SaveButton,
-  DeleteButton,
-  ArchetypesButton,
-  NoKeysH4,
-} from './styled';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -107,7 +105,7 @@ class NewDreamPage extends Component {
       this.setState({noKeyWordsInDream: true});
     }
     if (!keyWords.length) {
-       return; 
+       return;
     }
     let promiseArr = [];
     for (let i = 0; i < keyWords.length; i++) {
@@ -210,53 +208,54 @@ class NewDreamPage extends Component {
 
   render () {
     return(
-      <PageStyle>
+      <PageStyleS>
         <form
           onSubmit={ (e) => {e.preventDefault()} }
         >
-        <BlobInputContainerS>
+        <BlobContainer2S>
           <ColorBlob
           watchValue={this.state.content}
           leftAlign={-11}
           topAlign={4}
           />
-          <SpeechRec 
+          <SpeechRec
             handleChange={this.handleChange}
             handleSpeechRec={this.handleSpeechRec}
             textAreaOnFocus={this.textAreaOnFocus}
             initialContent={this.state.content}
           />
-        </BlobInputContainerS>
+        </BlobContainer2S>
         <br/>
-        <BlobInputContainerS>
+        <BlobContainer2S>
           <ColorBlob
           leftAlign={-9}
           topAlign={6}
           />
-          <DreamInput
+          <InputS
+            inputPadding={10}
             type="text"
-            id="DreamTitle"
+            id="DreamTitleS"
             name="title"
             value={this.state.title}
             onChange={this.handleChange}
             placeholder="Enter Dream Title (required)"
             onKeyUp={(e) => e.keyCode === 13 && e.target.blur()}
           />
-        </BlobInputContainerS>
+        </BlobContainer2S>
         <br />
         {this.state.content &&
-          <ArchetypesButton
+          <DreamButtonS
               id="archButton"
               onClick={ (e) => {this.archButtonHandler(e)}}
             >Interpret <br/> Dream
-          </ArchetypesButton>
+          </DreamButtonS>
         }
         <br />
         {(this.state.noKeyWordsInDream && !!this.state.content.length) &&
         <NoKeysH4>No keywords currently present in dream -- unable to generate images.</NoKeysH4>}
         {(!this.state.noKeyWordsInDream) &&
           <div>
-           <ThumbsDiv id='image-container'>
+           <ThumbsDivS id='image-container'>
             {this.state.imgUrlArr.map( (obj) =>
                 <ImageContainer
                   id={`${obj.keyword}ImageContainer`}
@@ -268,23 +267,22 @@ class NewDreamPage extends Component {
                   gatherSavedPlaces={this.gatherSavedPlaces}
                 />
             )}
-            </ThumbsDiv>
+            </ThumbsDivS>
           </div>
         }
         {(!!this.state.title && !!this.state.content) &&
-          <SaveButton
-            className="savebutton"
+          <DreamButtonS
             type="button"
             name="addDream"
             onClick={ (e) => {this.addDream(e)}}
           >Save <br/> Dream
-          </SaveButton>
+          </DreamButtonS>
         }
         </form>
         {!this.isNew &&
-          <DeleteButton name="deleteDream" onClick={this.deleteDream}>Delete</DeleteButton>
+          <DreamButtonS name="deleteDream" onClick={this.deleteDream}>Delete</DreamButtonS>
         }
-      </PageStyle>
+      </PageStyleS>
     );
   }
 }

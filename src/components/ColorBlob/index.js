@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import styled from "styled-components";
 import { throttle } from 'lodash';
+
+import { CanvasContainerS, BlobOnCanvasS, CanvasStitchS } from './styled';
 
 let y2;
 export default class ColorBlob extends Component{
@@ -196,7 +197,7 @@ export default class ColorBlob extends Component{
   render(){
 
     return(
-      <CanvasContainer
+      <CanvasContainerS
         width={this.props.width || 200}
         height={this.props.height || 200}
         onClick={this.generate}
@@ -206,32 +207,11 @@ export default class ColorBlob extends Component{
         canvasWidth={5}
         canvasHeight={10}
       >
-        <BlobOnCanvas
+        <BlobOnCanvasS
         blobWidth={1000}
-        ref={this.blob}></BlobOnCanvas>
-        <CanvasStitch ref={this.stitch}></CanvasStitch>
-      </CanvasContainer>
+        ref={this.blob}></BlobOnCanvasS>
+        <CanvasStitchS ref={this.stitch}></CanvasStitchS>
+      </CanvasContainerS>
     )
   }
 }
-//import CanvasContainer places and change size with this props thing in styling
-const CanvasContainer = styled.div`
-  z-index: -1;
-  position: relative;
-  top: ${props => props.topAlign}rem;
-  left: ${props => props.leftAlign}rem;
-  width: ${props => props.canvasWidth}vw;
-  height: ${props => props.canvasHeight}vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-const BlobOnCanvas = styled.canvas`
-  width:${props => props.blobWidth}%;
-  align-items: center;
-`
-const CanvasStitch = styled.canvas`
-display: flex;
-justify-content: center;
-align-items: center;
-`

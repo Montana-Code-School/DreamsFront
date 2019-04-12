@@ -1,7 +1,10 @@
 import React from 'react';
-import styled from "styled-components";
 
+//styles
+import { AuthFormTitleS } from '../styledComponents/formTitles';
+import { PageStyleS, BlobContainer1S } from './styled';
 import ColorBlob from '../ColorBlob';
+
 import { AuthUserContext, withAuthorization } from '../Session';
 import PasswordChangeForm from '../PasswordChange';
 
@@ -9,32 +12,19 @@ const AccountPage = () => (
 
   <AuthUserContext.Consumer>
     {authUser => (
-      <PageStyle>
-        <BlobInputContainerSS>
+      <PageStyleS>
+        <BlobContainer1S>
           <ColorBlob/>
-        </BlobInputContainerSS>
-        <h1>Account: {authUser.email}</h1>
+        </BlobContainer1S>
+        <AuthFormTitleS
+          formTitleBottomMargin={0}
+          formTitleTopMargin={-80}
+        >Account: {authUser.email}</AuthFormTitleS>
         <PasswordChangeForm />
-      </PageStyle>
+      </PageStyleS>
     )}
   </AuthUserContext.Consumer>
 );
-
-const PageStyle = styled.div`
-  margin-left: 25px;
-  font-family: serif;
-  color: gray;
-  font-size: xx-large;
-  font-weight: 900;
-`
-const BlobInputContainerSS = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50%;
-  transform: scale(10);
-`
 
 const condition = authUser => !!authUser;
 
