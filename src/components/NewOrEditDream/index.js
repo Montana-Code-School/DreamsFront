@@ -6,15 +6,19 @@ import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions
 //styles
 import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
-import { ThumbsDivS, PageStyleS, DreamTextareaS } from './styled';
 import { BlobContainer2S } from '../styledComponents/Style';
 import ColorBlob from '../ColorBlob';
+import {
+  ThumbsDivS,
+  PageStyleS,
+  NoKeysH4
+} from './styled';
 
 import { withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
+import SpeechRec from './SpeechRec'
 import ImageContainer from './ImagesContainer';
 import { commonWords, archetypes } from './archetypes';
-
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -52,7 +56,6 @@ class NewDreamPage extends Component {
       const imgUrlArr = this.state.imgUrlArr.map((image) => {
         return image;
       });
-      console.log("imgurlarr on CDM ", imgUrlArr)
       this.setState({imgUrlArr});
     }
   }
@@ -61,6 +64,10 @@ class NewDreamPage extends Component {
     e.preventDefault();
     e.stopPropagation();
     this.setState({[e.target.name]: e.target.value});
+  }
+
+  handleSpeechRec = (speechRecText) => {
+    this.setState({content: speechRecText})
   }
 
   textAreaOnFocus = () => {
@@ -79,10 +86,12 @@ class NewDreamPage extends Component {
       return commonWords.indexOf(word) === -1;
     });
     // match against archetypes
+    // skipping already existing keywords
+    let currentKeywords = this.state.imgUrlArr.map( obj => obj.keyword);
     let keysArr = [];
     for (let i = 0; i < dreamWords.length; i++){
       let word = dreamWords[i];
-      if (archetypes.includes(word) && !keysArr.includes(word)){
+      if ((archetypes.includes(word) && !keysArr.includes(word) && !currentKeywords.includes(word))){
         keysArr.push(word);
       }
     }
@@ -92,8 +101,10 @@ class NewDreamPage extends Component {
 
   archButtonHandler() {
     const keyWords = this.parseDreamContent();
+    if (!keyWords.length && !this.state.imgUrlArr.length){
+      this.setState({noKeyWordsInDream: true});
+    }
     if (!keyWords.length) {
-       this.setState({noKeyWordsInDream: true});
        return;
     }
     let promiseArr = [];
@@ -157,17 +168,14 @@ class NewDreamPage extends Component {
 
   addDream = (e) => {
     e.preventDefault();
-    const { _id, title, content, imgUrlArr: thumbUrlObj} = this.state;
+    const { _id, title, content, imgUrlArr: images } = this.state;
     const { userId } = this;
     if (!title || !content) {
       return;
     }
-    const images = thumbUrlObj
-      .map( obj => ({url: obj.url, keyword: obj.keyword, _id: obj._id, lastViewedIndex: obj.lastViewedIndex}));
     const body = { title, content, userId, images };
     if(!this.isNew) body._id = _id;
     // Post to DB
-    console.log("body.images just before save to db", body.images)
     const onSaveComplete = new Promise((resolve, reject) => {
       this.props.saveDream(body, this.isNew, resolve);
     });
@@ -194,19 +202,11 @@ class NewDreamPage extends Component {
   }
 
   removeImage = (keyword) => {
-    let indexToRemove;
-    let thumbsUrlObjs = this.state.imgUrlArr.slice().map((obj)=>{
-      if (obj.keyword === keyword){
-        indexToRemove = this.state.imgUrlArr.indexOf(obj)
-      }
-      return obj;
-    })
-    thumbsUrlObjs.splice(indexToRemove, 1);
+    let thumbsUrlObjs = this.state.imgUrlArr.filter( obj => obj.keyword !== keyword);
     this.setState({imgUrlArr: thumbsUrlObjs})
   }
 
   render () {
-    console.log("render imgURLarr ", this.state.imgUrlArr)
     return(
       <PageStyleS>
         <form
@@ -218,19 +218,11 @@ class NewDreamPage extends Component {
           leftAlign={-11}
           topAlign={4}
           />
-          <DreamTextareaS
-            onSubmit={ (e) => {e.preventDefault()}}
-            type="textarea"
-            rows="3"
-            cols="25"
-            name="content"
-            id="DreamText"
-            placeholder="Enter Dream Text (required)"
-            value={this.state.content}
-            onChange={e => this.handleChange(e)}
-            onFocus={this.textAreaOnFocus}
-            onBlur={this.textAreaOnBlur}
-            onKeyUp={(e) => e.keyCode === 13 && e.target.blur()}
+          <SpeechRec
+            handleChange={this.handleChange}
+            handleSpeechRec={this.handleSpeechRec}
+            textAreaOnFocus={this.textAreaOnFocus}
+            initialContent={this.state.content}
           />
         </BlobContainer2S>
         <br/>
@@ -260,14 +252,14 @@ class NewDreamPage extends Component {
         }
         <br />
         {(this.state.noKeyWordsInDream && !!this.state.content.length) &&
-        <h4>No keywords currently present in dream -- unable to generate images.</h4>}
+        <NoKeysH4>No keywords currently present in dream -- unable to generate images.</NoKeysH4>}
         {(!this.state.noKeyWordsInDream) &&
           <div>
            <ThumbsDivS id='image-container'>
             {this.state.imgUrlArr.map( (obj) =>
                 <ImageContainer
-                  id="image-subcontainer"
-                  key={obj.url}
+                  id={`${obj.keyword}ImageContainer`}
+                  key={obj.keyword}
                   url={obj.url.split(',')}
                   keyword={obj.keyword}
                   lastViewedIndex={obj.lastViewedIndex}

@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import Textarea from 'react-textarea-autosize';
 
 export const ThumbsDivS = styled.div`
   display: flex;
@@ -6,11 +7,16 @@ export const ThumbsDivS = styled.div`
   flex-wrap: wrap;
   margin-bottom: 5px;
 `
+export const NoKeysH4 = styled.h4`
+  color: snow;
+`
+
 export const PageStyleS = styled.div`
   margin-left: 25px;
   text-align: center;
 `
-export const DreamTextareaS = styled.textarea`
+
+export const DreamTextareaS = styled(Textarea)`
   z-index: 20;
   font-family: serif;
   color: white;

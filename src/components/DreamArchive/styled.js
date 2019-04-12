@@ -1,5 +1,9 @@
 import styled from 'styled-components';
 
+export const PS = styled.p`
+  color: snow;
+`
+
 export const ArchiveDivS = styled.div`
   position: relative;
   top: -85px;

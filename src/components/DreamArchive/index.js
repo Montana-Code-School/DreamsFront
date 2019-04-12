@@ -13,7 +13,8 @@ import {
   ContentRowDivS,
   ImgRowDivS,
   PageStyleS,
-  DreamDivS } from './styled';
+  DreamDivS,
+  PS } from './styled';
 
 import * as ROUTES from '../../Constants/routes';
 import { selectDream, fetchDreams } from '../../store/actions';
@@ -26,7 +27,6 @@ class ArchivePage extends Component {
     this.state = {
       userId: this.props.firebase.auth.O,
     };
-
   }
 
   componentDidMount() {
@@ -38,8 +38,8 @@ class ArchivePage extends Component {
     if(this.props.isFetchingDreams){
       return <p>Loading....</p>
     } else if (!this.props.dreams.length){
-      return <p>{`Looks like you haven't journaled any dreams yet!
-      Click New Dream to get started!`}</p>
+      return <PS>{`Looks like you haven't journaled any dreams yet!
+      Click New Dream to get started!`}</PS>
     }
   }
 

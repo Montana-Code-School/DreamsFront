@@ -47,11 +47,21 @@ describe('user signup test', () => {
     await page.click('#test-button-signin-submit');
     await page.waitForSelector('#DreamText');
     await page.type('#DreamText', 'cow horse');
+    await page.waitForSelector('#DreamTitle');
+    await page.type('#DreamTitle', 'puppeteer test');
     await page.click('#archButton');
-    await page.waitForSelector('.imageGenerated');
-    const url = await page.$eval('.imageGenerated', e => e.src);
-    expect(url).toBe('https://cdn.pixabay.com/photo/2014/11/06/15/14/grandpa-519246_150.jpg');
-  }, 32000);
+    await page.waitForSelector('.horseImageGenerated');
+    await page.waitForSelector('.horseSlideRight');
+    await page.click('.horseSlideRight');
+    await page.click('.horseSlideRight');
+    await page.click('.horseSlideRight');
+    const savedPlace = await page.$eval('.horse', e => e.savedPlace);
+    await page.waitForSelector('.savebutton');
+    await page.click('.savebutton');
+    await page.waitForSelector('.horse0');
+    const archiveSavedPlace = await page.$eval('.horse0', e => e.savedPlace);
+    expect(archiveSavedPlace).toBe(savedPlace);
+  }, 64000);
 
   afterAll(async () => {
     await browser.close();
