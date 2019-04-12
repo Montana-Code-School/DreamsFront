@@ -4,7 +4,7 @@ import styled from 'styled-components';
 export const SignUpS = styled.p`
 position: relative;
 `
-export const BlobInputContainerSS = styled.div`
+export const BlobContainer1S = styled.div`
 position: relative;
 display: flex;
 justify-content: center;
@@ -13,7 +13,7 @@ width: -150%;
 height: 50%;
 transform: scale(10);
 `
-export const StyledDiv = styled.div`
+export const StyledDivS = styled.div`
 color: white;
 font-family: serif;
 font-weight: 900;

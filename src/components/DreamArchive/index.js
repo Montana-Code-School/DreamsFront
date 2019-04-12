@@ -4,15 +4,15 @@ import { connect } from 'react-redux';
 
 import {
   ArchiveDivS,
-  BlobInputContainerS,
-  ArchiveTitle, DreamTitle,
-  BlobInputContainerSS,
-  StyledImg,
-  StyledHR,
-  TitleRowDiv,
-  ContentRowDiv,
-  ImgRowDiv,
-  PageStyle,
+  BlobContainer2S,
+  ArchiveTitleS, DreamTitleS,
+  BlobContainer1S,
+  StyledImgS,
+  StyledHRS,
+  TitleRowDivS,
+  ContentRowDivS,
+  ImgRowDivS,
+  PageStyleS,
   DreamDivS } from './styled';
 
 import * as ROUTES from '../../Constants/routes';
@@ -46,49 +46,49 @@ class ArchivePage extends Component {
   render() {
     let baseURL = "https://cdn.pixabay.com/photo/"
     return(
-      <PageStyle>
-        <BlobInputContainerS>
+      <PageStyleS>
+        <BlobContainer2S>
           <ColorBlob leftAlign={0} topAlign={0}/>
-        </BlobInputContainerS>
+        </BlobContainer2S>
         <AuthUserContext.Consumer>
           {authUser => (
             <ArchiveDivS>
-              <ArchiveTitle id="test-dreamarchive-user-h1">Dream Archive for {authUser.email}</ArchiveTitle>
-              <BlobInputContainerSS>
+              <ArchiveTitleS id="test-dreamarchive-user-h1">Dream Archive for {authUser.email}</ArchiveTitleS>
+              <BlobContainer1S>
                 <ColorBlob/>
-              </BlobInputContainerSS>
+              </BlobContainer1S>
               {this.loadingOrNoDreams()}
               {this.props.dreams.map( (dream, index) =>
                 <DreamDivS key={dream._id} >
-                  <TitleRowDiv>
-                    <DreamTitle>{dream.title}</DreamTitle>
+                  <TitleRowDivS>
+                    <DreamTitleS>{dream.title}</DreamTitleS>
                     <Link
                       to={ROUTES.EDIT_DREAM}
                       onClick={() => this.props.selectDream(dream)}
                     >Edit Dream</Link>
-                  </TitleRowDiv>
-                  <StyledHR />
-                  <ContentRowDiv>
+                  </TitleRowDivS>
+                  <StyledHRS />
+                  <ContentRowDivS>
                     <p>{dream.content}</p>
-                  </ContentRowDiv>
-                  <StyledHR />
-                  <ImgRowDiv>
+                  </ContentRowDivS>
+                  <StyledHRS />
+                  <ImgRowDivS>
                     {!!dream.images.length &&
                       dream.images.map( (image) =>
-                        <StyledImg
+                        <StyledImgS
                           className={image.keyword+index}
                           src={baseURL.concat(image.url.split(",")[image.lastViewedIndex])}
                           key={image._id}
                           lastViewedIndex={image.lastViewedIndex}
                         />)
                     }
-                  </ImgRowDiv>
+                  </ImgRowDivS>
                 </DreamDivS>
               )}
             </ArchiveDivS>
           )}
         </AuthUserContext.Consumer>
-      </PageStyle>
+      </PageStyleS>
     )
   }
 }

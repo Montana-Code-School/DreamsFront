@@ -6,8 +6,8 @@ import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions
 //styles
 import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
-import { ThumbsDiv, PageStyle, DreamTextarea } from './styled';
-import { BlobInputContainerS } from '../styledComponents/Style';
+import { ThumbsDivS, PageStyleS, DreamTextareaS } from './styled';
+import { BlobContainer2S } from '../styledComponents/Style';
 import ColorBlob from '../ColorBlob';
 
 import { withAuthorization } from '../Session';
@@ -208,17 +208,17 @@ class NewDreamPage extends Component {
   render () {
     console.log("render imgURLarr ", this.state.imgUrlArr)
     return(
-      <PageStyle>
+      <PageStyleS>
         <form
           onSubmit={ (e) => {e.preventDefault()} }
         >
-        <BlobInputContainerS>
+        <BlobContainer2S>
           <ColorBlob
           watchValue={this.state.content}
           leftAlign={-11}
           topAlign={4}
           />
-          <DreamTextarea
+          <DreamTextareaS
             onSubmit={ (e) => {e.preventDefault()}}
             type="textarea"
             rows="3"
@@ -232,9 +232,9 @@ class NewDreamPage extends Component {
             onBlur={this.textAreaOnBlur}
             onKeyUp={(e) => e.keyCode === 13 && e.target.blur()}
           />
-        </BlobInputContainerS>
+        </BlobContainer2S>
         <br/>
-        <BlobInputContainerS>
+        <BlobContainer2S>
           <ColorBlob
           leftAlign={-9}
           topAlign={6}
@@ -242,14 +242,14 @@ class NewDreamPage extends Component {
           <InputS
             inputPadding={10}
             type="text"
-            id="DreamTitle"
+            id="DreamTitleS"
             name="title"
             value={this.state.title}
             onChange={this.handleChange}
             placeholder="Enter Dream Title (required)"
             onKeyUp={(e) => e.keyCode === 13 && e.target.blur()}
           />
-        </BlobInputContainerS>
+        </BlobContainer2S>
         <br />
         {this.state.content &&
           <DreamButtonS
@@ -263,7 +263,7 @@ class NewDreamPage extends Component {
         <h4>No keywords currently present in dream -- unable to generate images.</h4>}
         {(!this.state.noKeyWordsInDream) &&
           <div>
-           <ThumbsDiv id='image-container'>
+           <ThumbsDivS id='image-container'>
             {this.state.imgUrlArr.map( (obj) =>
                 <ImageContainer
                   id="image-subcontainer"
@@ -275,7 +275,7 @@ class NewDreamPage extends Component {
                   gatherSavedPlaces={this.gatherSavedPlaces}
                 />
             )}
-            </ThumbsDiv>
+            </ThumbsDivS>
           </div>
         }
         {(!!this.state.title && !!this.state.content) &&
@@ -290,7 +290,7 @@ class NewDreamPage extends Component {
         {!this.isNew &&
           <DreamButtonS name="deleteDream" onClick={this.deleteDream}>Delete</DreamButtonS>
         }
-      </PageStyle>
+      </PageStyleS>
     );
   }
 }

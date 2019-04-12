@@ -4,9 +4,9 @@ import { compose } from 'recompose';
 
 //styles
 import { AuthButtonS } from '../styledComponents/authButtons';
-import { AuthFormTitles } from '../styledComponents/formTitles';
+import { AuthFormTitleS } from '../styledComponents/formTitles';
 import { InputS } from '../styledComponents/inputs';
-import { SignUpS, BlobInputContainerSS, StyledDiv } from './styled'
+import { SignUpS, BlobContainer1S, StyledDivS } from './styled'
 import ColorBlob from '../ColorBlob'
 
 import { SignInLink } from '../SignIn'
@@ -14,14 +14,14 @@ import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
 
 const SignUpPage = () => (
-  <StyledDiv>
-    <AuthFormTitles
+  <StyledDivS>
+    <AuthFormTitleS
     formTitleBottomMargin={-80}
     formTitleTopMargin={0}
     id="test-title-signup">
-    Sign Up</AuthFormTitles>
+    Sign Up</AuthFormTitleS>
     <SignUpForm />
-  </StyledDiv>
+  </StyledDivS>
 );
 
 const INITIAL_STATE = {
@@ -74,12 +74,12 @@ class SignUpFormBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        <BlobInputContainerSS id='happy'>
+        <BlobContainer1S id='happy'>
           <ColorBlob
           leftAlign={-3}
           topAlign={2}
           />
-        </BlobInputContainerSS>
+        </BlobContainer1S>
         <InputS
           inputPadding={5}
           id="test-input-username"

@@ -13,7 +13,7 @@ export const PageStyleS = styled.div`
   margin-top: 1.8rem;
   padding: 50px;
 `
-export const BlobInputContainerSS = styled.div`
+export const BlobContainer1S = styled.div`
   position: relative;
   display: flex;
   justify-content: center;

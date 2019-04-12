@@ -11,11 +11,11 @@ export const CanvasContainerS = styled.div`
   justify-content: center;
   align-items: center;
 `
-export const BlobOnCanvas = styled.canvas`
+export const BlobOnCanvasS = styled.canvas`
   width:${props => props.blobWidth}%;
   align-items: center;
 `
-export const CanvasStitch = styled.canvas`
+export const CanvasStitchS = styled.canvas`
   display: flex;
   justify-content: center;
   align-items: center;

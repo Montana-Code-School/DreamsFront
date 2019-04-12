@@ -1,13 +1,13 @@
 
 import styled from "styled-components";
 
-export const PageStyle = styled.div`
+export const PageStyleS = styled.div`
   margin-left: 20px;
   font-family: serif;
   font-size: x-large;
   font-weight: 900;
 `
-export const BlobInputContainerSS = styled.div`
+export const BlobContainer1S = styled.div`
   position: relative;
   display: flex;
   justify-content: center;

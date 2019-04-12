@@ -3,10 +3,10 @@ import { withRouter, Link } from 'react-router-dom';
 import { compose } from 'recompose'
 
 //styled
-import { AuthFormTitles } from '../styledComponents/formTitles';
+import { AuthFormTitleS } from '../styledComponents/formTitles';
 import { InputS } from '../styledComponents/inputs';
 import { AuthButtonS } from '../styledComponents/authButtons';
-import { PageStyle, BlobInputContainerSS, SignInPageS, SignInLinkS } from './styled'
+import { PageStyleS, BlobContainer1S, SignInPageS, SignInLinkS } from './styled'
 import ColorBlob from '../ColorBlob';
 
 import { SignUpLink } from '../SignUp';
@@ -17,11 +17,11 @@ import * as ROUTES from '../../Constants/routes';
 
 const SignInPage = () => (
   <SignInPageS>
-    <AuthFormTitles
+    <AuthFormTitleS
     id="test-signin-h1"
     formTitleBottomMargin={-80}
     formTitleTopMargin={0}>
-    Sign In</AuthFormTitles>
+    Sign In</AuthFormTitleS>
     <SignInForm />
     <PasswordForgetLink />
     <SignUpLink />
@@ -66,10 +66,10 @@ class SignInFormBase extends Component {
     const isInvalid = password === '' || email === '';
 
     return(
-      <PageStyle>
-         <BlobInputContainerSS>
+      <PageStyleS>
+         <BlobContainer1S>
           <ColorBlob/>
-        </BlobInputContainerSS>
+        </BlobContainer1S>
         <form onSubmit={this.onSubmit}>
           <InputS
             inputPadding={5}
@@ -97,7 +97,7 @@ class SignInFormBase extends Component {
           </AuthButtonS>
           {error && <p>{error.message}</p>}
         </form>
-      </PageStyle>
+      </PageStyleS>
     );
   }
 }

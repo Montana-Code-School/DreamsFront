@@ -6,26 +6,26 @@ export const ArchiveDivS = styled.div`
   left: -10px;
 `
 
-export const BlobInputContainerS = styled.div`
+export const BlobContainer2S = styled.div`
   display: inline-block;
   position: relative;
 `
 
-export const ArchiveTitle = styled.h1`
+export const ArchiveTitleS = styled.h1`
   font-family: serif;
   color: white;
   font-size: xx-large;
   font-weight: 900;
   background: transparent;
 `
-export const DreamTitle = styled.h2`
+export const DreamTitleS = styled.h2`
   font-family: serif;
   color: white;
   font-size: xx-large;
   font-weight: 900;
 `
 
-export const BlobInputContainerSS = styled.div`
+export const BlobContainer1S = styled.div`
   position: relative;
   display: flex;
   justify-content: center;
@@ -36,7 +36,7 @@ export const BlobInputContainerSS = styled.div`
   overflow: hidden;
 `
 
-export const StyledImg = styled.img`
+export const StyledImgS = styled.img`
   height: 100%;
   margin: 10px;
   border-radius: 15px;
@@ -50,29 +50,29 @@ export const StyledImg = styled.img`
   }
 `
 
-export const StyledHR = styled.hr`
+export const StyledHRS = styled.hr`
   border: 0.5px solid rgba(0,0,0,.1);
   width: 100%;
 `
 
-export const TitleRowDiv = styled.div`
+export const TitleRowDivS = styled.div`
   display: flex;
   justify-content: inherit;
 `
 
-export const ContentRowDiv = styled.div`
+export const ContentRowDivS = styled.div`
   font-family: serif;
   color: white;
   font-size: x-large;
   font-weight: 900;
 `
 
-export const ImgRowDiv = styled.div`
+export const ImgRowDivS = styled.div`
   display: flex;
   flex-wrap: wrap;
 `
 
-export const PageStyle = styled.div`
+export const PageStyleS = styled.div`
   margin-left: 25px;
 `
 

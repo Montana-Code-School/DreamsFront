@@ -1,9 +1,9 @@
 import styled from 'styled-components';
 
-export const BlobInputContainerS = styled.div`
+export const BlobContainer2S = styled.div`
   display: inline-block;
   position: relative;
 `
-export const PageStyle = styled.div`
+export const PageStyleS = styled.div`
   margin-left: 25px;
 `

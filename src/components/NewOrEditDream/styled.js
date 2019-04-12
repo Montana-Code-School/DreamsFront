@@ -1,16 +1,16 @@
 import styled from 'styled-components';
 
-export const ThumbsDiv = styled.div`
+export const ThumbsDivS = styled.div`
   display: flex;
   justify-content: space-evenly;
   flex-wrap: wrap;
   margin-bottom: 5px;
 `
-export const PageStyle = styled.div`
+export const PageStyleS = styled.div`
   margin-left: 25px;
   text-align: center;
 `
-export const DreamTextarea = styled.textarea`
+export const DreamTextareaS = styled.textarea`
   z-index: 20;
   font-family: serif;
   color: white;
