@@ -96,23 +96,43 @@ class NewDreamPage extends Component {
       })
   }
 
+  chunkParse = (text) => {
+    return fetch(`${REACT_APP_BACKEND_URL}/chunk`, {
+      method: 'POST',
+      body: JSON.stringify({text}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then((chunks) => {
+        return chunks;
+      })
+  }
+
   parseDreamContent = async () => {
     //remove common words
-    let lower = this.state.content.toLowerCase();
-    lower = lower.replace(/[^\w\d ]/g, '');
-    let dreamWords = lower.split(' ');
+    let dream = this.state.content;
+    dream = dream.replace(/[^\w\d ]/g, '');
+    let dreamWords = dream.split(' ');
     dreamWords = dreamWords.filter( (word) => {
       return commonWords.indexOf(word) === -1;
     });
-    let dreamWordsToStem = dreamWords.join(' ');
-    const result = await this.stemParse(dreamWordsToStem);
+
+    //tag and chunk
+    let dreamWordsString = dreamWords.join(' ');
+    const result = await this.stemParse(dreamWordsString);
     let lemmas = result.text.split(" ")
+    const chunks = await this.chunkParse(dreamWordsString);
+    console.log("chunks ", chunks.text);
+
     // match against archetypes
+    // match against lemmas
     // skipping already existing keywords
     let currentKeywords = this.state.imgUrlArr.map( obj => obj.keyword);
     let keysArr = [];
     for (let i = 0; i < dreamWords.length; i++){
-      let word = dreamWords[i];
+      let word = dreamWords[i].toLowerCase();
       if ((archetypes.includes(word) && !keysArr.includes(word) && !currentKeywords.includes(word))){
         keysArr.push(word);
       }
