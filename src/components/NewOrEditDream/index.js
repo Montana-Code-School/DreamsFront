@@ -6,7 +6,7 @@ import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions
 import { withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
 import ColorBlob from '../ColorBlob';
-
+import Chat from '../Chatbot';
 import SpeechRec from './SpeechRec'
 import ImageContainer from './ImagesContainer';
 import { commonWords, archetypes } from './archetypes';
@@ -36,6 +36,10 @@ class NewDreamPage extends Component {
         editing: false,
         noKeyWordsInDream: false,
         lemmas: {},
+        nouns: [],
+        persons: [],
+        chatbotSteps: [],
+        chat: false,
       }
     } else {
       const { title, content, _id, images } = this.props.currentDream
@@ -47,6 +51,10 @@ class NewDreamPage extends Component {
         editing: false,
         noKeyWordsInDream: false,
         lemmas: {},
+        nouns: [],
+        persons: [],
+        chatbotSteps: [],
+        chatReady: false,
       }
     }
   }
@@ -110,6 +118,47 @@ class NewDreamPage extends Component {
       })
   }
 
+  personParse = (chunks) => {
+    // get the persons
+    let persons = chunks.slice();
+    let personArr = [];
+    for (let i = 0; i < persons.length; i++) {
+      if (persons[i].includes("PERSON")){
+        persons[i] = persons[i].replace("PERSON ", "");
+        persons[i] = persons[i].replace(/(\/NNP)+/g, "");
+        persons[i] = persons[i].replace(/[^\w\d ]/g, '').trimStart();
+        personArr.push(persons[i]);
+      }
+    }
+    console.log("person ", personArr);
+    this.setState({persons: personArr});
+    this.makeChatbotSteps(personArr);
+    // speechSynthesis.speak(new SpeechSynthesisUtterance(`How did you first meet ${personArr[0]}?`))
+  }
+
+  nounParse = (chunks) => {
+    // get the nouns
+    let nouns = chunks.slice();
+    let nounArr = [];
+    for (let i = 0; i < nouns.length; i++) {
+      if(nouns[i].includes("NNS") && !nouns[i].includes("NNP")){
+        nouns[i] = nouns[i].replace(/(\/NNS)+\b/g, "");
+        console.log(nouns[i]);
+        nouns[i] = nouns[i].replace(/[^\w\d ]/g, '').trimStart();
+        nounArr.push(nouns[i]);
+      } else if (nouns[i].includes("NN") && !nouns[i].includes("NNP")){
+        nouns[i] = nouns[i].replace(/(\/NN)+\b/g, "");
+        console.log(nouns[i]);
+        nouns[i] = nouns[i].replace(/[^\w\d ]/g, '').trimStart();
+        nounArr.push(nouns[i]);
+      }
+    }
+    console.log("noun ", nounArr);
+    this.setState({nouns: nounArr});
+    this.makeChatbotSteps(nounArr);
+    //speechSynthesis.speak(new SpeechSynthesisUtterance('Hey'))
+  }
+
   parseDreamContent = async () => {
     //remove common words
     let dream = this.state.content;
@@ -119,14 +168,15 @@ class NewDreamPage extends Component {
       return commonWords.indexOf(word) === -1;
     });
 
-    //tag and chunk
+    // tag and chunk
     let dreamWordsString = dreamWords.join(' ');
     const result = await this.stemParse(dreamWordsString);
     let lemmas = result.text.split(" ")
     const chunks = await this.chunkParse(dreamWordsString);
-    console.log(typeof chunks.text);
-    const chunksArr = chunks.text.split(" ");
-    console.log("chunksarr ", chunks.text);
+    let chunksArr = chunks.text.split("\n");
+    console.log("chunks ", chunksArr);
+    this.nounParse(chunksArr);
+    this.personParse(chunksArr);
 
     // match against archetypes
     // match against lemmas
@@ -256,6 +306,64 @@ class NewDreamPage extends Component {
     this.setState({imgUrlArr: thumbsUrlObjs})
   }
 
+  makeChatbotSteps = (stepsToAdd) => {
+    let newSteps = [...this.state.chatbotSteps];
+    // make first step and last step
+    if (!newSteps.length) {
+      newSteps.push({id: 1, message: "sup", trigger: 2},
+      {
+        id: 2,
+        message: 'Bye Bye, nice to meet you!',
+        end: true,
+      } );
+    }
+    // insert new steps at penultimate index
+    if(stepsToAdd.length) {
+      for (let i = 0; i < stepsToAdd.length; i++) {
+        if (stepsToAdd[i].includes(" ")){
+          let choiceOfPersons = stepsToAdd[i].split(" ");
+          newSteps.splice(newSteps.length-1, 0, 
+            {
+              id: i,
+              message: `Who do you like better, ${choiceOfPersons[0]} or ${choiceOfPersons[1]}?`,
+              trigger: i+1,
+            },
+            {
+              id: i+1,
+              user: true,
+              trigger: i+2,
+            }
+          )
+        } else {
+          newSteps.splice(newSteps.length-1, 0, 
+            {
+              id: i,
+              message: `How do you feel about ${stepsToAdd[i]}?`,
+              trigger: i+1,
+            },
+            {
+              id: i+1,
+              user: true,
+              trigger: i+2,
+            }
+          )
+        }
+      }
+    }
+    // re-index ids and triggers
+    for (let i = 0; i < newSteps.length; i++) {
+      newSteps[i].id = i+1;
+      if (i === newSteps.length-1){
+        newSteps[i].end = true;
+      } else {
+        newSteps[i].trigger = i+2;
+      }
+      
+    }
+
+    this.setState({chatbotSteps: newSteps})
+  }
+
   render () {
     return(
       <PageStyle>
@@ -264,9 +372,9 @@ class NewDreamPage extends Component {
         >
         <BlobInputContainerS>
           <ColorBlob
-          watchValue={this.state.content}
-          leftAlign={-11}
-          topAlign={4}
+            watchValue={this.state.content}
+            leftAlign={-11}
+            topAlign={4}
           />
           <SpeechRec 
             handleChange={this.handleChange}
@@ -332,6 +440,8 @@ class NewDreamPage extends Component {
         {!this.isNew &&
           <DeleteButton name="deleteDream" onClick={this.deleteDream}>Delete</DeleteButton>
         }
+        <div><button onClick={()=>this.setState({chatReady: !this.state.chatReady})}>Chat</button></div>
+        {this.state.chatReady && <Chat steps={this.state.chatbotSteps}/> }
       </PageStyle>
     );
   }
