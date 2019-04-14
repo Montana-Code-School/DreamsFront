@@ -47,6 +47,7 @@ class ArchivePage extends Component {
               {this.loadingOrNoDreams()}
               {this.props.dreams.map( (dream, index) =>
                 <DreamDivS key={dream._id} >
+                  {console.log("dream ", dream)}
                   <TitleRowDiv>
                     <DreamTitle>{dream.title}</DreamTitle>
                     <Link

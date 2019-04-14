@@ -1,0 +1,26 @@
+const questionPhrases = [
+"what do you think of ",
+"have you had any significant life experiences involving ",
+"what is your first memory of ",
+"what would you do if you were reborn as ",
+"how often do you think about ",
+"do your friends like ",
+"what if I told you I have glimpsed the inner quintessence of ",
+"what is the weightiest you have ever seen of ",
+"what would you say if you were to anthropomorphose ",
+"can you think of any smells associated with ",
+"what kind of people generally are into ",
+"can you tell where online i might find more information on ",
+"In terms of value, how would you rate ",
+"where do you think is the best place to buy gifts associated with ",
+"what would the world be like if there was no ",
+"how would we get by in the world if it weren't for ",
+"you know what they say about ",
+"depending on where you live, you might not wanna publicly talk about ",
+"what do you think the future holds for ",
+"what would you do if you could possess the ultimate ",
+"what would you do if you were stuck with ",
+"do you think is good eating, the food what you call ",
+]  
+
+export default questionPhrases;

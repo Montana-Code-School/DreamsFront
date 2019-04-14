@@ -21,6 +21,7 @@ import {
   ArchetypesButton,
   NoKeysH4,
 } from './styled';
+import questionPhrases from './questionPhrases';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -35,11 +36,12 @@ class NewDreamPage extends Component {
         imgUrlArr: [],
         editing: false,
         noKeyWordsInDream: false,
+        keysArr: [],
         lemmas: {},
         nouns: [],
         persons: [],
         chatbotSteps: [],
-        chat: false,
+        chatReady: false,
       }
     } else {
       const { title, content, _id, images } = this.props.currentDream
@@ -50,6 +52,7 @@ class NewDreamPage extends Component {
         imgUrlArr: images || [],
         editing: false,
         noKeyWordsInDream: false,
+        keysArr: [],
         lemmas: {},
         nouns: [],
         persons: [],
@@ -60,7 +63,6 @@ class NewDreamPage extends Component {
   }
   isNew = this.props.match.path === ROUTES.NEW_DREAM;
   userId = this.props.firebase.auth.O;
-
 
   componentDidMount(){
     //if Edit Dream
@@ -99,7 +101,6 @@ class NewDreamPage extends Component {
     })
       .then(response => response.json())
       .then((lemmas) => {
-        console.log("fetch lemmas ", lemmas);
         return lemmas;
       })
   }
@@ -127,12 +128,11 @@ class NewDreamPage extends Component {
         persons[i] = persons[i].replace("PERSON ", "");
         persons[i] = persons[i].replace(/(\/NNP)+/g, "");
         persons[i] = persons[i].replace(/[^\w\d ]/g, '').trimStart();
-        personArr.push(persons[i]);
+        !personArr.includes(persons[i]) && personArr.push(persons[i]);
       }
     }
-    console.log("person ", personArr);
     this.setState({persons: personArr});
-    this.makeChatbotSteps(personArr);
+    //this.makeChatbotSteps(personArr);
     // speechSynthesis.speak(new SpeechSynthesisUtterance(`How did you first meet ${personArr[0]}?`))
   }
 
@@ -143,19 +143,17 @@ class NewDreamPage extends Component {
     for (let i = 0; i < nouns.length; i++) {
       if(nouns[i].includes("NNS") && !nouns[i].includes("NNP")){
         nouns[i] = nouns[i].replace(/(\/NNS)+\b/g, "");
-        console.log(nouns[i]);
         nouns[i] = nouns[i].replace(/[^\w\d ]/g, '').trimStart();
-        nounArr.push(nouns[i]);
+        !nounArr.includes(nouns[i]) && nounArr.push(nouns[i]);
       } else if (nouns[i].includes("NN") && !nouns[i].includes("NNP")){
         nouns[i] = nouns[i].replace(/(\/NN)+\b/g, "");
-        console.log(nouns[i]);
         nouns[i] = nouns[i].replace(/[^\w\d ]/g, '').trimStart();
-        nounArr.push(nouns[i]);
+        !nounArr.includes(nouns[i]) && nounArr.push(nouns[i]);
       }
     }
-    console.log("noun ", nounArr);
     this.setState({nouns: nounArr});
-    this.makeChatbotSteps(nounArr);
+    let revNouns = nounArr.sort().reverse()
+    // this.makeChatbotSteps(revNouns);
     //speechSynthesis.speak(new SpeechSynthesisUtterance('Hey'))
   }
 
@@ -174,7 +172,6 @@ class NewDreamPage extends Component {
     let lemmas = result.text.split(" ")
     const chunks = await this.chunkParse(dreamWordsString);
     let chunksArr = chunks.text.split("\n");
-    console.log("chunks ", chunksArr);
     this.nounParse(chunksArr);
     this.personParse(chunksArr);
 
@@ -195,12 +192,16 @@ class NewDreamPage extends Component {
         keysArr.push(word);
       }
     }
-    if (keysArr.length) this.setState({noKeyWordsInDream: false});
+    if (keysArr.length) {
+      this.setState({noKeyWordsInDream: false, keysArr});
+      console.log("keysarr ", keysArr)
+    }
     return keysArr;
   };
 
   archButtonHandler= async () => {
     const keyWords = await this.parseDreamContent();
+    this.makeChatbotSteps(this.state.imgUrlArr.map( obj => obj.keyword));
     if (!keyWords.length && !this.state.imgUrlArr.length){
       this.setState({noKeyWordsInDream: true});
     }
@@ -307,13 +308,14 @@ class NewDreamPage extends Component {
   }
 
   makeChatbotSteps = (stepsToAdd) => {
+    console.log("steps to add ", stepsToAdd);
     let newSteps = [...this.state.chatbotSteps];
     // make first step and last step
     if (!newSteps.length) {
-      newSteps.push({id: 1, message: "sup", trigger: 2},
+      newSteps.push({id: 1, message: "Excuse me, my english is not very good, but lets talk about your dream", trigger: 2},
       {
         id: 2,
-        message: 'Bye Bye, nice to meet you!',
+        message: 'Excuse me, I have to go now. You know how to contact me. Good luck.',
         end: true,
       } );
     }
@@ -325,7 +327,7 @@ class NewDreamPage extends Component {
           newSteps.splice(newSteps.length-1, 0, 
             {
               id: i,
-              message: `Who do you like better, ${choiceOfPersons[0]} or ${choiceOfPersons[1]}?`,
+              message: `Who would you rather be, ${choiceOfPersons[0]} or ${choiceOfPersons[1]}?`,
               trigger: i+1,
             },
             {
@@ -338,7 +340,7 @@ class NewDreamPage extends Component {
           newSteps.splice(newSteps.length-1, 0, 
             {
               id: i,
-              message: `How do you feel about ${stepsToAdd[i]}?`,
+              message: `${questionPhrases[Math.floor(Math.random() * questionPhrases.length)]}${stepsToAdd[i]}?`,
               trigger: i+1,
             },
             {
