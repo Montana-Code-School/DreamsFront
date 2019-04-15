@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
+import { Link } from 'react-router-dom';
 
 import { withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
@@ -21,9 +22,7 @@ import {
   ArchetypesButton,
   NoKeysH4,
 } from './styled';
-import questionPhrases from './questionPhrases';
 
-let nlp = require('compromise');
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -42,7 +41,6 @@ class NewDreamPage extends Component {
         lemmas: {},
         nouns: [],
         persons: [],
-        chatbotSteps: [],
         chatReady: false,
         elizaArchs: [],
       }
@@ -59,7 +57,6 @@ class NewDreamPage extends Component {
         lemmas: {},
         nouns: [],
         persons: [],
-        chatbotSteps: [],
         chatReady: false,
         elizaArchs: [],
       }
@@ -70,11 +67,15 @@ class NewDreamPage extends Component {
 
   componentDidMount(){
     //if Edit Dream
+    
     if(!this.isNew && this.state.imgUrlArr.length){
       const imgUrlArr = this.state.imgUrlArr.map((image) => {
         return image;
       });
-      this.setState({imgUrlArr});
+      const elizaArchs = this.state.imgUrlArr.map((image) => {
+        return image.keyword;
+      });
+      this.setState({imgUrlArr, elizaArchs});
     }
   }
 
@@ -136,7 +137,6 @@ class NewDreamPage extends Component {
       }
     }
     this.setState({persons: personArr});
-    this.makeChatbotSteps(personArr);
     // speechSynthesis.speak(new SpeechSynthesisUtterance(`How did you first meet ${personArr[0]}?`))
   }
 
@@ -156,8 +156,6 @@ class NewDreamPage extends Component {
       }
     }
     this.setState({nouns: nounArr});
-    let revNouns = nounArr.reverse()
-    this.makeChatbotSteps(revNouns);
     //speechSynthesis.speak(new SpeechSynthesisUtterance('Hey'))
   }
 
@@ -198,7 +196,6 @@ class NewDreamPage extends Component {
     }
     if (keysArr.length) {
       this.setState({noKeyWordsInDream: false, keysArr});
-      console.log("keysarr ", keysArr)
     }
     this.setState({elizaArchs: currentKeywords.concat(keysArr)})
     return keysArr;
@@ -206,7 +203,6 @@ class NewDreamPage extends Component {
 
   archButtonHandler= async () => {
     const keyWords = await this.parseDreamContent();
-    this.makeChatbotSteps(this.state.imgUrlArr.map( obj => obj.keyword));
     if (!keyWords.length && !this.state.imgUrlArr.length){
       this.setState({noKeyWordsInDream: true});
     }
@@ -312,80 +308,7 @@ class NewDreamPage extends Component {
     this.setState({imgUrlArr: thumbsUrlObjs})
   }
 
-  makeChatbotSteps = (stepsToAdd) => {
-    console.log("steps to add ", stepsToAdd);
-    let newSteps = [...this.state.chatbotSteps];
-    // make first step and last step
-    if (!newSteps.length) {
-      newSteps.push({id: 1, message: "Excuse me, my english is not very good, but lets talk about your dream", trigger: 2},
-      {
-        id: 2,
-        message: 'Excuse me, I have to go now. You know how to contact me. Good luck.',
-        end: true,
-      } );
-    }
-    // insert new steps at penultimate index
-    if(stepsToAdd.length) {
-      for (let i = 0; i < stepsToAdd.length; i++) {
-        if (stepsToAdd[i].includes(" ")){
-          let choiceOfPersons = stepsToAdd[i].split(" ");
-          newSteps.splice(newSteps.length-1, 0, 
-            {
-              id: i,
-              message: `didn't you used to live in a van down by the river with ${choiceOfPersons[0]} and ${choiceOfPersons[1]}?`,
-              trigger: i+1,
-            },
-            {
-              id: i+1,
-              user: true,
-              trigger: i+2,
-            }
-          )
-        } else {
-          newSteps.splice(newSteps.length-1, 0, 
-            {
-              id: i,
-              message: `${questionPhrases[Math.floor(Math.random() * questionPhrases.length)]}${stepsToAdd[i]}?`,
-              trigger: i+1,
-            },
-            {
-              id: i+1,
-              user: true,
-              trigger: i+2,
-            }
-          )
-        }
-      }
-    }
-    // re-index ids and triggers
-    for (let i = 0; i < newSteps.length; i++) {
-      newSteps[i].id = i+1;
-      if (i === newSteps.length-1){
-        newSteps[i].end = true;
-      } else {
-        newSteps[i].trigger = i+2;
-      }
-      
-    }
-    this.setState({chatbotSteps: newSteps})
-  }
-
-  elizaBot = (input) =>{
-    let doc = nlp(input)
-    //our canned-templates
-    if(doc.has('i #Adverb? (am|feel) #Adverb? #Adjective')){
-        let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal')
-        return `When did you become ${feeling}?`
-    } else if(doc.has('(father|mother|dad|mom)')){
-      let whichParent = doc.match('(father|mother|dad|mom)').out('normal')
-      return `Why don't you tell me about your ${whichParent}.`
-    } else {
-        return 'can you elaborate on that?'
-    }
-  }
-
   render () {
-    console.log("keysarr ", this.state.keysArr);
     return(
       <PageStyle>
         <form
@@ -433,19 +356,27 @@ class NewDreamPage extends Component {
         <NoKeysH4>No keywords currently present in dream -- unable to generate images.</NoKeysH4>}
         {(!this.state.noKeyWordsInDream) &&
           <div>
-           <ThumbsDiv id='image-container'>
-            {this.state.imgUrlArr.map( (obj) =>
-                <ImageContainer
-                  id={`${obj.keyword}ImageContainer`}
-                  key={obj.keyword}
-                  url={obj.url.split(',')}
-                  keyword={obj.keyword}
-                  lastViewedIndex={obj.lastViewedIndex}
-                  removeImage={this.removeImage}
-                  gatherSavedPlaces={this.gatherSavedPlaces}
-                />
-            )}
+            <ThumbsDiv id='image-container'>
+              {this.state.imgUrlArr.map( (obj) =>
+                  <ImageContainer
+                    id={`${obj.keyword}ImageContainer`}
+                    key={obj.keyword}
+                    url={obj.url.split(',')}
+                    keyword={obj.keyword}
+                    lastViewedIndex={obj.lastViewedIndex}
+                    removeImage={this.removeImage}
+                    gatherSavedPlaces={this.gatherSavedPlaces}
+                  />
+              )}
             </ThumbsDiv>
+            {this.state.elizaArchs.length && 
+              <Link
+                to={{
+                  pathname: ROUTES.CHAT,
+                  state: this.state.elizaArchs
+                }}
+              >Want to chat about this dream with a robotic shaman?</Link>
+            }
           </div>
         }
         {(!!this.state.title && !!this.state.content) &&
@@ -461,9 +392,6 @@ class NewDreamPage extends Component {
         {!this.isNew &&
           <DeleteButton name="deleteDream" onClick={this.deleteDream}>Delete</DeleteButton>
         }
-        <div><button onClick={()=>this.setState({chatReady: !this.state.chatReady})}>Chat</button></div>
-        {/* {this.state.chatReady && <Chat steps={this.state.chatbotSteps}/> } */}
-        {this.state.chatReady && <Chat eliza={this.elizaBot} archetypes={this.state.elizaArchs}/> }
       </PageStyle>
     );
   }
