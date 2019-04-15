@@ -132,7 +132,7 @@ class NewDreamPage extends Component {
       }
     }
     this.setState({persons: personArr});
-    //this.makeChatbotSteps(personArr);
+    this.makeChatbotSteps(personArr);
     // speechSynthesis.speak(new SpeechSynthesisUtterance(`How did you first meet ${personArr[0]}?`))
   }
 
@@ -152,8 +152,8 @@ class NewDreamPage extends Component {
       }
     }
     this.setState({nouns: nounArr});
-    let revNouns = nounArr.sort().reverse()
-    // this.makeChatbotSteps(revNouns);
+    let revNouns = nounArr.reverse()
+    this.makeChatbotSteps(revNouns);
     //speechSynthesis.speak(new SpeechSynthesisUtterance('Hey'))
   }
 
@@ -327,7 +327,7 @@ class NewDreamPage extends Component {
           newSteps.splice(newSteps.length-1, 0, 
             {
               id: i,
-              message: `Who would you rather be, ${choiceOfPersons[0]} or ${choiceOfPersons[1]}?`,
+              message: `didn't you used to live in a van down by the river with ${choiceOfPersons[0]} and ${choiceOfPersons[1]}?`,
               trigger: i+1,
             },
             {
