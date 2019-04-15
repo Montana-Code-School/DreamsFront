@@ -23,6 +23,8 @@ import {
 } from './styled';
 import questionPhrases from './questionPhrases';
 
+let nlp = require('compromise');
+
 const { REACT_APP_BACKEND_URL } = process.env;
 
 class NewDreamPage extends Component {
@@ -42,6 +44,7 @@ class NewDreamPage extends Component {
         persons: [],
         chatbotSteps: [],
         chatReady: false,
+        elizaArchs: [],
       }
     } else {
       const { title, content, _id, images } = this.props.currentDream
@@ -58,6 +61,7 @@ class NewDreamPage extends Component {
         persons: [],
         chatbotSteps: [],
         chatReady: false,
+        elizaArchs: [],
       }
     }
   }
@@ -158,7 +162,7 @@ class NewDreamPage extends Component {
   }
 
   parseDreamContent = async () => {
-    //remove common words
+    // remove common words
     let dream = this.state.content;
     dream = dream.replace(/[^\w\d ]/g, '');
     let dreamWords = dream.split(' ');
@@ -196,6 +200,7 @@ class NewDreamPage extends Component {
       this.setState({noKeyWordsInDream: false, keysArr});
       console.log("keysarr ", keysArr)
     }
+    this.setState({elizaArchs: currentKeywords.concat(keysArr)})
     return keysArr;
   };
 
@@ -362,11 +367,25 @@ class NewDreamPage extends Component {
       }
       
     }
-
     this.setState({chatbotSteps: newSteps})
   }
 
+  elizaBot = (input) =>{
+    let doc = nlp(input)
+    //our canned-templates
+    if(doc.has('i #Adverb? (am|feel) #Adverb? #Adjective')){
+        let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal')
+        return `When did you become ${feeling}?`
+    } else if(doc.has('(father|mother|dad|mom)')){
+      let whichParent = doc.match('(father|mother|dad|mom)').out('normal')
+      return `Why don't you tell me about your ${whichParent}.`
+    } else {
+        return 'can you elaborate on that?'
+    }
+  }
+
   render () {
+    console.log("keysarr ", this.state.keysArr);
     return(
       <PageStyle>
         <form
@@ -443,7 +462,8 @@ class NewDreamPage extends Component {
           <DeleteButton name="deleteDream" onClick={this.deleteDream}>Delete</DeleteButton>
         }
         <div><button onClick={()=>this.setState({chatReady: !this.state.chatReady})}>Chat</button></div>
-        {this.state.chatReady && <Chat steps={this.state.chatbotSteps}/> }
+        {/* {this.state.chatReady && <Chat steps={this.state.chatbotSteps}/> } */}
+        {this.state.chatReady && <Chat eliza={this.elizaBot} archetypes={this.state.elizaArchs}/> }
       </PageStyle>
     );
   }

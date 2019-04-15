@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import ChatBot from 'react-simple-chatbot';
 
+let nlp = require('compromise');
+
 class Chat extends Component {
   constructor(props){
     super(props);
@@ -8,7 +10,7 @@ class Chat extends Component {
       steps: [
         {
           id: '1',
-          message: 'What is your name?',
+          message: 'Tell me about your dream?',
           trigger: '2',
         },
         {
@@ -18,10 +20,29 @@ class Chat extends Component {
         },
         {
           id: '3',
-          message: 'Hi {previousValue}, nice to meet you!',
-          end: true,
+          message: ({ previousValue, steps }) => {return this.elizaBot(previousValue)},
+          trigger: 2, 
         },
       ]
+    }
+  }
+
+  
+
+  elizaBot = (input) =>{
+    let doc = nlp(input)
+    console.log("elizaarch ", this.props.archetypes)
+    const archetypesOpts = this.props.archetypes.join('|');
+    console.log("archOPts", archetypesOpts)
+    //our canned-templates
+    if(doc.has('i #Adverb? (am|feel) #Adverb? #Adjective')){
+        let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal')
+        return `When did you become ${feeling}?`
+    } else if(doc.has(`(${archetypesOpts})`)){
+      let whichArch = doc.match(`(${archetypesOpts})`).out('normal')
+      return `Why don't you tell me about your ${whichArch}.`
+    } else {
+        return 'can you elaborate on that?'
     }
   }
   
