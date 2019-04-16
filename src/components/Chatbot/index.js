@@ -77,7 +77,7 @@ class Chat extends Component {
         "#iCant (log|login|sign|get) (in|into) my? #Software" : 'LoginIssue',
         "#Software won't let me (log|sign|get) in" : 'LoginIssue',
         "what does the? #Archetype mean" : 'Question',
-        "* #iCant *" : 'SelfDefeat',
+        "i can't * " : 'SelfDefeat',
       }
     }
     nlp.plugin(plugin)
@@ -90,7 +90,7 @@ class Chat extends Component {
 
     else if(doc.has('#Question')){
       let archQuest = doc.match(`(${archetypesOpts})`).out('normal')
-      return `That is for you and you alone to decide. I dunno... ask the nearest ${archQuest}`
+      return `That is for you and you alone to decide. There are a lot of mysteries surrounding ${archQuest}`
     } 
     
     else if(doc.has(`(${archetypesOpts})`)){
@@ -100,7 +100,7 @@ class Chat extends Component {
     
     else if(doc.has('#SelfDefeat')){
       let whichICant = doc.match('#SelfDefeat').out('normal')
-      return `me neither, i can't ${whichICant} either`
+      return `me neither, ${whichICant} either`
     } 
     
     else if(doc.has('#LoginIssue')){
