@@ -76,7 +76,7 @@ class Chat extends Component {
         "i can't (log|sign|get) into my? #Software" : 'LoginIssue',
         "#iCant (log|login|sign|get) (in|into) my? #Software" : 'LoginIssue',
         "#Software won't let me (log|sign|get) in" : 'LoginIssue',
-        "what does #Archetype mean" : 'Question',
+        "what does the? #Archetype mean" : 'Question',
         "* #iCant *" : 'SelfDefeat',
       }
     }
@@ -99,13 +99,14 @@ class Chat extends Component {
     } 
     
     else if(doc.has('#SelfDefeat')){
-      let whichICant = doc.match('#SelfDefeatt').out('normal')
+      let whichICant = doc.match('#SelfDefeat').out('normal')
       return `me neither, i can't ${whichICant} either`
     } 
     
     else if(doc.has('#LoginIssue')){
         let whichSoftware = doc.match('#Software').out('normal')
-        return `OK, just delete ${whichSoftware}`
+        let whichArch = doc.match(`(${archetypesOpts})`).out('normal')
+        return `that's okay, ${whichArch} don't even care about ${whichSoftware} anyway`
     } 
 
     
