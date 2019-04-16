@@ -382,7 +382,7 @@ class NewDreamPage extends Component {
                   pathname: ROUTES.CHAT,
                   state: this.state.elizaArchs
                 }}
-              >Want to chat about this dream with a robotic shaman?</Link>
+              >Discuss with Shaman</Link>
             }
           </div>
         }

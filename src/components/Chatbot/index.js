@@ -26,7 +26,7 @@ class Chat extends Component {
       steps: [
         {
           id: '1',
-          message: `Tell me about your dream? I see that your dream contains several archetypes: ${this.propHandler(props)}`,
+          message: `Tell me about your dream... I see that your dream contains several archetypes: ${this.propHandler(props)}`,
           trigger: '2',
         },
         {
@@ -48,43 +48,68 @@ class Chat extends Component {
     let passedArchs = props.location.state;
     let archString = "";
     for (let i = 0; i < passedArchs.length; i++) {
-      if (i === passedArchs.length-1){
+      if (i > 0 && i === passedArchs.length-1){
         archString += "and " + passedArchs[i] + "."
       } else {
         archString += passedArchs[i] + ", ";
       }
-      
     }
     return archString;
   }
 
   elizaBot = (input) =>{
+    const archetypesOpts = this.props.location.state.join('|');
+    const archsWords = this.props.location.state.reduce((a, key) => Object.assign(a, { [key]: "Archetype" }), {});
+    
+    console.log("myObj ", archsWords);
+
     const plugin = {
       words:{
+        ...archsWords,
         'facebook': 'Software',
         'google': 'Software',
-        'salesforce': 'Software'
+        'salesforce': 'Software',
+        "i can't" : 'iCant',
       },
       patterns:{
-        "how do? i (can|should)? (log|sign|get) into my? #Software" : 'LoginIssue',
+        "how (should|do)? i (can|should)? (log|login|sign|get) (in|into|to) my? #Software" : 'LoginIssue',
         "i can't (log|sign|get) into my? #Software" : 'LoginIssue',
+        "#iCant (log|login|sign|get) (in|into) my? #Software" : 'LoginIssue',
         "#Software won't let me (log|sign|get) in" : 'LoginIssue',
+        "what does #Archetype mean" : 'Question',
+        "* #iCant *" : 'SelfDefeat',
       }
     }
     nlp.plugin(plugin)
     let doc = nlp(input)
-    const archetypesOpts = this.props.location.state.join('|');
     //templates
-    if(doc.has('i #Adverb? (am|feel) #Adverb? #Adjective')){
+    if(doc.has('i #Adverb? (am|feel|feeling) #Adverb? #Adjective')){
         let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal');
         return `When did you become ${feeling}?`;
-    } else if(doc.has(`(${archetypesOpts})`)){
+    } 
+
+    else if(doc.has('#Question')){
+      let archQuest = doc.match(`(${archetypesOpts})`).out('normal')
+      return `That is for you and you alone to decide. I dunno... ask the nearest ${archQuest}`
+    } 
+    
+    else if(doc.has(`(${archetypesOpts})`)){
         let whichArch = doc.match(`(${archetypesOpts})`).out('normal')
         return `Why don't you tell me more about the ${whichArch}.`
-    } else if(doc.has('#LoginIssue')){
+    } 
+    
+    else if(doc.has('#SelfDefeat')){
+      let whichICant = doc.match('#SelfDefeatt').out('normal')
+      return `me neither, i can't ${whichICant} either`
+    } 
+    
+    else if(doc.has('#LoginIssue')){
         let whichSoftware = doc.match('#Software').out('normal')
         return `OK, just delete ${whichSoftware}`
-    } else {
+    } 
+
+    
+    else {
         return 'can you elaborate on that?'
     }
   }
@@ -100,7 +125,7 @@ class Chat extends Component {
         <ChatBot
           botAvatar={`${blob}`}
           steps={this.state.steps} 
-          headerTitle="Shaman says..."
+          headerTitle={"Shaman says"}
           recognitionEnable={true}
           speechSynthesis={{ enable: true, lang: 'en'}}
         />

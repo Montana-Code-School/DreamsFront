@@ -65,10 +65,13 @@ export const TitleRowDivS = styled.div`
 `
 
 export const ContentRowDivS = styled.div`
-  font-family: serif;
   color: white;
+  display: block;
+  font-family: serif;
   font-size: x-large;
   font-weight: 900;
+  height: 100px;
+  overflow: scroll;
 `
 
 export const ImgRowDivS = styled.div`
