@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
+import { Link } from 'react-router-dom';
 
 //styles
 import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
 import { BlobContainer2S } from '../styledComponents/Style';
 import ColorBlob from '../ColorBlob';
+import Chat from '../Chatbot';
 import {
   ThumbsDivS,
   PageStyleS,
-  NoKeysH4
+  NoKeysH4,
+  BlobContainer1S,
+  ButtonFloaterS,
 } from './styled';
 
 import { withAuthorization } from '../Session';
@@ -19,6 +23,7 @@ import * as ROUTES from '../../Constants/routes';
 import SpeechRec from './SpeechRec'
 import ImageContainer from './ImagesContainer';
 import { commonWords, archetypes } from './archetypes';
+
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -33,6 +38,12 @@ class NewDreamPage extends Component {
         imgUrlArr: [],
         editing: false,
         noKeyWordsInDream: false,
+        keysArr: [],
+        lemmas: {},
+        nouns: [],
+        persons: [],
+        chatReady: false,
+        elizaArchs: [],
       }
     } else {
       const { title, content, _id, images } = this.props.currentDream
@@ -43,20 +54,29 @@ class NewDreamPage extends Component {
         imgUrlArr: images || [],
         editing: false,
         noKeyWordsInDream: false,
+        keysArr: [],
+        lemmas: {},
+        nouns: [],
+        persons: [],
+        chatReady: false,
+        elizaArchs: [],
       }
     }
   }
   isNew = this.props.match.path === ROUTES.NEW_DREAM;
   userId = this.props.firebase.auth.O;
 
-
   componentDidMount(){
     //if Edit Dream
+    
     if(!this.isNew && this.state.imgUrlArr.length){
       const imgUrlArr = this.state.imgUrlArr.map((image) => {
         return image;
       });
-      this.setState({imgUrlArr});
+      const elizaArchs = this.state.imgUrlArr.map((image) => {
+        return image.keyword;
+      });
+      this.setState({imgUrlArr, elizaArchs});
     }
   }
 
@@ -77,30 +97,113 @@ class NewDreamPage extends Component {
   textAreaOnBlur = () => {
   }
 
-  parseDreamContent = () => {
-    //remove common words
-    let lower = this.state.content.toLowerCase();
-    lower = lower.replace(/[^\w\d ]/g, '');
-    let dreamWords = lower.split(' ');
+  stemParse = (text) => {
+    return fetch(`${REACT_APP_BACKEND_URL}/stem`, {
+      method: 'POST',
+      body: JSON.stringify({text}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then((lemmas) => {
+        return lemmas;
+      })
+  }
+
+  chunkParse = (text) => {
+    return fetch(`${REACT_APP_BACKEND_URL}/chunk`, {
+      method: 'POST',
+      body: JSON.stringify({text}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+      .then(response => response.json())
+      .then((chunks) => {
+        return chunks;
+      })
+  }
+
+  personParse = (chunks) => {
+    // get the persons
+    let persons = chunks.slice();
+    let personArr = [];
+    for (let i = 0; i < persons.length; i++) {
+      if (persons[i].includes("PERSON")){
+        persons[i] = persons[i].replace("PERSON ", "");
+        persons[i] = persons[i].replace(/(\/NNP)+/g, "");
+        persons[i] = persons[i].replace(/[^\w\d ]/g, '').trimStart();
+        !personArr.includes(persons[i]) && personArr.push(persons[i]);
+      }
+    }
+    this.setState({persons: personArr});
+    // speechSynthesis.speak(new SpeechSynthesisUtterance(`How did you first meet ${personArr[0]}?`))
+  }
+
+  nounParse = (chunks) => {
+    // get the nouns
+    let nouns = chunks.slice();
+    let nounArr = [];
+    for (let i = 0; i < nouns.length; i++) {
+      if(nouns[i].includes("NNS") && !nouns[i].includes("NNP")){
+        nouns[i] = nouns[i].replace(/(\/NNS)+\b/g, "");
+        nouns[i] = nouns[i].replace(/[^\w\d ]/g, '').trimStart();
+        !nounArr.includes(nouns[i]) && nounArr.push(nouns[i]);
+      } else if (nouns[i].includes("NN") && !nouns[i].includes("NNP")){
+        nouns[i] = nouns[i].replace(/(\/NN)+\b/g, "");
+        nouns[i] = nouns[i].replace(/[^\w\d ]/g, '').trimStart();
+        !nounArr.includes(nouns[i]) && nounArr.push(nouns[i]);
+      }
+    }
+    this.setState({nouns: nounArr});
+    //speechSynthesis.speak(new SpeechSynthesisUtterance('Hey'))
+  }
+
+  parseDreamContent = async () => {
+    // remove common words
+    let dream = this.state.content;
+    dream = dream.replace(/[^\w\d ]/g, '');
+    let dreamWords = dream.split(' ');
     dreamWords = dreamWords.filter( (word) => {
       return commonWords.indexOf(word) === -1;
     });
+
+    // tag and chunk
+    let dreamWordsString = dreamWords.join(' ');
+    const result = await this.stemParse(dreamWordsString);
+    let lemmas = result.text.split(" ")
+    const chunks = await this.chunkParse(dreamWordsString);
+    let chunksArr = chunks.text.split("\n");
+    this.nounParse(chunksArr);
+    this.personParse(chunksArr);
+
     // match against archetypes
+    // match against lemmas
     // skipping already existing keywords
     let currentKeywords = this.state.imgUrlArr.map( obj => obj.keyword);
     let keysArr = [];
     for (let i = 0; i < dreamWords.length; i++){
-      let word = dreamWords[i];
+      let word = dreamWords[i].toLowerCase();
       if ((archetypes.includes(word) && !keysArr.includes(word) && !currentKeywords.includes(word))){
         keysArr.push(word);
       }
     }
-    if (keysArr.length) this.setState({noKeyWordsInDream: false});
+    for (let i = 0; i < lemmas.length; i++){
+      let word = lemmas[i];
+      if ((archetypes.includes(word) && !keysArr.includes(word) && !currentKeywords.includes(word))){
+        keysArr.push(word);
+      }
+    }
+    if (keysArr.length) {
+      this.setState({noKeyWordsInDream: false, keysArr});
+    }
+    this.setState({elizaArchs: currentKeywords.concat(keysArr)})
     return keysArr;
   };
 
-  archButtonHandler() {
-    const keyWords = this.parseDreamContent();
+  archButtonHandler= async () => {
+    const keyWords = await this.parseDreamContent();
     if (!keyWords.length && !this.state.imgUrlArr.length){
       this.setState({noKeyWordsInDream: true});
     }
@@ -209,14 +312,17 @@ class NewDreamPage extends Component {
   render () {
     return(
       <PageStyleS>
+        <BlobContainer1S>
+          <ColorBlob />
+        </BlobContainer1S>
         <form
           onSubmit={ (e) => {e.preventDefault()} }
         >
         <BlobContainer2S>
           <ColorBlob
-          watchValue={this.state.content}
-          leftAlign={-11}
-          topAlign={4}
+            watchValue={this.state.content}
+            leftAlign={-11}
+            topAlign={4}
           />
           <SpeechRec
             handleChange={this.handleChange}
@@ -243,6 +349,8 @@ class NewDreamPage extends Component {
           />
         </BlobContainer2S>
         <br />
+        <ButtonFloaterS>
+
         {this.state.content &&
           <DreamButtonS
               id="archButton"
@@ -258,16 +366,24 @@ class NewDreamPage extends Component {
            <ThumbsDivS id='image-container'>
             {this.state.imgUrlArr.map( (obj) =>
                 <ImageContainer
-                  id={`${obj.keyword}ImageContainer`}
-                  key={obj.keyword}
-                  url={obj.url.split(',')}
-                  keyword={obj.keyword}
-                  lastViewedIndex={obj.lastViewedIndex}
-                  removeImage={this.removeImage}
-                  gatherSavedPlaces={this.gatherSavedPlaces}
+                id={`${obj.keyword}ImageContainer`}
+                key={obj.keyword}
+                url={obj.url.split(',')}
+                keyword={obj.keyword}
+                lastViewedIndex={obj.lastViewedIndex}
+                removeImage={this.removeImage}
+                gatherSavedPlaces={this.gatherSavedPlaces}
                 />
-            )}
+                )}
             </ThumbsDivS>
+            {!!this.state.elizaArchs.length && 
+              <Link
+                to={{
+                  pathname: ROUTES.CHAT,
+                  state: this.state.elizaArchs
+                }}
+              >Discuss with Shaman</Link>
+            }
           </div>
         }
         {(!!this.state.title && !!this.state.content) &&
@@ -278,10 +394,13 @@ class NewDreamPage extends Component {
           >Save <br/> Dream
           </DreamButtonS>
         }
+        </ButtonFloaterS>
         </form>
-        {!this.isNew &&
-          <DreamButtonS name="deleteDream" onClick={this.deleteDream}>Delete</DreamButtonS>
-        }
+        <ButtonFloaterS>
+          {!this.isNew &&
+            <DreamButtonS name="deleteDream" onClick={this.deleteDream}>Delete</DreamButtonS>
+          }
+        </ButtonFloaterS>
       </PageStyleS>
     );
   }

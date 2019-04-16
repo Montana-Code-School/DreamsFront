@@ -66,6 +66,14 @@ class ArchivePage extends Component {
                       to={ROUTES.EDIT_DREAM}
                       onClick={() => this.props.selectDream(dream)}
                     >Edit Dream</Link>
+                    <Link
+                      to={{
+                        pathname: ROUTES.CHAT,
+                        state: !!dream.images.length ? 
+                          dream.images.map(obj => obj.keyword) : 
+                          ["oh wait there are no archetypes in your dream."]
+                      }}
+                    >Discuss with Shaman</Link>
                   </TitleRowDivS>
                   <StyledHRS />
                   <ContentRowDivS>

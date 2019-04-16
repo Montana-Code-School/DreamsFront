@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 export const DreamButtonS = styled.button`
+  z-index: 20;
   font-size: x-large;
   padding: 15px;
   line-height: 1.5rem;
