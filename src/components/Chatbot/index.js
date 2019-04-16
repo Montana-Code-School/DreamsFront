@@ -8,7 +8,7 @@ import styled from 'styled-components';
 let nlp = require('compromise');
 
 const theme = {
-  background: 'transparent',
+  background: 'rgba(255,255,255,0.0)',
   fontFamily: 'Helvetica Neue',
   headerBgColor: 'rgba(255,255,255,0.3)',
   headerFontColor: '#fff',
@@ -93,7 +93,10 @@ class Chat extends Component {
     console.log("voice from state ", this.state.voice)
     return(
       <div>
-        <ThemeProvider theme={theme}>
+        <BlobInputContainerSS>
+          <ColorBlob/>
+        </BlobInputContainerSS>
+        
         <ChatBot
           botAvatar={`${blob}`}
           steps={this.state.steps} 
@@ -101,17 +104,14 @@ class Chat extends Component {
           recognitionEnable={true}
           speechSynthesis={{ enable: true, lang: 'en'}}
         />
-        </ThemeProvider>
-        <BlobInputContainerSS>
-          <ColorBlob/>
-        </BlobInputContainerSS>
+       
       </div>
     )
   }
 }
 
 const BlobInputContainerSS = styled.div`
-  position: absolute;
+  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;

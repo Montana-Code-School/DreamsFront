@@ -2,7 +2,7 @@ import React, { Component, useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import SpeechRecognition from "react-speech-recognition";
 import {
-  DreamTextarea,
+  DreamTextareaS,
 } from './styled';
 
 const propTypes = {
@@ -30,9 +30,9 @@ const Dictaphone = ({
   if (!browserSupportsSpeechRecognition) {
     return null;
   }
-  
+
   const [content, setContent] = useState(initialContent);
-  
+
   const handleLocalChange = (e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -58,7 +58,7 @@ const Dictaphone = ({
 
   return (
     <div>
-      <DreamTextarea
+      <DreamTextareaS
         onSubmit={ (e) => {e.preventDefault()}}
         type="textarea"
         rows="3"

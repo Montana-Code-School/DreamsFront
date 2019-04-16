@@ -12,12 +12,12 @@ const fillFunc = props => {
 };
 
 const SubmitButton = styled.button`
-  background-color: transparent;
+  background-color: 'rgba(255,255,255,0.0)';
   border: 0;
   border-bottom-right-radius: 10px;
   box-shadow: none;
   cursor: ${props => (props.disabled ? 'default' : 'pointer')};
-  fill: ${fillFunc};
+  fill: #757575;
   opacity: ${props => (props.disabled && !props.invalid ? '.5' : '1')};
   outline: none;
   padding: 14px 16px 12px 16px;

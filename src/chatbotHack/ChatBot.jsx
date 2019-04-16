@@ -785,10 +785,10 @@ ChatBot.defaultProps = {
   speechSynthesis: {
     enable: false,
     lang: 'en',
-    voice: null
+    voice: window.speechSynthesis.getVoices()[50]
   },
   style: {},
-  submitButtonStyle: {},
+  submitButtonStyle: {background: 'transparent'},
   toggleFloating: undefined,
   userDelay: 1000,
   width: '350px',

@@ -17,9 +17,9 @@ const invalidInput = keyframes`
 `;
 
 const pulse = color => keyframes`
-  0% { box-shadow: 0 0 0 0 ${rgba(color, 0.4)}; }
-  70% { box-shadow: 0 0 0 10px ${rgba(color, 0)}; }
-  100% { box-shadow: 0 0 0 0 ${rgba(color, 0)}; }
+  0% { box-shadow: 0 0 0 0 rgba(124, 124, 124, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(124, 124, 124, 0.0); }
+  100% { box-shadow: 0 0 0 0 rgba(124, 124, 124, 0.0); }
 `;
 
 export { loading, scale, invalidInput, pulse };

@@ -15,11 +15,14 @@ const Input = styled.input`
   border-top: ${props => (props.invalid ? '0' : '1px solid #eee')};
   box-shadow: ${props => (props.invalid ? 'inset 0 0 2px #E53935' : 'none')};
   box-sizing: border-box;
-  color: ${props => (props.invalid ? '#E53935' : '')};
+  background: transparent;
+  color: snow;
   font-size: 16px;
-  opacity: ${props => (props.disabled && !props.invalid ? '.5' : '1')};
+  opacity: 1;
   outline: none;
+  overflow: auto;
   padding: ${props => (props.hasButton ? '16px 52px 16px 10px' : '16px 10px')};
+  resize: vertical;
   width: 100%;
   -webkit-appearance: none;
 

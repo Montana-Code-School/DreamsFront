@@ -1,11 +1,11 @@
 export default {
-  background: '#f5f8fb',
+  background: 'transparent',
   fontFamily: 'monospace',
-  headerBgColor: '#6e48aa',
+  headerBgColor: 'transparent',
   headerFontColor: '#fff',
   headerFontSize: '16px',
-  botBubbleColor: '#6E48AA',
+  botBubbleColor: 'transparent',
   botFontColor: '#fff',
-  userBubbleColor: '#fff',
-  userFontColor: '#4a4a4a'
+  userBubbleColor: 'transparent',
+  userFontColor: 'snow'
 };

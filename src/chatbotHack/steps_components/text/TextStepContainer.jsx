@@ -1,6 +1,7 @@
 import styled from 'styled-components';
 
 const TextStepContainer = styled.div`
+  overflow: visible;
   align-items: flex-end;
   display: flex;
   justify-content: ${props => (props.user ? 'flex-end' : 'flex-start')};
