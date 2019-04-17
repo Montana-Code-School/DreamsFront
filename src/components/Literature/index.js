@@ -3,8 +3,6 @@ import axios from 'axios';
 import { DreamArticleSectionS, SleepArticleSectionS,LabelS } from './styled';
 
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
-const dreamsParam = `&q=dreams`
-const sleepParam = `&q=sleep`
 const filterSections = `&fq=news_desk:(%22health%22%20%22science%22)`
 const key = `&api-key=OQKttP42ZWiOZdLWaBXQ1nfvbUKkU4Hb`
 
@@ -14,32 +12,34 @@ class LitPage extends Component {
     this.state = {
       dreamArticles: [],
       sleepArticles: [],
-      searchOption: "dreamArticles",
+      searchOption: "",
     }
   }
 
   getDreamArts() {
     const search = this.userInputSearch();
-    axios.get(`${baseURL}${search}${filterSections}${key}`)
+    axios.get(`${baseURL}&q=dreams ${search}${filterSections}${key}`)
     .then(res => {
       const dreamArticles = res.data.response.docs;
+      console.log(dreamArticles)
       this.setState({ dreamArticles });
     })
   }
 
   getSleepArts() {
     const search = this.userInputSearch();
-    axios.get(`${baseURL}${sleepParam}${search}${filterSections}${key}`)
+    axios.get(`${baseURL}&q=sleep ${search}${filterSections}${key}`)
       .then(res => {
         const sleepArticles = res.data.response.docs;
         this.setState({ sleepArticles });
       })
   }
 
+
   //getting value of input and passing input to onClickSearch.
   userInputSearch = () => {
     const input = document.querySelector('#userSrch').value;
-    const userSrchQuery = `&q=dreams ${input}`.trim();
+    const userSrchQuery = input.trim();
     return userSrchQuery;
   }
 
@@ -66,6 +66,7 @@ class LitPage extends Component {
   //what about URLSearchParams?
 
   render() {
+    console.log(this.state.dreamArticles)
     return (
       <div>
         <input
@@ -100,19 +101,7 @@ class LitPage extends Component {
           <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
         </div>
 
-        <div>
-          <input
-            type="radio"
-            checked={this.state.searchOption === "bothArticleSections"}
-            name="srchOptions"
-            value="bothArticleSections"
-            id="bothBox"
-            onChange={this.handleSrchCategoryChange}
-          />
-          <LabelS htmlFor="bothBox">Both</LabelS>
-        </div>
-
-      {!!this.state.sleepArticles.length &&
+      {!!this.state.dreamArticles.length &&
         <DreamArticleSectionS>Dream Articles
         {this.state.dreamArticles.map(article => {
           return (
