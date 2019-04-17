@@ -6,13 +6,13 @@ export const PS = styled.p`
 
 export const ArchiveDivS = styled.div`
   position: relative;
-  top: -85px;
+  
   left: -10px;
 `
 
 export const BlobContainer2S = styled.div`
-  display: inline-block;
-  position: relative;
+  display: block;
+  position: fixed;
 `
 
 export const ArchiveTitleS = styled.h1`
