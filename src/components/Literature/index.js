@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import { DreamArticleSectionS, SleepArticleSectionS,LabelS } from './styled';
 
+const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
+const dreamsParam = `&q=dreams`
+const sleepParam = `&q=sleep`
+const filterSections = `&fq=news_desk:(%22health%22%20%22science%22)`
+const key = `&api-key=OQKttP42ZWiOZdLWaBXQ1nfvbUKkU4Hb`
 
 class LitPage extends Component {
   constructor(props){
@@ -14,7 +19,8 @@ class LitPage extends Component {
   }
 
   getDreamArts() {
-    axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?&q=dreams&fq=news_desk:(%22health%22%20%22science%22)&api-key=OQKttP42ZWiOZdLWaBXQ1nfvbUKkU4Hb`)
+    const search = this.userInputSearch();
+    axios.get(`${baseURL}${search}${filterSections}${key}`)
     .then(res => {
       const dreamArticles = res.data.response.docs;
       this.setState({ dreamArticles });
@@ -22,13 +28,22 @@ class LitPage extends Component {
   }
 
   getSleepArts() {
-    axios.get(`https://api.nytimes.com/svc/search/v2/articlesearch.json?&q=sleep&fq=news_desk:(%22health%22%20%22science%22)&api-key=OQKttP42ZWiOZdLWaBXQ1nfvbUKkU4Hb`)
+    const search = this.userInputSearch();
+    axios.get(`${baseURL}${sleepParam}${search}${filterSections}${key}`)
       .then(res => {
         const sleepArticles = res.data.response.docs;
         this.setState({ sleepArticles });
       })
   }
 
+  //getting value of input and passing input to onClickSearch.
+  userInputSearch = () => {
+    const input = document.querySelector('#userSrch').value;
+    const userSrchQuery = `&q=dreams ${input}`.trim();
+    return userSrchQuery;
+  }
+
+  // enables search button to get dream and/or sleep articles according to which radio button is selected.
   onClickSearch = (e) => {
     e.preventDefault();
     const el = document.querySelector('input[name="srchOptions"]:checked')
@@ -43,16 +58,20 @@ class LitPage extends Component {
     this.getDreamArts();
   }
 
+  //enables radio buttons to be selected.
   handleSrchCategoryChange = (e) => {
     this.setState({searchOption: e.target.value});
   }
 
-  //user will be searching nyt api with search bar not just the lit page. Use URLSearchParams.
+  //what about URLSearchParams?
 
   render() {
     return (
       <div>
-        <input type="text" placeholder="Search.."/>
+        <input
+          type="text" id="userSrch"
+          placeholder="Search.."
+        />
         <button
           onClick={this.onClickSearch}
         >Search Articles</button>
@@ -60,9 +79,11 @@ class LitPage extends Component {
           <input
             type="radio"
             checked={this.state.searchOption === "dreamArticles"}
-            name="srchOptions" value="dreamArticles" id="dreamBox"
+            name="srchOptions"
+            value="dreamArticles"
+            id="dreamBox"
             onChange={this.handleSrchCategoryChange}
-            />
+          />
 
           <LabelS htmlFor="sleepBox">Search Dream Articles</LabelS>
         </div>
@@ -91,32 +112,34 @@ class LitPage extends Component {
           <LabelS htmlFor="bothBox">Both</LabelS>
         </div>
 
-
-      <DreamArticleSectionS>Dream Articles
-      {this.state.dreamArticles.map(article => {
-        return (
-          <div key={article._id}>
-            <a id="fullDreamArticle" target="_blank" rel="noopener noreferrer" href={article.web_url}>{article.headline.main}</a>
-            <p>{article.snippet}</p>
-            <img height={100} width={100} alt=''src={`https://www.nytimes.com/${article.multimedia[0].url}`}></img>
-          </div>
-        )
+      {!!this.state.sleepArticles.length &&
+        <DreamArticleSectionS>Dream Articles
+        {this.state.dreamArticles.map(article => {
+          return (
+            <div key={article._id}>
+              <a id="fullDreamArticle" target="_blank" rel="noopener noreferrer" href={article.web_url}>{article.headline.main}</a>
+              <p>{article.snippet}</p>
+              <img height={100} width={100} alt=''src={`https://www.nytimes.com/${article.multimedia[0].url}`}></img>
+            </div>
+          )
+        }
+        )}
+        </DreamArticleSectionS>
       }
-      )}
-      </DreamArticleSectionS>
-
-      <SleepArticleSectionS>Sleep Articles
-          {this.state.sleepArticles.map(article => {
-            return (
-              <div key={article._id}>
-                <a id="fullSleepArticle" target="_blank" rel="noopener noreferrer" href={article.web_url}>{article.headline.main}</a>
-                <p>{article.snippet}</p>
-                <img height={100} width={100} alt='' src={`https://www.nytimes.com/${article.multimedia[0].url}`}></img>
-              </div>
-            )
-          }
-          )}
-      </SleepArticleSectionS>
+      {!!this.state.sleepArticles.length &&
+        <SleepArticleSectionS>Sleep Articles
+            {this.state.sleepArticles.map(article => {
+              return (
+                <div key={article._id}>
+                  <a id="fullSleepArticle" target="_blank" rel="noopener noreferrer" href={article.web_url}>{article.headline.main}</a>
+                  <p>{article.snippet}</p>
+                  <img height={100} width={100} alt='' src={`https://www.nytimes.com/${article.multimedia[0].url}`}></img>
+                </div>
+              )
+            }
+            )}
+        </SleepArticleSectionS>
+      }
       </div>
     )
   }
