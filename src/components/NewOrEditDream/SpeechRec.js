@@ -15,6 +15,8 @@ const propTypes = {
 };
 
 const Dictaphone = ({
+  recognition,
+  abortListening,
   listening,
   textAreaOnFocus,
   initialContent,
@@ -56,6 +58,16 @@ const Dictaphone = ({
     handleSpeechRec(content);
   }, [finalTranscript]);
 
+  useEffect(()=>{
+    const cleanup = () => {
+      // we need to call onend and abort to prevent state updates
+      // if we navigate away from page while speech rec is running.
+      recognition.onend = () => {};
+      recognition.abort();
+    };
+    return cleanup;
+  }, []);
+
   return (
     <div>
       <DreamTextareaS
@@ -79,7 +91,8 @@ const Dictaphone = ({
 };
 
 const options = {
-  autoStart: false
+  autoStart: false,
+  continuous: true,
 }
 
 Dictaphone.propTypes = propTypes;

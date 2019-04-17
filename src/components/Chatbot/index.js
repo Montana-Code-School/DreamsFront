@@ -1,9 +1,11 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import ChatBot from '../../chatbotHack';
 import ColorBlob from '../ColorBlob';
 import { ThemeProvider } from 'styled-components';
 import blob from './blob.png'
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
+import * as ROUTES from '../../Constants/routes';
 
 let nlp = require('compromise');
 
@@ -118,25 +120,36 @@ class Chat extends Component {
   render() {
     console.log("voice from state ", this.state.voice)
     return(
-      <div>
+      <Fragment>
         <BlobInputContainerSS>
           <ColorBlob/>
         </BlobInputContainerSS>
-        
-        <ChatBot
-          botAvatar={`${blob}`}
-          steps={this.state.steps} 
-          headerTitle={"Shaman says"}
-          recognitionEnable={true}
-          speechSynthesis={{ enable: true, lang: 'en'}}
-        />
-       
-      </div>
+        <ChatbotContentS>
+          <ChatBot
+            botAvatar={`${blob}`}
+            steps={this.state.steps} 
+            headerTitle={"Shaman says"}
+            recognitionEnable={true}
+            speechSynthesis={{ enable: true, lang: 'en'}}
+          />
+          <br />
+          <Link
+            to={ROUTES.DREAM_ARCHIVE}
+          >Go Back to Dream Archive</Link>
+        </ChatbotContentS>
+      </Fragment>
+      
+      
     )
   }
 }
 
+const ChatbotContentS = styled.div`
+  position: relative;
+`
+
 const BlobInputContainerSS = styled.div`
+
   position: fixed;
   display: flex;
   justify-content: center;
