@@ -103,16 +103,24 @@ class LitPage extends Component {
 
       {!!this.state.dreamArticles.length &&
         <DreamArticleSectionS>Dream Articles
-        {this.state.dreamArticles.map(article => {
-          return (
-            <div key={article._id}>
-              <a id="fullDreamArticle" target="_blank" rel="noopener noreferrer" href={article.web_url}>{article.headline.main}</a>
-              <p>{article.snippet}</p>
-              <img height={100} width={100} alt=''src={`https://www.nytimes.com/${article.multimedia[0].url}`}></img>
-            </div>
-          )
-        }
-        )}
+          {this.state.dreamArticles.map(article => {
+            return (
+              <div key={article._id}>
+                <a id="fullDreamArticle"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   href={article.web_url}>{article.headline.main}
+                </a>
+                <p>{article.snippet}</p>
+                <img
+                  height={100}
+                  width={100} alt=''
+                  src={`https://www.nytimes.com/${article.multimedia[0].url}`}>
+                </img>
+              </div>
+            )
+          }
+          )}
         </DreamArticleSectionS>
       }
       {!!this.state.sleepArticles.length &&
@@ -120,9 +128,17 @@ class LitPage extends Component {
             {this.state.sleepArticles.map(article => {
               return (
                 <div key={article._id}>
-                  <a id="fullSleepArticle" target="_blank" rel="noopener noreferrer" href={article.web_url}>{article.headline.main}</a>
+                  <a id="fullSleepArticle"
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     href={article.web_url}>{article.headline.main}
+                  </a>
                   <p>{article.snippet}</p>
-                  <img height={100} width={100} alt='' src={`https://www.nytimes.com/${article.multimedia[0].url}`}></img>
+                  <img height={100}
+                       width={100}
+                       alt=''
+                       src={`https://www.nytimes.com/${article.multimedia[0].url}`}>
+                  </img>
                 </div>
               )
             }
