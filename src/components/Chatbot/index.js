@@ -28,7 +28,7 @@ class Chat extends Component {
       steps: [
         {
           id: '1',
-          message: `Tell me about your dream... I see that your dream contains several archetypes: ${this.propHandler(props)}`,
+          message: `Tell me about your dream... I see that your dream contains several archetypes: ${!!props ? this.propHandler(props) : "oh wait there aren't any archetypes in your dream"}`,
           trigger: '2',
         },
         {
@@ -79,11 +79,18 @@ class Chat extends Component {
         "#iCant (log|login|sign|get) (in|into) my? #Software" : 'LoginIssue',
         "#Software won't let me (log|sign|get) in" : 'LoginIssue',
         "what does the? #Archetype mean" : 'Question',
-        "i can't * " : 'SelfDefeat',
+        "i can't *" : 'SelfDefeat',
+
       }
     }
     nlp.plugin(plugin)
     let doc = nlp(input)
+    let people = doc.people().firstNames().out('topk')
+    let sentences = doc.sentences().data();
+    console.log("sentences ", sentences);
+    // let toQuestion = doc.sentences().toQuestion().out('normal');
+    
+
     //templates
     if(doc.has('i #Adverb? (am|feel|feeling) #Adverb? #Adjective')){
         let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal');
@@ -92,25 +99,27 @@ class Chat extends Component {
 
     else if(doc.has('#Question')){
       let archQuest = doc.match(`(${archetypesOpts})`).out('normal')
-      return `That is for you and you alone to decide. There are a lot of mysteries surrounding ${archQuest}`
+      return `That is for you and you alone to decide. There are many mysteries surrounding ${archQuest}.`
     } 
     
     else if(doc.has(`(${archetypesOpts})`)){
-        let whichArch = doc.match(`(${archetypesOpts})`).out('normal')
-        return `Why don't you tell me more about the ${whichArch}.`
+        let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
+        return `Why don't you tell me more about the ${whichArch}.`;
     } 
     
     else if(doc.has('#SelfDefeat')){
-      let whichICant = doc.match('#SelfDefeat').out('normal')
-      return `me neither, ${whichICant} either`
+      let whichICant = doc.match('#SelfDefeat').normalize().out('normal');
+      return `don't worry. it's okay, ${whichICant} either`;
     } 
     
     else if(doc.has('#LoginIssue')){
-        let whichSoftware = doc.match('#Software').out('normal')
-        let whichArch = doc.match(`(${archetypesOpts})`).out('normal')
-        return `that's okay, ${whichArch} don't even care about ${whichSoftware} anyway`
+        let whichSoftware = doc.match('#Software').out('normal');
+        return `that's okay, you're probably better off not using ${whichSoftware} anyway`;
     } 
-
+    else if(doc.has('#Person')){
+      let whichPerson = doc.match('#Person').out('normal');
+      return `How do you know ${people[0].normal}?`
+    } 
     
     else {
         return 'can you elaborate on that?'
@@ -118,7 +127,6 @@ class Chat extends Component {
   }
   
   render() {
-    console.log("voice from state ", this.state.voice)
     return(
       <Fragment>
         <BlobInputContainerSS>
