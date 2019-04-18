@@ -50,7 +50,7 @@ class Firebase {
       })
         .then(response => response.json())
         .then((data) => {
-          console.log("idToken server data",)
+          console.log("idToken server data", data)
         })
     }).catch(function(error) {
       // Handle error
