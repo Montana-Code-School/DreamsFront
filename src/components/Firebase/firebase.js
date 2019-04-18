@@ -44,6 +44,7 @@ class Firebase {
       fetch(`${REACT_APP_BACKEND_URL}/auth`, {
         method: 'POST',
         body: JSON.stringify({idToken}),
+        credentials: 'include',
         headers: {
           "Content-Type": "application/json"
         }
