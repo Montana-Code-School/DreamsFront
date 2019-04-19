@@ -307,7 +307,7 @@ class NewDreamPage extends Component {
         <form
           onSubmit={ (e) => {e.preventDefault()} }
         >
-        <BlobContainer2S>
+        <BlobContainer2S className="changingBlob">
           <ColorBlob
             watchValue={this.state.content}
             leftAlign={-11}
@@ -321,7 +321,7 @@ class NewDreamPage extends Component {
           />
         </BlobContainer2S>
         <br/>
-        <BlobContainer2S>
+        <BlobContainer2S className="InputBlob2">
           <ColorBlob
             leftAlign={-9}
             topAlign={6}
