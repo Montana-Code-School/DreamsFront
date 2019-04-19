@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { DreamArticleSectionS, SleepArticleSectionS,LabelS } from './styled';
+import { DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
 import * as ROUTES from '../../Constants/routes';
+import { Card, CardImg, CardText, CardBody,
+  CardTitle, CardSubtitle, Button } from 'reactstrap';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
@@ -68,14 +70,21 @@ class LitPage extends Component {
 
   addFavDreamArticle = (e, article) => {
     e.preventDefault();
+     const articleBody = {
+      headline: article.headline.main,
+      webUrl: article.web_url,
+      snippet: article.snippet,
+      image: article.multimedia[0].url,
+    }
     fetch(`${REACT_APP_BACKEND_URL}/articles`, {
       method:"POST",
-      body: JSON.stringify(article),
+      body: JSON.stringify(articleBody),
       headers: {
         "Content-Type": "application/json"
       }
     })
   }
+
 
   //what about URLSearchParams?
 
@@ -121,30 +130,35 @@ class LitPage extends Component {
         </div>
 
       {!!this.state.dreamArticles.length &&
-        <DreamArticleSectionS>Dream Articles
+        <DreamArticleSectionS>
           {this.state.dreamArticles.map((article) => {
             return (
-              <div key={article._id}>
-                <a
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  href={article.web_url}>{article.headline.main}
-                </a>
-                <p>{article.snippet}</p>
-                <img
-                  height={100}
-                  width={100} alt=''
-                  src={`https://www.nytimes.com/${article.multimedia[0].url}`}>
-                </img>
-                <button onClick={(e) => this.addFavDreamArticle(e, article)}>Favorite</button>
-              </div>
+                <CardS key={article._id}>
+                  <CardImg
+                    top
+                    height={100}
+                    width={100}
+                    alt=''
+                    src={`https://www.nytimes.com/${article.multimedia[0].url}`}/>
+                  <CardBody>
+                    <CardTitle>
+                      <a
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        href={article.web_url}>{article.headline.main}
+                      </a>
+                    </CardTitle>
+                    <CardText>{article.snippet}</CardText>
+                    <Button onClick={(e) => this.addFavDreamArticle(e, article)}>Favorite</Button>
+                  </CardBody>
+                </CardS>
             )
           }
           )}
         </DreamArticleSectionS>
       }
       {!!this.state.sleepArticles.length &&
-        <SleepArticleSectionS>Sleep Articles
+        <SleepArticleSectionS>
             {this.state.sleepArticles.map(article => {
               return (
                 <div key={article._id}>
@@ -171,6 +185,7 @@ class LitPage extends Component {
 }
 
 export default LitPage
+
 
 
 

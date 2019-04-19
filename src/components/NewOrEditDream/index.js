@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
-import { Link } from 'react-router-dom';
 
 //styles
 import { DreamButtonS } from '../styledComponents/dreamButtons';
@@ -69,7 +68,7 @@ class NewDreamPage extends Component {
 
   componentDidMount(){
     //if Edit Dream
-    
+
     if(!this.isNew && this.state.imgUrlArr.length){
       const imgUrlArr = this.state.imgUrlArr.map((image) => {
         return image;
@@ -377,7 +376,7 @@ class NewDreamPage extends Component {
                 />
                 )}
             </ThumbsDivS>
-            {!!this.state.elizaArchs.length && 
+            {!!this.state.elizaArchs.length &&
               <Link
                 to={{
                   pathname: ROUTES.CHAT,

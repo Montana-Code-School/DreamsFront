@@ -13,12 +13,9 @@ import AccountPage from '../Account';
 import NewOrEditDream from '../NewOrEditDream';
 import ArchivePage from '../DreamArchive';
 import LitPage from '../Literature';
-<<<<<<< HEAD
 import FavoritePage from '../FavoriteArticles';
 
-=======
 import Chat from '../Chatbot';
->>>>>>> media
 
 import * as ROUTES from '../../Constants/routes';
 import { withAuthentication } from '../Session';
