@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Random from 'random-id';
+import uuid from 'uuid';
 import { CustomStep, OptionsStep, TextStep } from './steps_components';
 import schema from './schemas/schema';
 import * as storage from './storage';
@@ -297,7 +297,7 @@ class ChatBot extends Component {
         }
       }
 
-      nextStep.key = Random(24);
+      nextStep.key = uuid();
 
       previousStep = currentStep;
       currentStep = nextStep;

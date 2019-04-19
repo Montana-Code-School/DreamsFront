@@ -33,7 +33,6 @@ class Chat extends Component {
   }
 
   propHandler = (props) => {
-    console.log("props ", props.location.state);
     let passedArchs = props.location.state;
     let archString = "";
     for (let i = 0; i < passedArchs.length; i++) {
@@ -49,9 +48,6 @@ class Chat extends Component {
   elizaBot = (input) =>{
     const archetypesOpts = this.props.location.state.join('|');
     const archsWords = this.props.location.state.reduce((a, key) => Object.assign(a, { [key]: "Archetype" }), {});
-    
-    console.log("myObj ", archsWords);
-
     const plugin = {
       words:{
         ...archsWords,
@@ -67,48 +63,38 @@ class Chat extends Component {
         "#Software won't let me (log|sign|get) in" : 'LoginIssue',
         "what does the? #Archetype mean" : 'Question',
         "i can't *" : 'SelfDefeat',
-
       }
     }
     nlp.plugin(plugin)
     let doc = nlp(input)
     let people = doc.people().firstNames().out('topk')
-    let sentences = doc.sentences().data();
-    console.log("sentences ", sentences);
-    // let toQuestion = doc.sentences().toQuestion().out('normal');
     
-
-    //templates
+    // here to render is where all the conversations are templated
     if(doc.has('i #Adverb? (am|feel|feeling) #Adverb? #Adjective')){
-        let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal');
-        return `When did you become ${feeling}?`;
+      let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal');
+      return `When did you become ${feeling}?`;
     } 
-
     else if(doc.has('#Question')){
       let archQuest = doc.match(`(${archetypesOpts})`).out('normal')
       return `That is for you and you alone to decide. There are many mysteries surrounding ${archQuest}.`
     } 
-    
     else if(doc.has(`(${archetypesOpts})`)){
-        let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
-        return `Why don't you tell me more about the ${whichArch}.`;
+      let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
+      return `Why don't you tell me more about the ${whichArch}.`;
     } 
-    
     else if(doc.has('#SelfDefeat')){
       let whichICant = doc.match('#SelfDefeat').normalize().out('normal');
       return `don't worry. it's okay, ${whichICant} either`;
     } 
-    
     else if(doc.has('#LoginIssue')){
-        let whichSoftware = doc.match('#Software').out('normal');
-        return `that's okay, you're probably better off not using ${whichSoftware} anyway`;
+      let whichSoftware = doc.match('#Software').out('normal');
+      return `that's okay, you're probably better off not using ${whichSoftware} anyway`;
     } 
     else if(doc.has('#Person')){
       return `How do you know ${people[0].normal}?`
     } 
-    
     else {
-        return 'can you elaborate on that?'
+      return 'can you elaborate on that?'
     }
   }
   
@@ -132,8 +118,6 @@ class Chat extends Component {
           >Go Back to Dream Archive</Link>
         </ChatbotContentS>
       </Fragment>
-      
-      
     )
   }
 }
@@ -143,7 +127,6 @@ const ChatbotContentS = styled.div`
 `
 
 const BlobInputContainerSS = styled.div`
-
   position: fixed;
   display: flex;
   justify-content: center;

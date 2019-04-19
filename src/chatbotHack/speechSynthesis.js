@@ -12,7 +12,6 @@ export const getSpeakText = step => {
 };
 
 export const speakFn = speechSynthesisOptions => (step, previousValue) => {
-  console.log("hello");
   const { lang, enable } = speechSynthesisOptions;
   const { user } = step;
 
