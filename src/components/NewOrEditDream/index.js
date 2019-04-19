@@ -4,13 +4,12 @@ import { connect } from 'react-redux';
 import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
 import { Link } from 'react-router-dom';
 
-//styles
 import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
 import { BlobContainer2S } from '../styledComponents/Style';
 import ColorBlob from '../ColorBlob';
-import Chat from '../Chatbot';
 import {
+  LinkS,
   ThumbsDivS,
   PageStyleS,
   NoKeysH4,
@@ -67,8 +66,7 @@ class NewDreamPage extends Component {
   userId = this.props.firebase.auth.O;
 
   componentDidMount(){
-    //if Edit Dream
-    
+    // if Edit Dream
     if(!this.isNew && this.state.imgUrlArr.length){
       const imgUrlArr = this.state.imgUrlArr.map((image) => {
         return image;
@@ -92,9 +90,6 @@ class NewDreamPage extends Component {
 
   textAreaOnFocus = () => {
     this.setState({editing: true});
-  }
-
-  textAreaOnBlur = () => {
   }
 
   stemParse = (text) => {
@@ -126,7 +121,6 @@ class NewDreamPage extends Component {
   }
 
   personParse = (chunks) => {
-    // get the persons
     let persons = chunks.slice();
     let personArr = [];
     for (let i = 0; i < persons.length; i++) {
@@ -138,11 +132,9 @@ class NewDreamPage extends Component {
       }
     }
     this.setState({persons: personArr});
-    // speechSynthesis.speak(new SpeechSynthesisUtterance(`How did you first meet ${personArr[0]}?`))
   }
 
   nounParse = (chunks) => {
-    // get the nouns
     let nouns = chunks.slice();
     let nounArr = [];
     for (let i = 0; i < nouns.length; i++) {
@@ -157,11 +149,9 @@ class NewDreamPage extends Component {
       }
     }
     this.setState({nouns: nounArr});
-    //speechSynthesis.speak(new SpeechSynthesisUtterance('Hey'))
   }
 
   parseDreamContent = async () => {
-    // remove common words
     let dream = this.state.content;
     dream = dream.replace(/[^\w\d ]/g, '');
     let dreamWords = dream.split(' ');
@@ -202,7 +192,7 @@ class NewDreamPage extends Component {
     return keysArr;
   };
 
-  archButtonHandler= async () => {
+  archButtonHandler = async () => {
     const keyWords = await this.parseDreamContent();
     if (!keyWords.length && !this.state.imgUrlArr.length){
       this.setState({noKeyWordsInDream: true});
@@ -236,7 +226,6 @@ class NewDreamPage extends Component {
   }
 
   promiseResolver = (arr) => {
-    // https://cdn.pixabay.com/photo/
     let thumbsArr = this.state.imgUrlArr.slice();
     Promise.all(arr).then((values) => {
       for (let i = 0; i < values.length; i++) {
@@ -318,7 +307,7 @@ class NewDreamPage extends Component {
         <form
           onSubmit={ (e) => {e.preventDefault()} }
         >
-        <BlobContainer2S>
+        <BlobContainer2S className="changingBlob">
           <ColorBlob
             watchValue={this.state.content}
             leftAlign={-11}
@@ -332,10 +321,10 @@ class NewDreamPage extends Component {
           />
         </BlobContainer2S>
         <br/>
-        <BlobContainer2S>
+        <BlobContainer2S className="InputBlob2">
           <ColorBlob
-          leftAlign={-9}
-          topAlign={6}
+            leftAlign={-9}
+            topAlign={6}
           />
           <InputS
             inputPadding={10}
@@ -360,29 +349,29 @@ class NewDreamPage extends Component {
         }
         <br />
         {(this.state.noKeyWordsInDream && !!this.state.content.length) &&
-        <NoKeysH4>No keywords currently present in dream -- unable to generate images.</NoKeysH4>}
+          <NoKeysH4>No keywords currently present in dream -- unable to generate images.</NoKeysH4>}
         {(!this.state.noKeyWordsInDream) &&
           <div>
-           <ThumbsDivS id='image-container'>
-            {this.state.imgUrlArr.map( (obj) =>
+            <ThumbsDivS id='image-container'>
+              {this.state.imgUrlArr.map( (obj) =>
                 <ImageContainer
-                id={`${obj.keyword}ImageContainer`}
-                key={obj.keyword}
-                url={obj.url.split(',')}
-                keyword={obj.keyword}
-                lastViewedIndex={obj.lastViewedIndex}
-                removeImage={this.removeImage}
-                gatherSavedPlaces={this.gatherSavedPlaces}
+                  id={`${obj.keyword}ImageContainer`}
+                  key={obj.keyword}
+                  url={obj.url.split(',')}
+                  keyword={obj.keyword}
+                  lastViewedIndex={obj.lastViewedIndex}
+                  removeImage={this.removeImage}
+                  gatherSavedPlaces={this.gatherSavedPlaces}
                 />
-                )}
+              )}
             </ThumbsDivS>
             {!!this.state.elizaArchs.length && 
-              <Link
+              <LinkS
                 to={{
                   pathname: ROUTES.CHAT,
                   state: this.state.elizaArchs
                 }}
-              >Discuss with Shaman</Link>
+              >Discuss with Shaman</LinkS>
             }
           </div>
         }
@@ -415,7 +404,6 @@ NewDreamPage.propTypes = {
   userId: PropTypes.string,
   imgUrlArr: PropTypes.array,
 };
-
 
 const condition = authUser => !!authUser;
 

@@ -2,15 +2,6 @@ import styled, { css } from 'styled-components';
 import defaultTheme from '../theme';
 import { pulse } from '../common/animations';
 
-const fillFunc = props => {
-  const { speaking, invalid, theme } = props;
-
-  if (speaking) {
-    return theme.headerBgColor;
-  }
-  return invalid ? '#E53935' : '#4a4a4a';
-};
-
 const SubmitButton = styled.button`
   background-color: 'rgba(255,255,255,0.0)';
   border: 0;
