@@ -9,6 +9,7 @@ import { InputS } from '../styledComponents/inputs';
 import { BlobContainer2S } from '../styledComponents/Style';
 import ColorBlob from '../ColorBlob';
 import {
+  LinkS,
   ThumbsDivS,
   PageStyleS,
   NoKeysH4,
@@ -365,12 +366,12 @@ class NewDreamPage extends Component {
               )}
             </ThumbsDivS>
             {!!this.state.elizaArchs.length && 
-              <Link
+              <LinkS
                 to={{
                   pathname: ROUTES.CHAT,
                   state: this.state.elizaArchs
                 }}
-              >Discuss with Shaman</Link>
+              >Discuss with Shaman</LinkS>
             }
           </div>
         }
