@@ -9,7 +9,6 @@ import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
 import { BlobContainer2S } from '../styledComponents/Style';
 import ColorBlob from '../ColorBlob';
-import Chat from '../Chatbot';
 import {
   ThumbsDivS,
   PageStyleS,

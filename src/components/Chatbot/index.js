@@ -1,25 +1,12 @@
 import React, { Component, Fragment } from 'react';
 import ChatBot from '../../chatbotHack';
 import ColorBlob from '../ColorBlob';
-import { ThemeProvider } from 'styled-components';
 import blob from './blob.png'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../Constants/routes';
 
 let nlp = require('compromise');
-
-const theme = {
-  background: 'rgba(255,255,255,0.0)',
-  fontFamily: 'Helvetica Neue',
-  headerBgColor: 'rgba(255,255,255,0.3)',
-  headerFontColor: '#fff',
-  headerFontSize: '15px',
-  botBubbleColor: '#EF6C00',
-  botFontColor: '#fff',
-  userBubbleColor: '#fff',
-  userFontColor: '#4a4a4a',
-};
 
 class Chat extends Component {
   constructor(props){
@@ -117,7 +104,6 @@ class Chat extends Component {
         return `that's okay, you're probably better off not using ${whichSoftware} anyway`;
     } 
     else if(doc.has('#Person')){
-      let whichPerson = doc.match('#Person').out('normal');
       return `How do you know ${people[0].normal}?`
     } 
     
