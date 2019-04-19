@@ -6,6 +6,9 @@ import {
   DELETE_DREAM 
 } from "../Constants/actionTypes";
 
+import * as ROUTES from '../Constants/routes';
+import Firebase from '../components/Firebase/firebase';
+
 const { REACT_APP_BACKEND_URL } = process.env;
 
 function receivedDreams(payload) {
@@ -42,11 +45,21 @@ export function fetchDreams(userID) {
     if(getState().dreams.length) return;
     dispatch(requestDreams());
     return fetch(`${REACT_APP_BACKEND_URL}/dreams/?userId=${userID}`, {credentials: "include"})
-      .then(response => response.json())
+      .then(response => {
+        if (response.status === 401){
+          Firebase.doSignOut();
+          this.props.history.push(ROUTES.SIGN_IN)
+        }
+        return response.json()
+      })
       .then((dreams) => {
         dreams = dreams.reverse();
         dispatch(receivedDreams(dreams));
       })
+      .catch(function(error) {
+        // Handle error
+        console.log("error");
+      });
   }
 }
 export function saveDream(dream, isNew, promiseResolver) {
@@ -63,6 +76,11 @@ export function saveDream(dream, isNew, promiseResolver) {
     .then((myJson) => {
       dispatch(addNewOrUpdateDream(myJson));
       promiseResolver();
+    })
+    .catch(function(error) {
+      // Handle error
+      console.log("error");
+      Firebase.doSignOut();
     });
   }
 }
