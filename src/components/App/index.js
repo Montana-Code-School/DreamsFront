@@ -13,8 +13,12 @@ import AccountPage from '../Account';
 import NewOrEditDream from '../NewOrEditDream';
 import ArchivePage from '../DreamArchive';
 import LitPage from '../Literature';
+<<<<<<< HEAD
 import FavoritePage from '../FavoriteArticles';
 
+=======
+import Chat from '../Chatbot';
+>>>>>>> media
 
 import * as ROUTES from '../../Constants/routes';
 import { withAuthentication } from '../Session';
@@ -33,6 +37,7 @@ const App = () => (
         <Route path={ROUTES.EDIT_DREAM} component={NewOrEditDream} />
         <Route path={ROUTES.LITERATURE} component={LitPage} />
         <Route path={ROUTES.FAVORITES} component={FavoritePage}/>
+        <Route path={ROUTES.CHAT} component={Chat} />
       </ContentS>
     </AppBackgroundS>
   </Router>

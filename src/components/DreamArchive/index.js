@@ -68,10 +68,12 @@ class ArchivePage extends Component {
                     >Edit Dream</Link>
                     <Link
                       to={{
-                        pathname: ROUTES.LITERATURE,
-                        state: dream.images.map(obj => obj.keyword),
+                        pathname: ROUTES.CHAT,
+                        state: !!dream.images.length ?
+                          dream.images.map(obj => obj.keyword) :
+                          ["oh wait there are no archetypes in your dream."]
                       }}
-                    >Want to research your archetypes?</Link>
+                    >Discuss with Shaman</Link>
                   </TitleRowDivS>
                   <StyledHRS />
                   <ContentRowDivS>

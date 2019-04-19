@@ -7,6 +7,22 @@ export const ThumbsDivS = styled.div`
   flex-wrap: wrap;
   margin-bottom: 5px;
 `
+export const ButtonFloaterS = styled.div`
+  z-index: 1;
+  position: relative;
+`
+
+export const BlobContainer1S = styled.div`
+  z-index: 0;
+  position: fixed;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 250%;
+  height: 50%;
+  transform: scale(10);
+  overflow: hidden;
+`
 export const NoKeysH4 = styled.h4`
   color: snow;
 `

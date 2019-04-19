@@ -6,13 +6,13 @@ export const PS = styled.p`
 
 export const ArchiveDivS = styled.div`
   position: relative;
-  top: -85px;
+  
   left: -10px;
 `
 
 export const BlobContainer2S = styled.div`
-  display: inline-block;
-  position: relative;
+  display: block;
+  position: fixed;
 `
 
 export const ArchiveTitleS = styled.h1`
@@ -30,7 +30,7 @@ export const DreamTitleS = styled.h2`
 `
 
 export const BlobContainer1S = styled.div`
-  position: relative;
+  position: fixed;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -65,10 +65,13 @@ export const TitleRowDivS = styled.div`
 `
 
 export const ContentRowDivS = styled.div`
-  font-family: serif;
   color: white;
+  display: block;
+  font-family: serif;
   font-size: x-large;
   font-weight: 900;
+  height: 100px;
+  overflow: scroll;
 `
 
 export const ImgRowDivS = styled.div`
