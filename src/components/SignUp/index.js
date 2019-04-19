@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import styled from 'styled-components';
+
+//styles
+import { AuthButtonS } from '../styledComponents/authButtons';
+import { AuthFormTitleS } from '../styledComponents/formTitles';
+import { InputS } from '../styledComponents/inputs';
+import { SignUpS, BlobContainer1S, StyledDivS } from './styled'
+import ColorBlob from '../ColorBlob'
 
 import { SignInLink } from '../SignIn'
-import ColorBlob from '../ColorBlob'
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
 
 const SignUpPage = () => (
-  <StyledDiv>
-    <h1 id="test-title-signup">Sign Up</h1>
+  <StyledDivS>
+    <AuthFormTitleS
+    formTitleBottomMargin={-80}
+    formTitleTopMargin={0}
+    id="test-title-signup">
+    Sign Up</AuthFormTitleS>
     <SignUpForm />
-  </StyledDiv>
+  </StyledDivS>
 );
 
 const INITIAL_STATE = {
@@ -65,13 +74,14 @@ class SignUpFormBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        <BlobInputContainerSS id='happy'>
+        <BlobContainer1S id='happy'>
           <ColorBlob
           leftAlign={-3}
           topAlign={2}
           />
-        </BlobInputContainerSS>
-        <SignUpFormS
+        </BlobContainer1S>
+        <InputS
+          inputPadding={5}
           id="test-input-username"
           name="username"
           value={username}
@@ -79,8 +89,9 @@ class SignUpFormBase extends Component {
           type="text"
           placeholder="Full Name"
         />
-        <SignUpFormS
-        id="test-input-email"
+        <InputS
+          inputPadding={5}
+          id="test-input-email"
           name="email"
           value={email}
           onChange={this.onChange}
@@ -88,7 +99,7 @@ class SignUpFormBase extends Component {
           placeholder="Email Address"
         />
         <br/>
-        <SignUpFormS
+        <InputS
           id="test-input-passwordone"
           name="passwordOne"
           value={passwordOne}
@@ -96,7 +107,7 @@ class SignUpFormBase extends Component {
           type="password"
           placeholder="Password"
         />
-        <SignUpFormS
+        <InputS
           id="test-input-passwordtwo"
           name="passwordTwo"
           value={passwordTwo}
@@ -104,9 +115,9 @@ class SignUpFormBase extends Component {
           type="password"
           placeholder="Confirm Password"
         />
-        <ButtonS id="test-button-signup-submit" disabled={isInvalid} type="submit">
+        <AuthButtonS id="test-button-signup-submit" disabled={isInvalid} type="submit">
           Sign Up
-        </ButtonS>
+        </AuthButtonS>
         <SignInLink/>
         {error && <p>{error.message}</p>}
       </form>
@@ -115,90 +126,15 @@ class SignUpFormBase extends Component {
 }
 
 const SignUpLink = () => (
-  <p>
-    Don't have an account? <Link id="test-link-signup" to={ROUTES.SIGN_UP}>Sign Up</Link>
-  </p>
+  <SignUpS>
+    {`Don't have an account?`} <Link id="test-link-signup" to={ROUTES.SIGN_UP}>Sign Up</Link>
+  </SignUpS>
 );
 
 const SignUpForm = compose(
   withRouter,
   withFirebase,
-)(SignUpFormBase);
-
-const BlobInputContainerSS = styled.div`
-  z-index: -1;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  transform: scale(10);
-`
-
-const StyledDiv = styled.div`
-  color: gray;
-  font-family: serif;
-  font-weight: 900;
-  border-radius: 10px;
-  font-size: x-large;
-  padding: 50px;
-  border-radius: 10px;
-  font-family: serif;
-  color: gray;
-  font-size: x-large;
-  font-weight: 900;
-  background: rgba(255, 255, 255,.3);
-
-`
-const ButtonS = styled.button`
-  padding: 10px;
-  z-index: 20;
-  font-family: serif;
-  color: gray;
-  font-size: x-large;
-  font-weight: 900;
-  border-style: double;
-  border-color: darkgoldenrod;
-  text-align: left;
-  margin-bottom: 2rem;
-  margin-top: 1.8rem;
-  position: relative;
-  background: rgba(255,255,255,0.3);
-  border-radius: 6px;
-  &::placeholder{
-    color: gray;
-    font-weight: 900;
-    font-size: x-large;
-  }
-  &:hover{
-    transition: 1s ease-in-out;
-    background-color: turquoise;;
-  }
-`
-const SignUpFormS = styled.input`
-  padding: 5px;
-  z-index: 20;
-  width: 350px;
-  font-family: serif;
-  color: gray;
-  font-size: x-large;
-  font-weight: 900;
-  border: white;
-  text-align: left;
-  margin-right: 5px;
-  margin-bottom: 2rem;
-  margin-top: 1.8rem;
-  position: relative;
-  background: rgba(255,255,255,0.3);
-  border-radius: 6px;
-  &::placeholder{
-    color: gray;
-    font-weight: 900;
-    font-size: x-large;
-  }
-  &:focus{
-    outline:none;
-  }
-`
+  )(SignUpFormBase);
 
 export default SignUpPage;
 

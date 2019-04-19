@@ -162,11 +162,12 @@ let archs = {
   "Heart": "center of self"
 }
 const keys = Object.keys(archs);
-
-
 for (let i = 0; i < keys.length; i++) {
   keys[i] = keys[i].toLowerCase();
+  
 }
+
+export const archtypesFull = archs;
 
 export const archetypes = keys;
 

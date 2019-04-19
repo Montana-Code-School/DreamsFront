@@ -3,8 +3,8 @@ import {
   BrowserRouter as Router,
   Route,
 } from 'react-router-dom';
-import styled from "styled-components";
 
+import { AppBackgroundS, ContentS } from './styled.js';
 import Navigation from '../Navigation';
 import SignUpPage from '../SignUp';
 import SignInPage from '../SignIn';
@@ -12,13 +12,14 @@ import PasswordForgetPage from '../PasswordForget';
 import AccountPage from '../Account';
 import NewOrEditDream from '../NewOrEditDream';
 import ArchivePage from '../DreamArchive';
+import Chat from '../Chatbot';
 
 import * as ROUTES from '../../Constants/routes';
 import { withAuthentication } from '../Session';
 
 const App = () => (
   <Router>
-    <AppS>
+    <AppBackgroundS>
       <Navigation />
       <ContentS>
         <Route exact path={ROUTES.SIGN_IN} component={SignInPage} />
@@ -28,20 +29,10 @@ const App = () => (
         <Route path={ROUTES.NEW_DREAM} component={NewOrEditDream} />
         <Route path={ROUTES.DREAM_ARCHIVE} component={ArchivePage} />
         <Route path={ROUTES.EDIT_DREAM} component={NewOrEditDream} />
+        <Route path={ROUTES.CHAT} component={Chat} />
       </ContentS>
-    </AppS>
+    </AppBackgroundS>
   </Router>
 );
 
-const AppS = styled.div`
-  height: 100%;
-  background: rgba(200,200,200,0.3);
-  overflow-x: hidden;
-`
-const ContentS = styled.div`
-  padding: 1.75rem;
-  width: 100%;
-  height: 100%;
-
-`
 export default withAuthentication(App);
