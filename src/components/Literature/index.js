@@ -1,7 +1,10 @@
 import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { DreamArticleSectionS, SleepArticleSectionS,LabelS } from './styled';
+import * as ROUTES from '../../Constants/routes';
 
+const { REACT_APP_BACKEND_URL } = process.env;
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
 const filterSections = `&fq=news_desk:(%22health%22%20%22science%22)`
 const key = `&api-key=OQKttP42ZWiOZdLWaBXQ1nfvbUKkU4Hb`
@@ -63,12 +66,28 @@ class LitPage extends Component {
     this.setState({searchOption: e.target.value});
   }
 
+  addFavDreamArticle = (e, article) => {
+    e.preventDefault();
+    fetch(`${REACT_APP_BACKEND_URL}/articles`, {
+      method:"POST",
+      body: JSON.stringify(article),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+  }
+
   //what about URLSearchParams?
 
   render() {
     console.log(this.state.dreamArticles)
     return (
       <div>
+        <Link
+          to={ROUTES.FAVORITES}
+        >Your Favorite Articles
+        </Link>
+        <br/>
         <input
           type="text" id="userSrch"
           placeholder="Search.."
@@ -103,13 +122,13 @@ class LitPage extends Component {
 
       {!!this.state.dreamArticles.length &&
         <DreamArticleSectionS>Dream Articles
-          {this.state.dreamArticles.map(article => {
+          {this.state.dreamArticles.map((article) => {
             return (
               <div key={article._id}>
-                <a id="fullDreamArticle"
-                   target="_blank"
-                   rel="noopener noreferrer"
-                   href={article.web_url}>{article.headline.main}
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={article.web_url}>{article.headline.main}
                 </a>
                 <p>{article.snippet}</p>
                 <img
@@ -117,6 +136,7 @@ class LitPage extends Component {
                   width={100} alt=''
                   src={`https://www.nytimes.com/${article.multimedia[0].url}`}>
                 </img>
+                <button onClick={(e) => this.addFavDreamArticle(e, article)}>Favorite</button>
               </div>
             )
           }
