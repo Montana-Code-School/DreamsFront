@@ -37,10 +37,6 @@ class Firebase {
 
   getServerToken = () => {
     this.auth.currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
-      // Send token to your backend via HTTPS
-      // ...
-      console.log("idToken ", idToken);
-
       fetch(`${REACT_APP_BACKEND_URL}/auth`, {
         method: 'POST',
         body: JSON.stringify({idToken}),

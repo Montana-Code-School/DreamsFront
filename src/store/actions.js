@@ -54,6 +54,7 @@ export function saveDream(dream, isNew, promiseResolver) {
     fetch(`${REACT_APP_BACKEND_URL}/dreams`, {
       method: isNew ? "POST" : "PUT",
       body: JSON.stringify(dream),
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       }

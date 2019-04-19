@@ -65,10 +65,6 @@ class SignInFormBase extends Component {
     this.props.firebase.getServerToken();
   }
 
-  componentDidMount(){
-    fetch('http://localhost:3001/test', {credentials: "include"}).then(res => res.json()).then( data => console.log("data, ", data));
-  }
-
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
   };
