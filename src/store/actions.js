@@ -7,7 +7,6 @@ import {
 } from "../Constants/actionTypes";
 
 import * as ROUTES from '../Constants/routes';
-import Firebase from '../components/Firebase/firebase';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -80,7 +79,6 @@ export function saveDream(dream, isNew, promiseResolver) {
     .catch(function(error) {
       // Handle error
       console.log("error");
-      Firebase.doSignOut();
     });
   }
 }

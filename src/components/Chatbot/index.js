@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom';
 import * as ROUTES from '../../Constants/routes';
 import { archsLowercase } from '../NewOrEditDream/archetypes';
 
-console.log(archsLowercase)
 let nlp = require('compromise');
 
 class Chat extends Component {
@@ -108,7 +107,6 @@ class Chat extends Component {
     }
     else if(doc.has('#WhyArch')){
       let whichVerb = doc.match('#Verb').out('normal').split(" ");
-      console.log("whichverb: ", whichVerb);
       let whichArch = doc.match('#Archetype').out('normal');
       let whichAdjective = doc.match('#Adjective').setPunctuation("").out('normal'); 
 
