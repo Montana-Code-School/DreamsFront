@@ -13,6 +13,7 @@ import AccountPage from '../Account';
 import NewOrEditDream from '../NewOrEditDream';
 import ArchivePage from '../DreamArchive';
 import Chat from '../Chatbot';
+import ErrorSignOut from '../ErrorSignOut';
 
 import * as ROUTES from '../../Constants/routes';
 import { withAuthentication } from '../Session';
@@ -29,6 +30,7 @@ const App = () => (
         <Route path={ROUTES.NEW_DREAM} component={NewOrEditDream} />
         <Route path={ROUTES.DREAM_ARCHIVE} component={ArchivePage} />
         <Route path={ROUTES.EDIT_DREAM} component={NewOrEditDream} />
+        <Route path={ROUTES.ERROR_SIGN_OUT} component={ErrorSignOut} />
         <Route path={ROUTES.CHAT} component={Chat} />
       </ContentS>
     </AppBackgroundS>

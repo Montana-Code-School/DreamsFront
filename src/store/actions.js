@@ -3,11 +3,11 @@ import {
   REQUEST_DREAMS, 
   SELECT_DREAM, 
   ADD_NEW_OR_UPDATE_DREAM, 
-  DELETE_DREAM 
+  DELETE_DREAM,
+  ERROR_SIGN_OUT
 } from "../Constants/actionTypes";
 
 import * as ROUTES from '../Constants/routes';
-import Firebase from '../components/Firebase/firebase';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -40,15 +40,23 @@ export function deleteDream(id) {
     payload: {id},
   }
 }
-export function fetchDreams(userID) {
+
+export function errorOnSignOut(h) {
+  h.push(ROUTES.ERROR_SIGN_OUT);
+  return {
+    type: ERROR_SIGN_OUT,
+  }
+}
+
+export function fetchDreams(userID, props) {
   return function(dispatch, getState){
     if(getState().dreams.length) return;
     dispatch(requestDreams());
     return fetch(`${REACT_APP_BACKEND_URL}/dreams/?userId=${userID}`, {credentials: "include"})
       .then(response => {
         if (response.status === 401){
-          Firebase.doSignOut();
-          this.props.history.push(ROUTES.SIGN_IN)
+          // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
+          dispatch(errorOnSignOut(props.history))
         }
         return response.json()
       })
@@ -59,10 +67,13 @@ export function fetchDreams(userID) {
       .catch(function(error) {
         // Handle error
         console.log("error");
+        // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
+        dispatch(errorOnSignOut(props.history))
       });
   }
 }
-export function saveDream(dream, isNew, promiseResolver) {
+
+export function saveDream(dream, isNew, promiseResolver, props ) {
   return function(dispatch, getState){
     fetch(`${REACT_APP_BACKEND_URL}/dreams`, {
       method: isNew ? "POST" : "PUT",
@@ -72,7 +83,13 @@ export function saveDream(dream, isNew, promiseResolver) {
         "Content-Type": "application/json"
       }
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.status === 401){
+      // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
+      dispatch(errorOnSignOut(props.history))
+      }
+      return response.json()
+    })
     .then((myJson) => {
       dispatch(addNewOrUpdateDream(myJson));
       promiseResolver();
@@ -80,7 +97,7 @@ export function saveDream(dream, isNew, promiseResolver) {
     .catch(function(error) {
       // Handle error
       console.log("error");
-      Firebase.doSignOut();
+      dispatch(errorOnSignOut(props.history))
     });
   }
 }

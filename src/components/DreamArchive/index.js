@@ -31,7 +31,7 @@ class ArchivePage extends Component {
 
   componentDidMount() {
     const { userId } = this.state;
-    this.props.fetchDreams(userId);
+    this.props.fetchDreams(userId, this.props);
   }
 
   loadingOrNoDreams(){
@@ -109,7 +109,7 @@ const mapStateToProps = state => state;
 
 const mapDispatchToProps = dispatch => ({
   selectDream: (dream) => dispatch(selectDream(dream)),
-  fetchDreams: (userID) => dispatch(fetchDreams(userID)),
+  fetchDreams: (userID, props) => dispatch(fetchDreams(userID, props)),
 });
 
 export default connect(
