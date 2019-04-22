@@ -43,7 +43,6 @@ const schema = {
 
     for (const key in step) {
       if (keys.indexOf(key) < 0) {
-        console.error(`Invalid key '${key}' in step '${step.id}'`);
         delete step[key];
       }
     }
