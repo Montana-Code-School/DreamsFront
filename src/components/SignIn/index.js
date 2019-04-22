@@ -48,13 +48,22 @@ class SignInFormBase extends Component {
       .doSignInWithEmailAndPassword(email, password)
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.NEW_DREAM);
+        console.log("signed in ", email)
+        this.obtainToken();
+        //this.props.history.push(ROUTES.NEW_DREAM);
       })
       .catch(error => {
         this.setState({ error });
       });
+
     event.preventDefault();
+    
+    
   };
+  
+  obtainToken = () => {
+    this.props.firebase.getServerToken();
+  }
 
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });

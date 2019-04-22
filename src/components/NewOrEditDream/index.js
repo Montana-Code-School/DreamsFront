@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
-import { Link } from 'react-router-dom';
 
 import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
@@ -281,6 +280,7 @@ class NewDreamPage extends Component {
       fetch(`${REACT_APP_BACKEND_URL}/dreams`, {
         method: "DELETE",
         body: JSON.stringify({ _id }),
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         }
