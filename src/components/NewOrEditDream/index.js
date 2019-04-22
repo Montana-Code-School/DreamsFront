@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
+import { addNewOrUpdateDream, deleteDream, saveDream, errorOnSignOut } from '../../store/actions';
 
 import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
@@ -268,7 +268,7 @@ class NewDreamPage extends Component {
     if(!this.isNew) body._id = _id;
     // Post to DB
     const onSaveComplete = new Promise((resolve, reject) => {
-      this.props.saveDream(body, this.isNew, resolve);
+      this.props.saveDream(body, this.isNew, resolve, this.props);
     });
     onSaveComplete.then(() => this.props.history.push(ROUTES.DREAM_ARCHIVE));
   }
@@ -296,6 +296,10 @@ class NewDreamPage extends Component {
   removeImage = (keyword) => {
     let thumbsUrlObjs = this.state.imgUrlArr.filter( obj => obj.keyword !== keyword);
     this.setState({imgUrlArr: thumbsUrlObjs})
+  }
+
+  errorSignOut(){
+    console.log("signout on error");
   }
 
   render () {
@@ -415,13 +419,14 @@ const mapStateToProps = state => {
   }
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   addNewOrUpdateDream: (newDream) => dispatch(addNewOrUpdateDream(newDream)),
   deleteDream: (id) => dispatch(deleteDream(id)),
-  saveDream: (dream, isNew, promise) => dispatch(saveDream(dream, isNew, promise))
+  saveDream: (dream, isNew, promise, props) => dispatch(saveDream(dream, isNew, promise, props)),
+  errorOnSignOut: (history) => dispatch(errorOnSignOut(history))
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(authWrap)
