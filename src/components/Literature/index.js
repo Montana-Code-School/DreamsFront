@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
+import { DefaultArticleSectionS,DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
 import * as ROUTES from '../../Constants/routes';
-import { Card, CardImg, CardText, CardBody,
-  CardTitle, CardSubtitle, Button } from 'reactstrap';
+import {CardImg, CardText, CardBody,
+  CardTitle, Button } from 'reactstrap';
+import ArticleView from '../../ArticleView';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
@@ -17,8 +18,18 @@ class LitPage extends Component {
     this.state = {
       dreamArticles: [],
       sleepArticles: [],
+      articles: [],
       searchOption: "",
     }
+  }
+
+  componentDidMount(){
+    axios.get(`${baseURL}&q=dreams&q=sleep${filterSections}${key}`)
+    .then(res => {
+      const articles = res.data.response.docs;
+      console.log(articles)
+      this.setState({ articles });
+    })
   }
 
   getDreamArts() {
@@ -39,7 +50,6 @@ class LitPage extends Component {
         this.setState({ sleepArticles });
       })
   }
-
 
   //getting value of input and passing input to onClickSearch.
   userInputSearch = () => {
@@ -85,7 +95,6 @@ class LitPage extends Component {
     })
   }
 
-
   //what about URLSearchParams?
 
   render() {
@@ -128,66 +137,31 @@ class LitPage extends Component {
           />
           <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
         </div>
-
-      {!!this.state.dreamArticles.length &&
-        <DreamArticleSectionS>
-          {this.state.dreamArticles.map((article) => {
-            return (
-                <CardS key={article._id}>
-                  <CardImg
-                    top
-                    height={100}
-                    width={100}
-                    alt=''
-                    src={`https://www.nytimes.com/${article.multimedia[0].url}`}/>
-                  <CardBody>
-                    <CardTitle>
-                      <a
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        href={article.web_url}>{article.headline.main}
-                      </a>
-                    </CardTitle>
-                    <CardText>{article.snippet}</CardText>
-                    <Button onClick={(e) => this.addFavDreamArticle(e, article)}>Favorite</Button>
-                  </CardBody>
-                </CardS>
-            )
-          }
-          )}
-        </DreamArticleSectionS>
-      }
-      {!!this.state.sleepArticles.length &&
-        <SleepArticleSectionS>
-            {this.state.sleepArticles.map(article => {
-              return (
-                <div key={article._id}>
-                  <a id="fullSleepArticle"
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     href={article.web_url}>{article.headline.main}
-                  </a>
-                  <p>{article.snippet}</p>
-                  <img height={100}
-                       width={100}
-                       alt=''
-                       src={`https://www.nytimes.com/${article.multimedia[0].url}`}>
-                  </img>
-                </div>
-              )
-            }
+        {!!this.state.articles.length &&
+          <DefaultArticleSectionS>
+            {this.state.articles.map((article) =>
+              <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
             )}
-        </SleepArticleSectionS>
-      }
+          </DefaultArticleSectionS>
+        }
+
+        {!!this.state.dreamArticles.length &&
+          <DreamArticleSectionS>
+            {this.state.dreamArticles.map((article) =>
+              <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+            )}
+          </DreamArticleSectionS>
+        }
+        {!!this.state.sleepArticles.length &&
+          <SleepArticleSectionS>
+            {this.state.sleepArticles.map(article =>
+              <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+            )}
+          </SleepArticleSectionS>
+        }
       </div>
     )
   }
 }
 
 export default LitPage
-
-
-
-
-
-
