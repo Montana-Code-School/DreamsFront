@@ -12,8 +12,7 @@ export const getSpeakText = step => {
 };
 
 export const speakFn = speechSynthesisOptions => (step, previousValue) => {
-  console.log("hello");
-  const { lang, voice, enable } = speechSynthesisOptions;
+  const { lang, enable } = speechSynthesisOptions;
   const { user } = step;
 
   if (!window.SpeechSynthesisUtterance || !window.speechSynthesis) {
@@ -25,10 +24,16 @@ export const speakFn = speechSynthesisOptions => (step, previousValue) => {
   if (!enable) {
     return;
   }
-  const text = getSpeakText(step);
-  const msg = new window.SpeechSynthesisUtterance();
-  msg.text = text.replace(/{previousValue}/g, previousValue);
-  msg.lang = lang;
-  msg.voice = window.speechSynthesis.getVoices()[50];
-  window.speechSynthesis.speak(msg);
+  let text = getSpeakText(step);
+  text = text.replace(/{previousValue}/g, previousValue);
+  const sentences = text.split(",");
+  for (let i = 0; i < sentences.length; i++) {
+    let sentence = sentences[i]
+    let msg = new SpeechSynthesisUtterance(sentence)
+    msg.rate=0.8;
+    msg.pitch=2.0;
+    msg.lang = lang;
+    msg.voice = window.speechSynthesis.getVoices()[50];
+    window.speechSynthesis.speak(msg)
+  }
 };

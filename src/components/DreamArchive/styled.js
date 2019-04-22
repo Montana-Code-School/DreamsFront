@@ -1,5 +1,13 @@
 import styled from 'styled-components';
 
+import { Link } from 'react-router-dom';
+
+export const LinkS = styled( Link )`
+  &:hover {
+    color: hotpink;
+  }
+`
+
 export const PS = styled.p`
   color: snow;
 `

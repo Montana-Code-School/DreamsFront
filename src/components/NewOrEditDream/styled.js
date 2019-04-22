@@ -1,5 +1,12 @@
 import styled from 'styled-components';
-import Textarea from 'react-textarea-autosize';
+
+import { Link } from 'react-router-dom';
+
+export const LinkS = styled( Link )`
+  &:hover {
+    color: hotpink;
+  }
+`
 
 export const ThumbsDivS = styled.div`
   display: flex;
@@ -32,7 +39,9 @@ export const PageStyleS = styled.div`
   text-align: center;
 `
 
-export const DreamTextareaS = styled(Textarea)`
+export const DreamTextareaS = styled.textarea`
+  height: 400px;
+  width: 50vw;
   z-index: 20;
   font-family: serif;
   color: white;

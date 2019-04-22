@@ -1,25 +1,13 @@
 import React, { Component, Fragment } from 'react';
 import ChatBot from '../../chatbotHack';
 import ColorBlob from '../ColorBlob';
-import { ThemeProvider } from 'styled-components';
 import blob from './blob.png'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../Constants/routes';
+import { archsLowercase } from '../NewOrEditDream/archetypes';
 
 let nlp = require('compromise');
-
-const theme = {
-  background: 'rgba(255,255,255,0.0)',
-  fontFamily: 'Helvetica Neue',
-  headerBgColor: 'rgba(255,255,255,0.3)',
-  headerFontColor: '#fff',
-  headerFontSize: '15px',
-  botBubbleColor: '#EF6C00',
-  botFontColor: '#fff',
-  userBubbleColor: '#fff',
-  userFontColor: '#4a4a4a',
-};
 
 class Chat extends Component {
   constructor(props){
@@ -28,7 +16,7 @@ class Chat extends Component {
       steps: [
         {
           id: '1',
-          message: `Tell me about your dream... I see that your dream contains several archetypes: ${!!props ? this.propHandler(props) : "oh wait there aren't any archetypes in your dream"}`,
+          message: `Tell me about your dream... I see that your dream contains ${props.location.state.length === 1 ? "an archetype: " : "several archetypes: "}${!!props ? this.propHandler(props) : "oh wait there aren't any archetypes in your dream"}`,
           trigger: '2',
         },
         {
@@ -46,12 +34,13 @@ class Chat extends Component {
   }
 
   propHandler = (props) => {
-    console.log("props ", props.location.state);
     let passedArchs = props.location.state;
     let archString = "";
     for (let i = 0; i < passedArchs.length; i++) {
       if (i > 0 && i === passedArchs.length-1){
-        archString += "and " + passedArchs[i] + "."
+        archString += "and " + passedArchs[i] + ".";
+      } else if (passedArchs.length === 1) {
+        archString += passedArchs[i] + ".";
       } else {
         archString += passedArchs[i] + ", ";
       }
@@ -62,9 +51,6 @@ class Chat extends Component {
   elizaBot = (input) =>{
     const archetypesOpts = this.props.location.state.join('|');
     const archsWords = this.props.location.state.reduce((a, key) => Object.assign(a, { [key]: "Archetype" }), {});
-    
-    console.log("myObj ", archsWords);
-
     const plugin = {
       words:{
         ...archsWords,
@@ -74,55 +60,73 @@ class Chat extends Component {
         "i can't" : 'iCant',
       },
       patterns:{
-        "how (should|do)? i (can|should)? (log|login|sign|get) (in|into|to) my? #Software" : 'LoginIssue',
+        "how (can|should|do)? i (can|should)? (log|login|sign|get) (in|into|to) my? #Software" : 'LoginIssue',
         "i can't (log|sign|get) into my? #Software" : 'LoginIssue',
         "#iCant (log|login|sign|get) (in|into) my? #Software" : 'LoginIssue',
         "#Software won't let me (log|sign|get) in" : 'LoginIssue',
         "what does the? #Archetype mean" : 'Question',
         "i can't *" : 'SelfDefeat',
-
+        "i #Verb (the|a) #Archetype" : 'VerbTheArch',
+        "why (is|was|does|are) the? #Archetype #Adjective? #Adverb? #Verb #Adverb?" : 'WhyArch',
       }
     }
     nlp.plugin(plugin)
     let doc = nlp(input)
     let people = doc.people().firstNames().out('topk')
-    let sentences = doc.sentences().data();
-    console.log("sentences ", sentences);
-    // let toQuestion = doc.sentences().toQuestion().out('normal');
     
-
-    //templates
+    // here to render is where all the conversations are templated
     if(doc.has('i #Adverb? (am|feel|feeling) #Adverb? #Adjective')){
-        let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal');
-        return `When did you become ${feeling}?`;
+      let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal');
+      return `When did you become ${feeling}?`;
     } 
-
     else if(doc.has('#Question')){
       let archQuest = doc.match(`(${archetypesOpts})`).out('normal')
-      return `That is for you and you alone to decide. There are many mysteries surrounding ${archQuest}.`
+      return `That is for you and you alone to decide. 
+        There are many mysteries surrounding ${archQuest},
+        and all we really can know is that it represents ${archsLowercase[archQuest]}.
+        What do you think about that?`
     } 
-    
-    else if(doc.has(`(${archetypesOpts})`)){
-        let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
-        return `Why don't you tell me more about the ${whichArch}.`;
-    } 
-    
     else if(doc.has('#SelfDefeat')){
       let whichICant = doc.match('#SelfDefeat').normalize().out('normal');
-      return `don't worry. it's okay, ${whichICant} either`;
+      return `Don't worry. It's okay, ${whichICant} either.`;
     } 
-    
     else if(doc.has('#LoginIssue')){
-        let whichSoftware = doc.match('#Software').out('normal');
-        return `that's okay, you're probably better off not using ${whichSoftware} anyway`;
+      let whichSoftware = doc.match('#Software').out('normal');
+      return `That's okay, you're probably better off not using ${whichSoftware} anyway`;
     } 
     else if(doc.has('#Person')){
-      let whichPerson = doc.match('#Person').out('normal');
       return `How do you know ${people[0].normal}?`
     } 
-    
+    else if(doc.has('#Place')){
+      let whichPlace = doc.match(`#Place`).out('normal');
+      return `${whichPlace}... .`
+    } 
+    else if(doc.has('what does the fox say')){
+      return `Jacha-chacha-chacha-chow! Chacha-cha cha-cha cha-chow! 
+      Cha cha-cha cha-cha cha-chow! What does the fox say!`
+    }
+    else if(doc.has('#WhyArch')){
+      let whichVerb = doc.match('#Verb').out('normal').split(" ");
+      let whichArch = doc.match('#Archetype').out('normal');
+      let whichAdjective = doc.match('#Adjective').setPunctuation("").out('normal'); 
+
+      if (whichAdjective){
+        return `The ${whichArch} is ${whichAdjective} because the old Gods deemed it so.`
+      } else if (whichVerb) {
+        return `The ${whichArch} ${whichVerb[0]} ${whichVerb[1]} simply because it can.`
+      }
+    }
+    else if(doc.has('#VerbTheArch')){
+      let whichVerb = doc.verbs().out('normal');
+      let whichArch = doc.match('#Archetype').out('normal')
+      return `You ${whichVerb} the ${whichArch}?`;
+    }
+    else if(doc.has(`(${archetypesOpts})`)){
+      let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
+      return `Tell me more about the ${whichArch}.`;
+    } 
     else {
-        return 'can you elaborate on that?'
+      return 'can you elaborate on that?'
     }
   }
   
@@ -146,8 +150,6 @@ class Chat extends Component {
           >Go Back to Dream Archive</Link>
         </ChatbotContentS>
       </Fragment>
-      
-      
     )
   }
 }
@@ -157,7 +159,6 @@ const ChatbotContentS = styled.div`
 `
 
 const BlobInputContainerSS = styled.div`
-
   position: fixed;
   display: flex;
   justify-content: center;

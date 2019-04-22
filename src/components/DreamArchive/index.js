@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 
 import {
+  LinkS,
   ArchiveDivS,
   BlobContainer2S,
   ArchiveTitleS, DreamTitleS,
@@ -31,7 +31,7 @@ class ArchivePage extends Component {
 
   componentDidMount() {
     const { userId } = this.state;
-    this.props.fetchDreams(userId);
+    this.props.fetchDreams(userId, this.props);
   }
 
   loadingOrNoDreams(){
@@ -62,18 +62,18 @@ class ArchivePage extends Component {
                 <DreamDivS key={dream._id} >
                   <TitleRowDivS>
                     <DreamTitleS>{dream.title}</DreamTitleS>
-                    <Link
+                    <LinkS
                       to={ROUTES.EDIT_DREAM}
                       onClick={() => this.props.selectDream(dream)}
-                    >Edit Dream</Link>
-                    <Link
+                    >Edit Dream</LinkS>
+                    <LinkS
                       to={{
                         pathname: ROUTES.CHAT,
                         state: !!dream.images.length ?
                           dream.images.map(obj => obj.keyword) :
                           ["oh wait there are no archetypes in your dream."]
                       }}
-                    >Discuss with Shaman</Link>
+                    >Discuss with Shaman</LinkS>
                   </TitleRowDivS>
                   <StyledHRS />
                   <ContentRowDivS>
@@ -109,7 +109,7 @@ const mapStateToProps = state => state;
 
 const mapDispatchToProps = dispatch => ({
   selectDream: (dream) => dispatch(selectDream(dream)),
-  fetchDreams: (userID) => dispatch(fetchDreams(userID)),
+  fetchDreams: (userID, props) => dispatch(fetchDreams(userID, props)),
 });
 
 export default connect(
