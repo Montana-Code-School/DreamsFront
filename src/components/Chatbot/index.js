@@ -5,7 +5,9 @@ import blob from './blob.png'
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import * as ROUTES from '../../Constants/routes';
+import { archsLowercase } from '../NewOrEditDream/archetypes';
 
+console.log(archsLowercase)
 let nlp = require('compromise');
 
 class Chat extends Component {
@@ -15,7 +17,7 @@ class Chat extends Component {
       steps: [
         {
           id: '1',
-          message: `Tell me about your dream... I see that your dream contains several archetypes: ${!!props ? this.propHandler(props) : "oh wait there aren't any archetypes in your dream"}`,
+          message: `Tell me about your dream... I see that your dream contains ${props.location.state.length === 1 ? "an archetype: " : "several archetypes: "}${!!props ? this.propHandler(props) : "oh wait there aren't any archetypes in your dream"}`,
           trigger: '2',
         },
         {
@@ -37,7 +39,9 @@ class Chat extends Component {
     let archString = "";
     for (let i = 0; i < passedArchs.length; i++) {
       if (i > 0 && i === passedArchs.length-1){
-        archString += "and " + passedArchs[i] + "."
+        archString += "and " + passedArchs[i] + ".";
+      } else if (passedArchs.length === 1) {
+        archString += passedArchs[i] + ".";
       } else {
         archString += passedArchs[i] + ", ";
       }
@@ -57,12 +61,14 @@ class Chat extends Component {
         "i can't" : 'iCant',
       },
       patterns:{
-        "how (should|do)? i (can|should)? (log|login|sign|get) (in|into|to) my? #Software" : 'LoginIssue',
+        "how (can|should|do)? i (can|should)? (log|login|sign|get) (in|into|to) my? #Software" : 'LoginIssue',
         "i can't (log|sign|get) into my? #Software" : 'LoginIssue',
         "#iCant (log|login|sign|get) (in|into) my? #Software" : 'LoginIssue',
         "#Software won't let me (log|sign|get) in" : 'LoginIssue',
         "what does the? #Archetype mean" : 'Question',
         "i can't *" : 'SelfDefeat',
+        "i #Verb (the|a) #Archetype" : 'VerbTheArch',
+        "why (is|was|does|are) the? #Archetype #Adjective? #Adverb? #Verb #Adverb?" : 'WhyArch',
       }
     }
     nlp.plugin(plugin)
@@ -76,22 +82,50 @@ class Chat extends Component {
     } 
     else if(doc.has('#Question')){
       let archQuest = doc.match(`(${archetypesOpts})`).out('normal')
-      return `That is for you and you alone to decide. There are many mysteries surrounding ${archQuest}.`
-    } 
-    else if(doc.has(`(${archetypesOpts})`)){
-      let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
-      return `Why don't you tell me more about the ${whichArch}.`;
+      return `That is for you and you alone to decide. 
+        There are many mysteries surrounding ${archQuest},
+        and all we really can know is that it represents ${archsLowercase[archQuest]}.
+        What do you think about that?`
     } 
     else if(doc.has('#SelfDefeat')){
       let whichICant = doc.match('#SelfDefeat').normalize().out('normal');
-      return `don't worry. it's okay, ${whichICant} either`;
+      return `Don't worry. It's okay, ${whichICant} either.`;
     } 
     else if(doc.has('#LoginIssue')){
       let whichSoftware = doc.match('#Software').out('normal');
-      return `that's okay, you're probably better off not using ${whichSoftware} anyway`;
+      return `That's okay, you're probably better off not using ${whichSoftware} anyway`;
     } 
     else if(doc.has('#Person')){
       return `How do you know ${people[0].normal}?`
+    } 
+    else if(doc.has('#Place')){
+      let whichPlace = doc.match(`#Place`).out('normal');
+      return `${whichPlace}... .`
+    } 
+    else if(doc.has('what does the fox say')){
+      return `Jacha-chacha-chacha-chow! Chacha-cha cha-cha cha-chow! 
+      Cha cha-cha cha-cha cha-chow! What does the fox say!`
+    }
+    else if(doc.has('#WhyArch')){
+      let whichVerb = doc.match('#Verb').out('normal').split(" ");
+      console.log("whichverb: ", whichVerb);
+      let whichArch = doc.match('#Archetype').out('normal');
+      let whichAdjective = doc.match('#Adjective').setPunctuation("").out('normal'); 
+
+      if (whichAdjective){
+        return `The ${whichArch} is ${whichAdjective} because the old Gods deemed it so.`
+      } else if (whichVerb) {
+        return `The ${whichArch} ${whichVerb[0]} ${whichVerb[1]} simply because it can.`
+      }
+    }
+    else if(doc.has('#VerbTheArch')){
+      let whichVerb = doc.verbs().out('normal');
+      let whichArch = doc.match('#Archetype').out('normal')
+      return `You ${whichVerb} the ${whichArch}?`;
+    }
+    else if(doc.has(`(${archetypesOpts})`)){
+      let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
+      return `Tell me more about the ${whichArch}.`;
     } 
     else {
       return 'can you elaborate on that?'

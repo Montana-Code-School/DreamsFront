@@ -26,6 +26,8 @@ export const speakFn = speechSynthesisOptions => (step, previousValue) => {
   }
   const text = getSpeakText(step);
   const msg = new window.SpeechSynthesisUtterance();
+  msg.rate=0.8;
+  msg.pitch=2.0;
   msg.text = text.replace(/{previousValue}/g, previousValue);
   msg.lang = lang;
   msg.voice = window.speechSynthesis.getVoices()[50];

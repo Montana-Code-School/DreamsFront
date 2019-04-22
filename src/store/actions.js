@@ -47,7 +47,7 @@ export function fetchDreams(userID) {
     return fetch(`${REACT_APP_BACKEND_URL}/dreams/?userId=${userID}`, {credentials: "include"})
       .then(response => {
         if (response.status === 401){
-          Firebase.doSignOut();
+          // Firebase.doSignOut();
           this.props.history.push(ROUTES.SIGN_IN)
         }
         return response.json()
@@ -58,7 +58,7 @@ export function fetchDreams(userID) {
       })
       .catch(function(error) {
         // Handle error
-        console.log("error");
+        console.log("error", error);
       });
   }
 }
