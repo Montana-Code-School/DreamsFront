@@ -36,22 +36,21 @@ class Firebase {
     this.auth.currentUser.updatePassword(password);
 
   getServerToken = () => {
-    this.auth.currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
-      fetch(`${REACT_APP_BACKEND_URL}/auth`, {
+    return this.auth.currentUser.getIdToken(true).then(function(idToken) {
+      return fetch(`${REACT_APP_BACKEND_URL}/auth`, {
         method: 'POST',
         body: JSON.stringify({idToken}),
-        credentials: 'include',
         headers: {
           "Content-Type": "application/json"
-        }
+        },
+        credentials: "include"
       })
-        .then(response => response.json())
-        .then((data) => {
-          console.log("idToken server data", data)
-        })
+      .then(response => response.json())
+      .then((data) => {
+        return data
+      })
     }).catch(function(error) {
-      // Handle error
-      console.log("error");
+      console.error(error);
     });
   }
 

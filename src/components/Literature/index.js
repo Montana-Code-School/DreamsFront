@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { DefaultArticleSectionS,DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
+import { DefaultArticleSectionS,DreamArticleSectionS, SleepArticleSectionS, LabelS } from './styled';
 import * as ROUTES from '../../Constants/routes';
-import {CardImg, CardText, CardBody,
-  CardTitle, Button } from 'reactstrap';
 import ArticleView from '../../ArticleView';
 
 const { REACT_APP_BACKEND_URL } = process.env;

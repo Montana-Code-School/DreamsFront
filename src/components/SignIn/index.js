@@ -14,14 +14,15 @@ import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
 
-
 const SignInPage = () => (
   <SignInPageS>
     <AuthFormTitleS
-    id="test-signin-h1"
-    formTitleBottomMargin={-80}
-    formTitleTopMargin={0}>
-    Sign In</AuthFormTitleS>
+      id="test-signin-h1"
+      formTitleBottomMargin={-80}
+      formTitleTopMargin={0}
+    >
+    Sign In
+    </AuthFormTitleS>
     <SignInForm />
     <PasswordForgetLink />
     <SignUpLink />
@@ -41,24 +42,20 @@ class SignInFormBase extends Component {
   }
 
   onSubmit = event => {
+    event.preventDefault();
     const { email, password } = this.state;
 
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.obtainToken();
-        this.props.history.push(ROUTES.DREAM_ARCHIVE);
+      .then(async () => {
+        await this.props.firebase.getServerToken();
+        await this.setState({ ...INITIAL_STATE });
+        await this.props.history.push(ROUTES.DREAM_ARCHIVE);
       })
       .catch(error => {
         this.setState({ error });
       });
-    event.preventDefault();
   };
-  
-  obtainToken = () => {
-    this.props.firebase.getServerToken();
-  }
 
   onChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -116,8 +113,6 @@ const SignInForm = compose(
   withRouter,
   withFirebase,
 )(SignInFormBase);
-
-
 
 export default SignInPage;
 

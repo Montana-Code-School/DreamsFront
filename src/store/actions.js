@@ -50,25 +50,26 @@ export function errorOnSignOut(h) {
 
 export function fetchDreams(userID, props) {
   return function(dispatch, getState){
+    console.log("got past that funcion nonsense");
     if(getState().dreams.length) return;
     dispatch(requestDreams());
-    return fetch(`${REACT_APP_BACKEND_URL}/dreams/?userId=${userID}`, {credentials: "include"})
+    return fetch(`${REACT_APP_BACKEND_URL}/secure/dreams/?userId=${userID}`, {credentials: "include"})
       .then(response => {
-        if (response.status === 401){
-          // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
-          dispatch(errorOnSignOut(props.history))
-        }
+        // if (response.status === 401){
+        //   dispatch(errorOnSignOut(props.history))
+        // }
         return response.json()
       })
       .then((dreams) => {
+        console.log("resolved");
         dreams = dreams.reverse();
         dispatch(receivedDreams(dreams));
       })
       .catch(function(error) {
         // Handle error
-        console.log("error");
+        console.log("error", error);
         // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
-        dispatch(errorOnSignOut(props.history))
+        // dispatch(errorOnSignOut(props.history))
       });
   }
 }
