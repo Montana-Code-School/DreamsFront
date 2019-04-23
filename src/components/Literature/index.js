@@ -27,7 +27,6 @@ class LitPage extends Component {
     axios.get(`${baseURL}&q=dreams&q=sleep${filterSections}${key}`)
     .then(res => {
       const articles = res.data.response.docs;
-      console.log(articles)
       this.setState({ articles });
     })
   }
@@ -37,7 +36,6 @@ class LitPage extends Component {
     axios.get(`${baseURL}&q=dreams ${search}${filterSections}${key}`)
     .then(res => {
       const dreamArticles = res.data.response.docs;
-      console.log(dreamArticles)
       this.setState({ dreamArticles });
     })
   }
@@ -80,7 +78,7 @@ class LitPage extends Component {
 
   addFavDreamArticle = (e, article) => {
     e.preventDefault();
-     const articleBody = {
+    const articleBody = {
       headline: article.headline.main,
       webUrl: article.web_url,
       snippet: article.snippet,
@@ -98,7 +96,6 @@ class LitPage extends Component {
   //what about URLSearchParams?
 
   render() {
-    console.log(this.state.dreamArticles)
     return (
       <div>
         <Link

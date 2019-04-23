@@ -24,7 +24,6 @@ class FavoritePage extends Component {
       <div>
         <h1>Your Favorites</h1>
         {this.state.articles.map((article) =>
-
          <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
         )}
       </div>
