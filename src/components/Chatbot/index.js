@@ -67,7 +67,7 @@ class Chat extends Component {
         "what does the? #Archetype mean" : 'Question',
         "i can't *" : 'SelfDefeat',
         "i #Verb (the|a) #Archetype" : 'VerbTheArch',
-        "why (is|was|does|are) the? #Archetype #Adjective? #Adverb? #Verb #Adverb?" : 'WhyArch',
+        "why (is|was|does|are) the? #Adjective? #Archetype #Adjective? #Adverb? #Verb #Adverb?" : 'WhyArch',
       }
     }
     nlp.plugin(plugin)
@@ -75,7 +75,7 @@ class Chat extends Component {
     let people = doc.people().firstNames().out('topk')
     
     // here to render is where all the conversations are templated
-    if(doc.has('i #Adverb? (am|feel|feeling) #Adverb? #Adjective')){
+    if(doc.has('i #Adverb? (am|feel|feeling) like? a? #Noun? #Adverb? #Adjective?')){
       let feeling = doc.match('i #Adverb? am #Adverb? [#Adjective]').out('normal');
       return `When did you become ${feeling}?`;
     } 
@@ -99,11 +99,14 @@ class Chat extends Component {
     } 
     else if(doc.has('#Place')){
       let whichPlace = doc.match(`#Place`).out('normal');
-      return `${whichPlace}... .`
+      return `${whichPlace}... have you had many meaningful experiences there?`
     } 
     else if(doc.has('what does the fox say')){
       return `Jacha-chacha-chacha-chow! Chacha-cha cha-cha cha-chow! 
       Cha cha-cha cha-cha cha-chow! What does the fox say!`
+    }
+    else if(doc.has(`i don't know`)){
+      return `Well perhaps you can think about it overnight, and get back to me tomorrow. Is there anything you do know for certain?`
     }
     else if(doc.has('#WhyArch')){
       let whichVerb = doc.match('#Verb').out('normal').split(" ");
@@ -125,8 +128,26 @@ class Chat extends Component {
       let whichArch = doc.match(`(${archetypesOpts})`).out('normal');
       return `Tell me more about the ${whichArch}.`;
     } 
+    else if(doc.has('why?')){
+      return `I'm only trying to understand your dream.`;
+    } 
     else {
-      return 'can you elaborate on that?'
+      let otherwise = [
+        'Can you elaborate on that?',
+        `How interesting, let's explore that a little further. Please continue...`,
+        `Hmmm... tell me more.`,
+        `Oh my! Now I am deeply intrigued! Go on, do tell...`,
+        `Well then, anything else?`,
+        `Have you told anyone else about this?`,
+        `I do not understand, can you explain that more simply?`,
+        `Can you explain that a little more?`,
+        `Could you say the same thing in a different way, perhaps tying it back into your dream?`,
+        `What causes you to say that?`,
+        `A wise old sorceress said something similiar to me once. I'm sorry, what else were saying, about your dream?`,
+        `Isn't there a Greatful Dead song about that?`,
+        
+      ];
+      return otherwise[Math.floor(Math.random()*otherwise.length)];
     }
   }
   
