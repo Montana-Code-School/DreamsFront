@@ -169,6 +169,7 @@ for (let i = 0; i < keys.length; i++) {
 
 export const archtypesFull = archs;
 
+// eslint-disable-next-line no-sequences
 export const archsLowercase = Object.keys(archs).reduce((c, k) => (c[k.toLowerCase()] = archs[k], c), {});
 
 export const archetypes = keys;

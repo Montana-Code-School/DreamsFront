@@ -4,7 +4,6 @@ import * as ROUTES from '../../Constants/routes';
 
 class ErrorOnSignOut extends Component { 
   componentDidMount() {
-    console.log("hello")
     this.props.firebase.doSignOut()
     this.props.history.push(ROUTES.SIGN_IN)
   }

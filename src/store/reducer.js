@@ -4,7 +4,8 @@ import {
   REQUEST_DREAMS, 
   SELECT_DREAM, 
   ADD_NEW_OR_UPDATE_DREAM, 
-  DELETE_DREAM 
+  DELETE_DREAM,
+  RESET_DREAMS
 } from "../Constants/actionTypes";
 
 const initialState = {
@@ -30,6 +31,11 @@ export const rootReducer = (state = initialState, action) => {
       return {
         ...state,
         currentDream: action.payload,
+      }
+    case RESET_DREAMS:
+      return {
+        ...state,
+        dreams: [],
       }
     case ADD_NEW_OR_UPDATE_DREAM:{
       const dreams = [...state.dreams];

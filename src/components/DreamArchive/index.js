@@ -17,7 +17,7 @@ import {
   PS } from './styled';
 
 import * as ROUTES from '../../Constants/routes';
-import { selectDream, fetchDreams } from '../../store/actions';
+import { selectDream, fetchDreams, resetDreams } from '../../store/actions';
 import ColorBlob from '../ColorBlob';
 import { AuthUserContext, withAuthorization } from '../Session';
 
@@ -32,6 +32,10 @@ class ArchivePage extends Component {
   componentDidMount() {
     const { userId } = this.state;
     this.props.fetchDreams(userId, this.props);
+  }
+
+  componentWillUnmount(){
+    this.props.resetDreams();
   }
 
   loadingOrNoDreams(){
@@ -110,6 +114,7 @@ const mapStateToProps = state => state;
 const mapDispatchToProps = dispatch => ({
   selectDream: (dream) => dispatch(selectDream(dream)),
   fetchDreams: (userID, props) => dispatch(fetchDreams(userID, props)),
+  resetDreams: () => dispatch(resetDreams()),
 });
 
 export default connect(
