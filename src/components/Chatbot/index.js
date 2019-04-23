@@ -99,11 +99,14 @@ class Chat extends Component {
     } 
     else if(doc.has('#Place')){
       let whichPlace = doc.match(`#Place`).out('normal');
-      return `${whichPlace}... .`
+      return `${whichPlace}... have you had many meaningful experiences there?`
     } 
     else if(doc.has('what does the fox say')){
       return `Jacha-chacha-chacha-chow! Chacha-cha cha-cha cha-chow! 
       Cha cha-cha cha-cha cha-chow! What does the fox say!`
+    }
+    else if(doc.has(`i don't know`)){
+      return `Well perhaps you can think about it overnight, and get back to me tomorrow. Is there anything you do know for sure?`
     }
     else if(doc.has('#WhyArch')){
       let whichVerb = doc.match('#Verb').out('normal').split(" ");
