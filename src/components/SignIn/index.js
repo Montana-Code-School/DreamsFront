@@ -33,7 +33,6 @@ function getCookie(name) {
 const postIdTokenToAuth = function(url, idToken, csrfToken) {
   // POST to session login endpoint.
   
-  console.log("here in postIdTokenToAuth,", csrfToken);
   return fetch(`${REACT_APP_BACKEND_URL}/auth`, {
     method: 'POST',
     body: JSON.stringify({idToken, csrfToken}),
@@ -44,7 +43,6 @@ const postIdTokenToAuth = function(url, idToken, csrfToken) {
   })
   .then(response => response.json())
   .then((data) => {
-    console.log("idToken server data", data)
     return data
   })
   .catch((error)=> {

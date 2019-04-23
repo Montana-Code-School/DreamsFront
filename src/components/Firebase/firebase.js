@@ -2,8 +2,6 @@ import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
-import { resetDreams } from '../../store/actions'
-
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -42,7 +40,6 @@ class Firebase {
       return idToken;
     }).catch(function(error) {
       throw new Error("Token error");
-      console.log(error);
     });
   }
 
@@ -54,9 +51,6 @@ class Firebase {
     })
     .then(response => response.json())
     .then((data) => {
-      console.log("deAuth server data", data)
-      //  does this do anything ?
-      // resetDreams();
       return data
     })
     .catch((error)=> {
