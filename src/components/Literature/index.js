@@ -18,17 +18,31 @@ class LitPage extends Component {
     this.state = {
       dreamArticles: [],
       sleepArticles: [],
+      favoritedArticles: [],
       articles: [],
       searchOption: "",
     }
   }
 
   componentDidMount(){
-    axios.get(`${baseURL}&q=dreams&q=sleep${filterSections}${key}`)
-    .then(res => {
-      const articles = res.data.response.docs;
-      this.setState({ articles });
-    })
+    const getArticles = axios.get(`${baseURL}&q=dreams&q=sleep${filterSections}${key}`)
+    const getFavArticles = axios.get(`${REACT_APP_BACKEND_URL}/articles/all`)
+    Promise.all([getArticles, getFavArticles])
+    .then((results) => {
+      // loop thru article array(which is an object) and check against favorite article array and return modified array.
+      // have to loop thru objects in article array to get web_url key
+      // if articles.web_url === favoritedArticles.web_url,  articles.splice(0, 1, favoritedArticles.web_url) return articles;
+      const articles = results[0].data.response.docs;
+      const favoritedArticles = results[1].data;
+      articles.forEach((article, index) => {
+        favoritedArticles.forEach((favArticle)=> {
+          if(article.web_url === favArticle.webUrl){
+            articles.splice(index, 1, favArticle);
+          }
+        })
+      })
+      this.setState({favoritedArticles, articles});
+    });
   }
 
   getDreamArts() {
