@@ -2,6 +2,8 @@ import app from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/database';
 
+import { resetDreams } from '../../store/actions'
+
 const config = {
   apiKey: process.env.REACT_APP_API_KEY,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -36,24 +38,31 @@ class Firebase {
     this.auth.currentUser.updatePassword(password);
 
   getServerToken = () => {
-    this.auth.currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
-      fetch(`${REACT_APP_BACKEND_URL}/auth`, {
-        method: 'POST',
-        body: JSON.stringify({idToken}),
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(response => response.json())
-        .then((data) => {
-          console.log("idToken server data", data)
-        })
+    return this.auth.currentUser.getIdToken(true).then(function(idToken) {
+      return idToken;
     }).catch(function(error) {
-      // Handle error
-      console.log("error");
+      throw new Error("Token error");
+      console.log(error);
     });
   }
+
+  deAuth = function() {
+    // POST to session login endpoint.
+    return fetch(`${REACT_APP_BACKEND_URL}/logout`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+    .then(response => response.json())
+    .then((data) => {
+      console.log("deAuth server data", data)
+      //  does this do anything ?
+      // resetDreams();
+      return data
+    })
+    .catch((error)=> {
+      throw new Error(`deAuth, ${error}`);
+    })
+  };
 
   // *** User API ***
 
