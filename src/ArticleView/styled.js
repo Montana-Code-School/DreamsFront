@@ -15,5 +15,13 @@ export const ImageContainerS = styled.div`
   align-self: center;
   margin-top: 1.25rem;
 `
-
-
+export const ButtonXS = styled.button`
+  position: absolute;
+  top: -4px;
+  right: -6px;
+  border-radius: 12px;
+  border-color: transparent;
+  background-color: transparent;
+  color: white;
+  opacity: 0.8;
+`
