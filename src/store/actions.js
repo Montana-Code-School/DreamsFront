@@ -4,7 +4,8 @@ import {
   SELECT_DREAM, 
   ADD_NEW_OR_UPDATE_DREAM, 
   DELETE_DREAM,
-  ERROR_SIGN_OUT
+  ERROR_SIGN_OUT,
+  RESET_DREAMS
 } from "../Constants/actionTypes";
 
 import * as ROUTES from '../Constants/routes';
@@ -22,6 +23,13 @@ function requestDreams() {
     type: REQUEST_DREAMS,
   }
 }
+
+export function resetDreams() {
+  return {
+    type: RESET_DREAMS,
+  }
+}
+
 export function selectDream(payload) {
   return {
     type: SELECT_DREAM,
@@ -34,6 +42,7 @@ export function addNewOrUpdateDream(payload) {
     payload
   }
 }
+
 export function deleteDream(id) {
   return {
     type: DELETE_DREAM,

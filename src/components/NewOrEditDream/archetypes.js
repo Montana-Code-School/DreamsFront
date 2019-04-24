@@ -8,7 +8,7 @@ let archs = {
   "Lake": "the mirror for self-reflection and to see unconscious fantasies in its depth",
   "Land": "territoriality, power, or status",
   "Metal": "the smelting process as union of male and female",
-  "River": "confluence into the sea symbolizes the individual into the absolute, or life (river) to death (sea)",
+  "River": "confluence into the sea, which symbolizes the individual into the absolute, or life (river) to death (sea)",
   "Sea": "undifferentiated primal state, the absolute, origins of life, or mother earth",
   "Ocean": "undifferentiated primal state, the absolute, origins of life, or mother earth",
   "Stone": "static constancy",
@@ -119,14 +119,14 @@ let archs = {
   "Chair": "symbol of authority or rank",
   "Crown": "circle representing wholeness, unity, perfection, supreme power",
   "Sceptre": "extension of the arm, phallic symbol, sovereignty",
-  "Fish": "symbolic of the collective unconscious",
+  "Fish": "a symbol of the collective unconscious",
   "Amphibian": "transformation, purification",
   "Frog": "transition between conscious and unconscious",
   "Reptiles": "cruelty, aggression",
   "Fox": "theft, craftiness, trickster",
   "bear": "mother archetype with cubs, or aggression and brutality",
   "Lion": "rising sun (young lion) and setting sun (old lion), lioness nurturing mother",
-  "Spider": "the web is a Mandela, unity of opposites: creating and killing",
+  "Spider": "a Mandala, unity of opposites: creating and killing",
   "Stag": "drops rack and regenerates: tree of life, regeneration, growth, fertility",
   "Wolf": "nurturing or destructive",
   "Bull": "fertility, virility",
@@ -156,7 +156,7 @@ let archs = {
   "Beard": "wisdom, maturity",
   "Breast": "maternity, nurturance and plenty",
   "Eye": "consciousness, intelligence, insight",
-  "Foot": "phallic symbol",
+  "Foot": "a phallic symbol",
   "Fat": "in societies with scarcity of food, high social status, and in societies with plenty of food, low social status",
   "Fist": "anger",
   "Heart": "center of self"
@@ -169,6 +169,7 @@ for (let i = 0; i < keys.length; i++) {
 
 export const archtypesFull = archs;
 
+// eslint-disable-next-line no-sequences
 export const archsLowercase = Object.keys(archs).reduce((c, k) => (c[k.toLowerCase()] = archs[k], c), {});
 
 export const archetypes = keys;

@@ -36,24 +36,27 @@ class Firebase {
     this.auth.currentUser.updatePassword(password);
 
   getServerToken = () => {
-    this.auth.currentUser.getIdToken(/* forceRefresh */ true).then(function(idToken) {
-      fetch(`${REACT_APP_BACKEND_URL}/auth`, {
-        method: 'POST',
-        body: JSON.stringify({idToken}),
-        credentials: 'include',
-        headers: {
-          "Content-Type": "application/json"
-        }
-      })
-        .then(response => response.json())
-        .then((data) => {
-          console.log("idToken server data", data)
-        })
+    return this.auth.currentUser.getIdToken(true).then(function(idToken) {
+      return idToken;
     }).catch(function(error) {
-      // Handle error
-      console.log("error");
+      throw new Error("Token error");
     });
   }
+
+  deAuth = function() {
+    // POST to session login endpoint.
+    return fetch(`${REACT_APP_BACKEND_URL}/logout`, {
+      method: 'GET',
+      credentials: 'include',
+    })
+    .then(response => response.json())
+    .then((data) => {
+      return data
+    })
+    .catch((error)=> {
+      throw new Error(`deAuth, ${error}`);
+    })
+  };
 
   // *** User API ***
 
