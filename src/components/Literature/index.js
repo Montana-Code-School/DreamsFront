@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { DefaultArticleSectionS,DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
+import { DefaultArticleSectionS, LabelS, PS } from './styled';
 import * as ROUTES from '../../Constants/routes';
 import ArticleView from '../../ArticleView';
 
@@ -17,6 +17,7 @@ class LitPage extends Component {
       favoritedArticles: [],
       articles: [],
       searchOption: "dreams",
+      searchResults: true,
     }
   }
 
@@ -47,6 +48,11 @@ class LitPage extends Component {
     axios.get(`${baseURL}&q=${search}&fq=subject:(${this.state.searchOption})${key}`)
     .then(res => {
       const articles = res.data.response.docs;
+      if (!articles.length){
+        this.setState({searchResults: false})
+      } else if (articles.length) {
+        this.setState({searchResults: true})
+      }
       this.setState({ articles });
     })
   }
@@ -127,6 +133,7 @@ class LitPage extends Component {
           />
           <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
         </div>
+        {!this.state.searchResults && <PS>Sorry, your search turned up empty.</PS>}
         {!!this.state.articles.length &&
           <DefaultArticleSectionS>
             {this.state.articles.map((article) =>

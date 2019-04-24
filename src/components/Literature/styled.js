@@ -1,6 +1,10 @@
 import styled from 'styled-components';
 import { Card } from 'reactstrap';
 
+export const PS = styled.p`
+  font-family: serif;
+  color: snow;
+`
 export const DefaultArticleSectionS = styled.div`
   font-family: serif;
   color: white;
