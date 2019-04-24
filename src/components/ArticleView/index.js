@@ -1,7 +1,7 @@
 import React from 'react';
-import {CardImg, CardText, CardBody,
-  CardTitle, Button } from 'reactstrap';
-import { CardS, ImageContainerS, ButtonXS } from './styled';
+import { CardImg, CardText, CardBody,
+  CardTitle } from 'reactstrap';
+import { CardS, ImageContainerS, ButtonS, ButtonXS } from './styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
@@ -26,15 +26,15 @@ const getImageOrNot = (multimedia, image) => {
 }
 
 const ArticleView = ({
-  _id, 
-  image, 
-  multimedia, 
-  web_url, 
-  webUrl, 
-  headline, 
-  snippet, 
-  addFavDreamArticle, 
-  deFavorite 
+  _id,
+  image,
+  multimedia,
+  web_url,
+  webUrl,
+  headline,
+  snippet,
+  addFavDreamArticle,
+  deFavorite
 }) =>
   <CardS>
     {getImageOrNot(multimedia, image)}
@@ -48,9 +48,10 @@ const ArticleView = ({
         </a>
       </CardTitle>
       <CardText>{snippet}</CardText>
-      {!image && <Button onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}><FontAwesomeIcon color='springgreen' icon={faHeart} /></Button>}
-      {image && <ButtonXS onClick={() => deFavorite(_id)}>X</ButtonXS>}
+      {!image && <ButtonS
+      onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}>
+      <FontAwesomeIcon color='springgreen' icon={faHeart} /></ButtonS>}
+        {image && <ButtonXS onClick={() => deFavorite(_id)}>X</ButtonXS>}
     </CardBody>
   </CardS>
-
 export default ArticleView

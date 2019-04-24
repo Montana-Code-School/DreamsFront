@@ -1,10 +1,17 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { DefaultArticleSectionS, LabelS, PS } from './styled';
+
+// styles
+import { InputS } from '../styledComponents/inputs';
+import { DefaultArticleSectionS, LabelS, PS, SrchOptionsDivS, RadioButtonS, LinkS } from './styled';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
+
 import { AuthUserContext, withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
-import ArticleView from '../../ArticleView';
+import ArticleView from '../ArticleView';
+import { AuthButtonS } from '../styledComponents/authButtons';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
@@ -101,19 +108,19 @@ class LitPage extends Component {
       <AuthUserContext.Consumer>
         {authUser => (
           <div>
-            <Link
+            <LinkS
               to={ROUTES.FAVORITES}
-            >Your Favorite Articles
-            </Link>
+            ><FontAwesomeIcon color='springgreen' icon={faHeart} />
+            Your Favorite Articles
+            </LinkS>
             <br/>
-            <input
+            <InputS
               type="text" id="userSrch"
               placeholder="Search.."
+              inputPadding={10}
             />
-            <button
-              onClick={this.onClickSearch}
-            >Search Articles</button>
-            <div>
+            <SrchOptionsDivS className='buttonDiv'>
+            <RadioButtonS>
               <input
                 type="radio"
                 checked={this.state.searchOption === "dreams"}
@@ -122,10 +129,9 @@ class LitPage extends Component {
                 id="dreamBox"
                 onChange={this.handleSrchCategoryChange}
               />
-
               <LabelS htmlFor="sleepBox">Search Dream Articles</LabelS>
-            </div>
-            <div>
+            </RadioButtonS>
+            <RadioButtonS>
               <input
                 type="radio"
                 checked={this.state.searchOption === "sleep"}
@@ -135,7 +141,11 @@ class LitPage extends Component {
                 onChange={this.handleSrchCategoryChange}
               />
               <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
-            </div>
+            </RadioButtonS>
+            </SrchOptionsDivS>
+            <AuthButtonS
+              onClick={this.onClickSearch}
+            >Search Articles</AuthButtonS>
             {!this.state.searchResults && <PS>Sorry, your search turned up empty.</PS>}
             {!!this.state.articles.length &&
               <DefaultArticleSectionS>
