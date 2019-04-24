@@ -1,5 +1,5 @@
 import styled from 'styled-components';
-import { Card } from 'reactstrap';
+import { Card, Button } from 'reactstrap';
 
 export const CardS = styled(Card)`
   background: rgba(255, 255, 255, 0.3);
@@ -14,6 +14,12 @@ export const ImageContainerS = styled.div`
   width: 200px;
   align-self: center;
   margin-top: 1.25rem;
+`
+export const ButtonS = styled(Button)`
+    &:hover{
+  transition: 1s ease-in-out;
+  background-color: deeppink;
+  }
 `
 
 
