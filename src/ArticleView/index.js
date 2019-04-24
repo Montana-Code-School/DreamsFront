@@ -5,20 +5,35 @@ import { CardS, ImageContainerS } from './styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
-const ArticleView = ({ image, multimedia, web_url, headline, snippet, addFavDreamArticle }) =>
-  <CardS>
+const checkMultimedia = (multimedia, image) => {
+  if (multimedia){
+    return multimedia.length && `https://www.nytimes.com/${multimedia[0].url}`
+  } else if (image) {
+    return `https://www.nytimes.com/${image}`
+  }
+}
+
+const getImageOrNot = (multimedia, image) => {
+  if ((multimedia && !multimedia.length) && !image) return null;
+  return (
     <ImageContainerS>
       <CardImg
         alt=''
-        src={ multimedia ? (`https://www.nytimes.com/${multimedia[0].url}`) : (`https://www.nytimes.com/${image}`) }
+        src={checkMultimedia(multimedia, image)}
       />
     </ImageContainerS>
+  )
+}
+
+const ArticleView = ({ image, multimedia, web_url, webUrl, headline, snippet, addFavDreamArticle }) =>
+  <CardS>
+    {getImageOrNot(multimedia, image)}
     <CardBody>
       <CardTitle>
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href={typeof headline === "object" ? `https://www.nytimes.com/${headline.main}` : `https://www.nytimes.com/${headline}`}>
+          href={web_url || webUrl}>
           {typeof headline === "object" ? headline.main : headline}
         </a>
       </CardTitle>
