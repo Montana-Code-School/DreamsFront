@@ -18,8 +18,27 @@ class FavoritePage extends Component {
    .then((articles) => {
      console.log(articles);
      this.setState({ articles });
-
    })
+  }
+
+  deFavorite = (_id) => {
+    fetch(`${REACT_APP_BACKEND_URL}/articles`, {
+      method:"DELETE",
+      body: JSON.stringify({_id}),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    })
+    .then(res => res.json())
+    .then((data) => {
+      let _articles = [...this.state.articles];
+      for (let i = 0; i < _articles.length; i++) {
+        if (data._id === _articles[i]._id){
+          _articles.splice(i, 1)
+        }
+      }
+      this.setState({articles: _articles})
+    })
   }
 
   render(){
@@ -29,7 +48,13 @@ class FavoritePage extends Component {
           <div>
             <h1>Your Favorites</h1>
             {this.state.articles.map((article) =>
-            <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+              <ArticleView 
+                key={article._id} 
+                _id={article._id}
+                {...article} 
+                addFavDreamArticle={this.addFavDreamArticle}
+                deFavorite={this.deFavorite}
+              />
             )}
           </div>
         )}

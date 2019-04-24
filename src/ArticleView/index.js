@@ -1,7 +1,7 @@
 import React from 'react';
 import {CardImg, CardText, CardBody,
   CardTitle, Button } from 'reactstrap';
-import { CardS, ImageContainerS } from './styled';
+import { CardS, ImageContainerS, ButtonXS } from './styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
@@ -25,7 +25,17 @@ const getImageOrNot = (multimedia, image) => {
   )
 }
 
-const ArticleView = ({ image, multimedia, web_url, webUrl, headline, snippet, addFavDreamArticle }) =>
+const ArticleView = ({
+  _id, 
+  image, 
+  multimedia, 
+  web_url, 
+  webUrl, 
+  headline, 
+  snippet, 
+  addFavDreamArticle, 
+  deFavorite 
+}) =>
   <CardS>
     {getImageOrNot(multimedia, image)}
     <CardBody>
@@ -39,6 +49,7 @@ const ArticleView = ({ image, multimedia, web_url, webUrl, headline, snippet, ad
       </CardTitle>
       <CardText>{snippet}</CardText>
       {!image && <Button onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}><FontAwesomeIcon color='springgreen' icon={faHeart} /></Button>}
+      {image && <ButtonXS onClick={() => deFavorite(_id)}>X</ButtonXS>}
     </CardBody>
   </CardS>
 
