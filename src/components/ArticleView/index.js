@@ -1,6 +1,6 @@
 import React from 'react';
-import {CardImg, CardText, CardBody,
-  CardTitle} from 'reactstrap';
+import { CardImg, CardText, CardBody,
+  CardTitle } from 'reactstrap';
 import { CardS, ImageContainerS, ButtonS } from './styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';

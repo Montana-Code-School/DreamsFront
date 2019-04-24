@@ -38,14 +38,13 @@ export const SrchOptionsDivS = styled.div`
 export const RadioButtonS = styled.div`
   padding: 10px;
 `
-
 export const LinkS = styled(Link)`
   font-family: serif;
   font-size: xx-large;
   color: hotpink;
   padding: 5px;
   &:hover{
-  transition: .25s ease-in-out;
-  color: deeppink;
+    transition: .25s ease-in-out;
+    color: deeppink;
   }
 `
