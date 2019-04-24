@@ -2,7 +2,8 @@ import React from 'react';
 import {CardImg, CardText, CardBody,
   CardTitle, Button } from 'reactstrap';
 import { CardS, ImageContainerS } from './styled';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 const ArticleView = ({ image, multimedia, web_url, headline, snippet, addFavDreamArticle }) =>
   <CardS>
@@ -22,7 +23,7 @@ const ArticleView = ({ image, multimedia, web_url, headline, snippet, addFavDrea
         </a>
       </CardTitle>
       <CardText>{snippet}</CardText>
-      {!image && <Button onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}><i style={{color: "springgreen"}} className="fas fa-heart"></i></Button>}
+      {!image && <Button onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}><FontAwesomeIcon color='springgreen' icon={faHeart} /></Button>}
     </CardBody>
   </CardS>
 
