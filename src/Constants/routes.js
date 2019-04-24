@@ -6,6 +6,7 @@ export const NEW_DREAM = '/newdream';
 export const DREAM_ARCHIVE = '/dreamArchive';
 export const EDIT_DREAM = '/EditDream';
 export const LITERATURE = '/Literature';
+export const FAVORITES = '/FavoriteArticles';
 export const CHAT = '/chat';
 export const COLOR_BLOB = '/ColorBlob';
 export const ERROR_SIGN_OUT = '/ErrorSignOut';
