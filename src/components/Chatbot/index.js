@@ -45,7 +45,7 @@ let otherwise = [
   `Could you perhaps say the same thing in a different way, tying it back into your dream?`,
   `What causes you to say that?`,
   `A wise old sorceress said something similar to me once. I'm sorry, what else were saying, about your dream?`,
-  `Isn't there a Greatful Dead song about that?`,
+  `Isn't there a Grateful Dead song about that?`,
 
 
 ];
