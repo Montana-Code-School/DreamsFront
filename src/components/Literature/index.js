@@ -9,7 +9,9 @@ import ArticleView from '../../ArticleView';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
-const filterSections = `&fq=news_desk:(%22health%22%20%22science%22)`
+const filterSectionDreams = `&fq=subject:(dreams)`
+const filterSectionSleep = `&fq=subject:(sleep)`
+const filterSectionDefault = `&fq=subject.contains:(sleep,dreams)`
 const key = `&api-key=OQKttP42ZWiOZdLWaBXQ1nfvbUKkU4Hb`
 
 class LitPage extends Component {
@@ -25,7 +27,7 @@ class LitPage extends Component {
   }
 
   componentDidMount(){
-    const getArticles = axios.get(`${baseURL}&q=dreams&q=sleep${filterSections}${key}`)
+    const getArticles = axios.get(`${baseURL}&q=dreams&q=sleep${filterSectionDefault}${key}`)
     const getFavArticles = axios.get(`${REACT_APP_BACKEND_URL}/articles/all`)
     Promise.all([getArticles, getFavArticles])
     .then((results) => {
@@ -47,7 +49,7 @@ class LitPage extends Component {
 
   getDreamArts() {
     const search = this.userInputSearch();
-    axios.get(`${baseURL}&q=dreams ${search}${filterSections}${key}`)
+    axios.get(`${baseURL}&q=dreams ${search}${filterSectionDreams}${key}`)
     .then(res => {
       const dreamArticles = res.data.response.docs;
       this.setState({ dreamArticles });
@@ -56,7 +58,7 @@ class LitPage extends Component {
 
   getSleepArts() {
     const search = this.userInputSearch();
-    axios.get(`${baseURL}&q=sleep ${search}${filterSections}${key}`)
+    axios.get(`${baseURL}&q=sleep ${search}${filterSectionSleep}${key}`)
       .then(res => {
         const sleepArticles = res.data.response.docs;
         this.setState({ sleepArticles });
