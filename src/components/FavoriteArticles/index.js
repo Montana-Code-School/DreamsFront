@@ -3,6 +3,8 @@ import ArticleView from '../../ArticleView';
 
 import { AuthUserContext, withAuthorization } from '../Session';
 
+import { DefaultArticleSectionS } from './styled';
+
 const { REACT_APP_BACKEND_URL } = process.env;
 
 class FavoritePage extends Component {
@@ -47,15 +49,17 @@ class FavoritePage extends Component {
         {authUser => (
           <div>
             <h1>Your Favorites</h1>
-            {this.state.articles.map((article) =>
-              <ArticleView 
-                key={article._id} 
-                _id={article._id}
-                {...article} 
-                addFavDreamArticle={this.addFavDreamArticle}
-                deFavorite={this.deFavorite}
-              />
-            )}
+            <DefaultArticleSectionS>
+              {this.state.articles.map((article) =>
+                <ArticleView 
+                  key={article._id} 
+                  _id={article._id}
+                  {...article} 
+                  addFavDreamArticle={this.addFavDreamArticle}
+                  deFavorite={this.deFavorite}
+                />
+              )}
+            </DefaultArticleSectionS>
           </div>
         )}
       </AuthUserContext.Consumer>
