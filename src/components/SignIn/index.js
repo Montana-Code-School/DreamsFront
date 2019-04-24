@@ -13,7 +13,51 @@ import { SignUpLink } from '../SignUp';
 import { PasswordForgetLink } from '../PasswordForget';
 import { withFirebase } from '../Firebase';
 import * as ROUTES from '../../Constants/routes';
+const { REACT_APP_BACKEND_URL } = process.env;
 
+/**
+ * @param {string} name The cookie name.
+ * @return {?string} The corresponding cookie value to lookup.
+ */
+function getCookie(name) {
+  var v = document.cookie.match('(^|;) ?' + name + '=([^;]*)(;|$)');
+  return v ? v[2] : null;
+}
+
+/**
+ * @param {string} url The session login endpoint.
+ * @param {string} idToken The ID token to post to backend.
+ * @param {?string} csrfToken The CSRF token to send to backend.
+ * @return {jQuery.jqXHR<string>} A jQuery promise that resolves on completion.
+ */
+const postIdTokenToAuth = function(url, idToken, csrfToken) {
+  // POST to session login endpoint.
+  
+  return fetch(`${REACT_APP_BACKEND_URL}/auth`, {
+    method: 'POST',
+    body: JSON.stringify({idToken, csrfToken}),
+    credentials: 'include',
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+  .then(response => response.json())
+  .then((data) => {
+    return data
+  })
+  .catch((error)=> {
+    throw new Error(`postIdTokenToAuth, ${error}`);
+  })
+};
+
+const handleSignedInUser = function(idToken, csrfToken) {
+  return postIdTokenToAuth('/auth', idToken, csrfToken)
+  .then(function(data) {
+    return data
+  }, function(error) {
+    throw new Error(`handleSignedInUser, ${error}`);
+  });
+};
 
 const SignInPage = () => (
   <SignInPageS>
@@ -37,7 +81,6 @@ const INITIAL_STATE = {
 class SignInFormBase extends Component {
   constructor(props) {
     super(props);
-
     this.state = { ...INITIAL_STATE };
   }
 
@@ -46,9 +89,12 @@ class SignInFormBase extends Component {
 
     this.props.firebase
       .doSignInWithEmailAndPassword(email, password)
-      .then(() => {
-        this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.NEW_DREAM);
+      .then(async () => {
+        const idToken = await this.props.firebase.getServerToken();
+        const csrfToken = await getCookie('csrfToken');
+        await handleSignedInUser(idToken, csrfToken)
+        await this.setState({ ...INITIAL_STATE });
+        await this.props.history.push(ROUTES.DREAM_ARCHIVE);
       })
       .catch(error => {
         this.setState({ error });

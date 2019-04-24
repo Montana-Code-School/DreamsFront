@@ -3,8 +3,12 @@ import {
   REQUEST_DREAMS, 
   SELECT_DREAM, 
   ADD_NEW_OR_UPDATE_DREAM, 
-  DELETE_DREAM 
+  DELETE_DREAM,
+  ERROR_SIGN_OUT,
+  RESET_DREAMS
 } from "../Constants/actionTypes";
+
+import * as ROUTES from '../Constants/routes';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -19,6 +23,13 @@ function requestDreams() {
     type: REQUEST_DREAMS,
   }
 }
+
+export function resetDreams() {
+  return {
+    type: RESET_DREAMS,
+  }
+}
+
 export function selectDream(payload) {
   return {
     type: SELECT_DREAM,
@@ -31,37 +42,71 @@ export function addNewOrUpdateDream(payload) {
     payload
   }
 }
+
 export function deleteDream(id) {
   return {
     type: DELETE_DREAM,
     payload: {id},
   }
 }
-export function fetchDreams(userID) {
+
+export function errorOnSignOut(h) {
+  h.push(ROUTES.ERROR_SIGN_OUT);
+  return {
+    type: ERROR_SIGN_OUT,
+  }
+}
+
+export function fetchDreams(userID, props) {
   return function(dispatch, getState){
     if(getState().dreams.length) return;
     dispatch(requestDreams());
-    return fetch(`${REACT_APP_BACKEND_URL}/dreams/?userId=${userID}`)
-      .then(response => response.json())
+    return fetch(`${REACT_APP_BACKEND_URL}/dreams/?userId=${userID}`, {credentials: "include"})
+      .then(response => {
+        if (response.status === 401){
+          // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
+          dispatch(errorOnSignOut(props.history))
+        }
+        return response.json()
+      })
       .then((dreams) => {
         dreams = dreams.reverse();
         dispatch(receivedDreams(dreams));
       })
+      .catch(function(error) {
+        // Handle error
+        console.log("error");
+        // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
+        dispatch(errorOnSignOut(props.history))
+      });
   }
 }
-export function saveDream(dream, isNew, promiseResolver) {
+
+export function saveDream(dream, isNew, promiseResolver, props ) {
   return function(dispatch, getState){
     fetch(`${REACT_APP_BACKEND_URL}/dreams`, {
       method: isNew ? "POST" : "PUT",
       body: JSON.stringify(dream),
+      credentials: "include",
       headers: {
         "Content-Type": "application/json"
       }
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.status === 401){
+      // this.props.history.push(ROUTES.ERROR_SIGN_OUT)
+      dispatch(errorOnSignOut(props.history))
+      }
+      return response.json()
+    })
     .then((myJson) => {
       dispatch(addNewOrUpdateDream(myJson));
       promiseResolver();
+    })
+    .catch(function(error) {
+      // Handle error
+      console.log("error");
+      dispatch(errorOnSignOut(props.history))
     });
   }
 }

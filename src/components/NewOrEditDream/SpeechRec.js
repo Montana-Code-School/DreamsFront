@@ -1,8 +1,11 @@
-import React, { Component, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import SpeechRecognition from "react-speech-recognition";
+
+import { DreamButtonS } from '../styledComponents/dreamButtons';
 import {
   DreamTextareaS,
+  InterimDivS,
 } from './styled';
 
 const propTypes = {
@@ -83,9 +86,9 @@ const Dictaphone = ({
         value={content}
         onChange={e => handleLocalChange(e)}
       />
-      <div>{interimTranscript}</div>
-      {!listening && <button onClick={startListening}>Start Listening</button>}
-      {listening && <button onClick={stopListening}>Stop Listening</button>}
+      <InterimDivS>{interimTranscript}</InterimDivS>
+      {!listening && <DreamButtonS onClick={startListening}>Start Listening</DreamButtonS>}
+      {listening && <DreamButtonS onClick={stopListening}>Stop Listening</DreamButtonS>}
     </div>
   );
 };
