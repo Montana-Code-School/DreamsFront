@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { DefaultArticleSectionS, LabelS, PS } from './styled';
+import { AuthUserContext, withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
 import ArticleView from '../../ArticleView';
 
@@ -97,53 +98,60 @@ class LitPage extends Component {
 
   render() {
     return (
-      <div>
-        <Link
-          to={ROUTES.FAVORITES}
-        >Your Favorite Articles
-        </Link>
-        <br/>
-        <input
-          type="text" id="userSrch"
-          placeholder="Search.."
-        />
-        <button
-          onClick={this.onClickSearch}
-        >Search Articles</button>
-        <div>
-          <input
-            type="radio"
-            checked={this.state.searchOption === "dreams"}
-            name="srchOptions"
-            value="dreams"
-            id="dreamBox"
-            onChange={this.handleSrchCategoryChange}
-          />
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <div>
+            <Link
+              to={ROUTES.FAVORITES}
+            >Your Favorite Articles
+            </Link>
+            <br/>
+            <input
+              type="text" id="userSrch"
+              placeholder="Search.."
+            />
+            <button
+              onClick={this.onClickSearch}
+            >Search Articles</button>
+            <div>
+              <input
+                type="radio"
+                checked={this.state.searchOption === "dreams"}
+                name="srchOptions"
+                value="dreams"
+                id="dreamBox"
+                onChange={this.handleSrchCategoryChange}
+              />
 
-          <LabelS htmlFor="sleepBox">Search Dream Articles</LabelS>
-        </div>
-        <div>
-          <input
-            type="radio"
-            checked={this.state.searchOption === "sleep"}
-            name="srchOptions"
-            value="sleep"
-            id="sleepBox"
-            onChange={this.handleSrchCategoryChange}
-          />
-          <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
-        </div>
-        {!this.state.searchResults && <PS>Sorry, your search turned up empty.</PS>}
-        {!!this.state.articles.length &&
-          <DefaultArticleSectionS>
-            {this.state.articles.map((article) =>
-              <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
-            )}
-          </DefaultArticleSectionS>
-        }
-      </div>
+              <LabelS htmlFor="sleepBox">Search Dream Articles</LabelS>
+            </div>
+            <div>
+              <input
+                type="radio"
+                checked={this.state.searchOption === "sleep"}
+                name="srchOptions"
+                value="sleep"
+                id="sleepBox"
+                onChange={this.handleSrchCategoryChange}
+              />
+              <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
+            </div>
+            {!this.state.searchResults && <PS>Sorry, your search turned up empty.</PS>}
+            {!!this.state.articles.length &&
+              <DefaultArticleSectionS>
+                {this.state.articles.map((article) =>
+                  <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+                )}
+              </DefaultArticleSectionS>
+            }
+          </div>
+        )}
+      </AuthUserContext.Consumer>
     )
   }
 }
 
-export default LitPage
+const condition = authUser => !!authUser;
+const authorizedLitPage = withAuthorization(condition)(LitPage);
+
+export default authorizedLitPage
