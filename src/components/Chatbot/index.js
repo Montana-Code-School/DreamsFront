@@ -1,9 +1,13 @@
 import React, { Component, Fragment } from 'react';
+import { Link } from 'react-router-dom';
+
+import { AuthUserContext, withAuthorization } from '../Session';
+
+
 import ChatBot from '../../chatbotHack';
 import ColorBlob from '../ColorBlob';
 import blob from './blob.png'
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 import * as ROUTES from '../../Constants/routes';
 import { archsLowercase } from '../NewOrEditDream/archetypes';
 
@@ -207,27 +211,37 @@ class Chat extends Component {
   
   render() {
     return(
-      <Fragment>
-        <BlobInputContainerSS>
-          <ColorBlob/>
-        </BlobInputContainerSS>
-        <ChatbotContentS>
-          <ChatBot
-            botAvatar={`${blob}`}
-            steps={this.state.steps} 
-            headerTitle={"Shaman says"}
-            recognitionEnable={true}
-            speechSynthesis={{ enable: true, lang: 'en'}}
-          />
-          <br />
-          <Link
-            to={ROUTES.DREAM_ARCHIVE}
-          >Go Back to Dream Archive</Link>
-        </ChatbotContentS>
-      </Fragment>
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <Fragment>
+            <BlobInputContainerSS>
+              <ColorBlob/>
+            </BlobInputContainerSS>
+            <ChatbotContentS>
+              <ChatBot
+                botAvatar={`${blob}`}
+                steps={this.state.steps} 
+                headerTitle={"Shaman says"}
+                recognitionEnable={true}
+                speechSynthesis={{ enable: true, lang: 'en'}}
+              />
+              <br />
+              <LinkS
+                to={ROUTES.DREAM_ARCHIVE}
+              >Go Back to Dream Archive</LinkS>
+            </ChatbotContentS>
+          </Fragment>
+        )}
+      </AuthUserContext.Consumer>
     )
   }
 }
+
+const LinkS = styled( Link )`
+  &:hover {
+    color: hotpink;
+  }
+`
 
 const ChatbotContentS = styled.div`
   position: relative;
@@ -244,4 +258,7 @@ const BlobInputContainerSS = styled.div`
   overflow: hidden;
 `
 
-export default Chat;
+const condition = authUser => !!authUser;
+const authorizedChat = withAuthorization(condition)(Chat);
+
+export default authorizedChat;
