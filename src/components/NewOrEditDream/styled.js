@@ -2,6 +2,10 @@ import styled from 'styled-components';
 
 import { Link } from 'react-router-dom';
 
+export const InterimDivS = styled.div`
+  color: snow;
+`
+
 export const LinkS = styled( Link )`
   &:hover {
     color: hotpink;
