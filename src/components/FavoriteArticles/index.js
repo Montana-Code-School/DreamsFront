@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
 import ArticleView from '../../ArticleView';
+
+import { AuthUserContext, withAuthorization } from '../Session';
+
 const { REACT_APP_BACKEND_URL } = process.env;
 
 class FavoritePage extends Component {
@@ -21,14 +24,21 @@ class FavoritePage extends Component {
 
   render(){
     return(
-      <div>
-        <h1>Your Favorites</h1>
-        {this.state.articles.map((article) =>
-         <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <div>
+            <h1>Your Favorites</h1>
+            {this.state.articles.map((article) =>
+            <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+            )}
+          </div>
         )}
-      </div>
+      </AuthUserContext.Consumer>
     )
   }
 }
 
-export default FavoritePage
+const condition = authUser => !!authUser;
+const authorizedFavoritePage = withAuthorization(condition)(FavoritePage);
+
+export default authorizedFavoritePage

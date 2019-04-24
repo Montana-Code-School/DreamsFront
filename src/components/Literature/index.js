@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { DefaultArticleSectionS,DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
-import * as ROUTES from '../../Constants/routes';
 import {CardImg, CardText, CardBody,
   CardTitle, Button } from 'reactstrap';
+
+import { AuthUserContext, withAuthorization } from '../Session';
+import { DefaultArticleSectionS,DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
+import * as ROUTES from '../../Constants/routes';
 import ArticleView from '../../ArticleView';
 
 const { REACT_APP_BACKEND_URL } = process.env;
@@ -114,68 +116,76 @@ class LitPage extends Component {
 
   render() {
     return (
-      <div>
-        <Link
-          to={ROUTES.FAVORITES}
-        >Your Favorite Articles
-        </Link>
-        <br/>
-        <input
-          type="text" id="userSrch"
-          placeholder="Search.."
-        />
-        <button
-          onClick={this.onClickSearch}
-        >Search Articles</button>
-        <div>
-          <input
-            type="radio"
-            checked={this.state.searchOption === "dreamArticles"}
-            name="srchOptions"
-            value="dreamArticles"
-            id="dreamBox"
-            onChange={this.handleSrchCategoryChange}
-          />
+      <AuthUserContext.Consumer>
+        {authUser => (
+          <div>
+            <Link
+              to={ROUTES.FAVORITES}
+            >Your Favorite Articles
+            </Link>
+            <br/>
+            <input
+              type="text" id="userSrch"
+              placeholder="Search.."
+            />
+            <button
+              onClick={this.onClickSearch}
+            >Search Articles</button>
+            <div>
+              <input
+                type="radio"
+                checked={this.state.searchOption === "dreamArticles"}
+                name="srchOptions"
+                value="dreamArticles"
+                id="dreamBox"
+                onChange={this.handleSrchCategoryChange}
+              />
 
-          <LabelS htmlFor="sleepBox">Search Dream Articles</LabelS>
-        </div>
+              <LabelS htmlFor="sleepBox">Search Dream Articles</LabelS>
+            </div>
 
-        <div>
-          <input
-            type="radio"
-            checked={this.state.searchOption === "sleepArticles"}
-            name="srchOptions"
-            value="sleepArticles"
-            id="sleepBox"
-            onChange={this.handleSrchCategoryChange}
-          />
-          <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
-        </div>
-        {!!this.state.articles.length &&
-          <DefaultArticleSectionS>
-            {this.state.articles.map((article) =>
-              <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
-            )}
-          </DefaultArticleSectionS>
-        }
+            <div>
+              <input
+                type="radio"
+                checked={this.state.searchOption === "sleepArticles"}
+                name="srchOptions"
+                value="sleepArticles"
+                id="sleepBox"
+                onChange={this.handleSrchCategoryChange}
+              />
+              <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
+            </div>
+            {!!this.state.articles.length &&
+              <DefaultArticleSectionS>
+                {this.state.articles.map((article) =>
+                  <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+                )}
+              </DefaultArticleSectionS>
+            }
 
-        {!!this.state.dreamArticles.length &&
-          <DreamArticleSectionS>
-            {this.state.dreamArticles.map((article) =>
-              <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
-            )}
-          </DreamArticleSectionS>
-        }
-        {!!this.state.sleepArticles.length &&
-          <SleepArticleSectionS>
-            {this.state.sleepArticles.map(article =>
-              <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
-            )}
-          </SleepArticleSectionS>
-        }
-      </div>
+            {!!this.state.dreamArticles.length &&
+              <DreamArticleSectionS>
+                {this.state.dreamArticles.map((article) =>
+                  <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+                )}
+              </DreamArticleSectionS>
+            }
+            {!!this.state.sleepArticles.length &&
+              <SleepArticleSectionS>
+                {this.state.sleepArticles.map(article =>
+                  <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
+                )}
+              </SleepArticleSectionS>
+            }
+          </div>
+
+        )}
+      </AuthUserContext.Consumer>
     )
   }
 }
 
-export default LitPage
+const condition = authUser => !!authUser;
+const authorizedLitPage = withAuthorization(condition)(LitPage);
+
+export default authorizedLitPage
