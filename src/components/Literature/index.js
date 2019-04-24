@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
-import {CardImg, CardText, CardBody,
-  CardTitle, Button } from 'reactstrap';
-
+import { DefaultArticleSectionS, LabelS, PS } from './styled';
 import { AuthUserContext, withAuthorization } from '../Session';
-import { DefaultArticleSectionS,DreamArticleSectionS, SleepArticleSectionS,LabelS, CardS } from './styled';
 import * as ROUTES from '../../Constants/routes';
 import ArticleView from '../../ArticleView';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
-const filterSectionDreams = `&fq=subject:(dreams)`
-const filterSectionSleep = `&fq=subject:(sleep)`
 const filterSectionDefault = `&fq=subject.contains:(sleep,dreams)`
 const key = `&api-key=OQKttP42ZWiOZdLWaBXQ1nfvbUKkU4Hb`
 
@@ -20,11 +15,10 @@ class LitPage extends Component {
   constructor(props){
     super(props);
     this.state = {
-      dreamArticles: [],
-      sleepArticles: [],
       favoritedArticles: [],
       articles: [],
-      searchOption: "",
+      searchOption: "dreams",
+      searchResults: true,
     }
   }
 
@@ -50,22 +44,18 @@ class LitPage extends Component {
     });
   }
 
-  getDreamArts() {
+  getArts() {
     const search = this.userInputSearch();
-    axios.get(`${baseURL}&q=dreams ${search}${filterSectionDreams}${key}`)
+    axios.get(`${baseURL}&q=${search}&fq=subject:(${this.state.searchOption})${key}`)
     .then(res => {
-      const dreamArticles = res.data.response.docs;
-      this.setState({ dreamArticles });
+      const articles = res.data.response.docs;
+      if (!articles.length){
+        this.setState({searchResults: false})
+      } else if (articles.length) {
+        this.setState({searchResults: true})
+      }
+      this.setState({ articles });
     })
-  }
-
-  getSleepArts() {
-    const search = this.userInputSearch();
-    axios.get(`${baseURL}&q=sleep ${search}${filterSectionSleep}${key}`)
-      .then(res => {
-        const sleepArticles = res.data.response.docs;
-        this.setState({ sleepArticles });
-      })
   }
 
   //getting value of input and passing input to onClickSearch.
@@ -78,16 +68,8 @@ class LitPage extends Component {
   // enables search button to get dream and/or sleep articles according to which radio button is selected.
   onClickSearch = (e) => {
     e.preventDefault();
-    const el = document.querySelector('input[name="srchOptions"]:checked')
-    const currentSrchOpt = el.value;
-    if(currentSrchOpt === "dreamArticles"){
-      return this.getDreamArts();
-    }
-    if(currentSrchOpt === "sleepArticles"){
-      return this.getSleepArts();
-    }
-    this.getSleepArts();
-    this.getDreamArts();
+    this.setState({articles: []});
+    this.getArts();
   }
 
   //enables radio buttons to be selected.
@@ -134,27 +116,27 @@ class LitPage extends Component {
             <div>
               <input
                 type="radio"
-                checked={this.state.searchOption === "dreamArticles"}
+                checked={this.state.searchOption === "dreams"}
                 name="srchOptions"
-                value="dreamArticles"
+                value="dreams"
                 id="dreamBox"
                 onChange={this.handleSrchCategoryChange}
               />
 
               <LabelS htmlFor="sleepBox">Search Dream Articles</LabelS>
             </div>
-
             <div>
               <input
                 type="radio"
-                checked={this.state.searchOption === "sleepArticles"}
+                checked={this.state.searchOption === "sleep"}
                 name="srchOptions"
-                value="sleepArticles"
+                value="sleep"
                 id="sleepBox"
                 onChange={this.handleSrchCategoryChange}
               />
               <LabelS htmlFor="dreamBox">Search Sleep Articles</LabelS>
             </div>
+            {!this.state.searchResults && <PS>Sorry, your search turned up empty.</PS>}
             {!!this.state.articles.length &&
               <DefaultArticleSectionS>
                 {this.state.articles.map((article) =>
@@ -162,23 +144,7 @@ class LitPage extends Component {
                 )}
               </DefaultArticleSectionS>
             }
-
-            {!!this.state.dreamArticles.length &&
-              <DreamArticleSectionS>
-                {this.state.dreamArticles.map((article) =>
-                  <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
-                )}
-              </DreamArticleSectionS>
-            }
-            {!!this.state.sleepArticles.length &&
-              <SleepArticleSectionS>
-                {this.state.sleepArticles.map(article =>
-                  <ArticleView key={article._id} {...article} addFavDreamArticle={this.addFavDreamArticle}/>
-                )}
-              </SleepArticleSectionS>
-            }
           </div>
-
         )}
       </AuthUserContext.Consumer>
     )
