@@ -19,8 +19,8 @@ export const SleepArticleSectionS = styled.div`
   display:flex;
 `
 export const LabelS = styled.label`
-   font-family: serif;
-    color: snow;
+  font-family: serif;
+  color: snow;
 `
 export const CardS = styled(Card)`
   background: rgba(255, 255, 255, 0.3);

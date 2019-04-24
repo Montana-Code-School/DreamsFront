@@ -36,6 +36,7 @@ class LitPage extends Component {
       // if articles.web_url === favoritedArticles.web_url,  articles.splice(0, 1, favoritedArticles.web_url) return articles;
       const articles = results[0].data.response.docs;
       const favoritedArticles = results[1].data;
+      console.log(results);
       articles.forEach((article, index) => {
         favoritedArticles.forEach((favArticle)=> {
           if(article.web_url === favArticle.webUrl){

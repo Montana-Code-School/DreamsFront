@@ -3,7 +3,8 @@ import {CardImg, CardText, CardBody,
   CardTitle, Button } from 'reactstrap';
 import { CardS, ImageContainerS } from './styled';
 
-const ArticleView = ({ image, multimedia, web_url, headline, title, snippet, addFavDreamArticle }) =>
+
+const ArticleView = ({ image, multimedia, web_url, headline, snippet, addFavDreamArticle }) =>
   <CardS>
     <ImageContainerS>
       <CardImg
@@ -16,11 +17,12 @@ const ArticleView = ({ image, multimedia, web_url, headline, title, snippet, add
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href={web_url}>{typeof headline === "object" ? `https://www.nytimes.com/${headline.main}` : `https://www.nytimes.com/${title}`}
+          href={typeof headline === "object" ? `https://www.nytimes.com/${headline.main}` : `https://www.nytimes.com/${headline}`}>
+          {typeof headline === "object" ? headline.main : headline}
         </a>
       </CardTitle>
       <CardText>{snippet}</CardText>
-      {!image && <Button onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}>Favorite</Button>}
+      {!image && <Button onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}><i style={{color: "springgreen"}} className="fas fa-heart"></i></Button>}
     </CardBody>
   </CardS>
 
