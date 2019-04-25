@@ -16,6 +16,8 @@ export const ImageContainerS = styled.div`
   margin-top: 1.25rem;
 `
 export const ButtonS = styled(Button)`
+  border: double;
+  border-color: goldenrod;
   &:hover{
     transition: 1s ease-in-out;
     background-color: deeppink;

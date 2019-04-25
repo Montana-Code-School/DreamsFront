@@ -41,16 +41,20 @@ const ArticleView = ({
     <CardBody>
       <CardTitle>
         <a
+          style={{fontFamily:"serif", fontSize:"x-large", color:"snow"}}
           target="_blank"
           rel="noopener noreferrer"
           href={web_url || webUrl}>
           {typeof headline === "object" ? headline.main : headline}
         </a>
       </CardTitle>
-      <CardText>{snippet}</CardText>
+      <CardText
+        style={{fontFamily:"serif", fontSize:"large", color:"snow"}}
+      >{snippet}
+      </CardText>
       {!image && <ButtonS
       onClick={(e) => addFavDreamArticle(e, { headline, snippet, multimedia, web_url } )}>
-      <FontAwesomeIcon color='springgreen' icon={faHeart} /></ButtonS>}
+      <FontAwesomeIcon color='turquoise' icon={faHeart} /></ButtonS>}
         {image && <ButtonXS onClick={() => deFavorite(_id)}>X</ButtonXS>}
     </CardBody>
   </CardS>
