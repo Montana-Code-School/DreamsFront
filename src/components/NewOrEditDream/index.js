@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { addNewOrUpdateDream, deleteDream, saveDream } from '../../store/actions';
-import { Link } from 'react-router-dom';
+import { addNewOrUpdateDream, deleteDream, saveDream, errorOnSignOut } from '../../store/actions';
 
 import { DreamButtonS } from '../styledComponents/dreamButtons';
 import { InputS } from '../styledComponents/inputs';
@@ -268,7 +267,7 @@ class NewDreamPage extends Component {
     if(!this.isNew) body._id = _id;
     // Post to DB
     const onSaveComplete = new Promise((resolve, reject) => {
-      this.props.saveDream(body, this.isNew, resolve);
+      this.props.saveDream(body, this.isNew, resolve, this.props);
     });
     onSaveComplete.then(() => this.props.history.push(ROUTES.DREAM_ARCHIVE));
   }
@@ -280,6 +279,7 @@ class NewDreamPage extends Component {
       fetch(`${REACT_APP_BACKEND_URL}/dreams`, {
         method: "DELETE",
         body: JSON.stringify({ _id }),
+        credentials: "include",
         headers: {
           "Content-Type": "application/json"
         }
@@ -297,6 +297,10 @@ class NewDreamPage extends Component {
     this.setState({imgUrlArr: thumbsUrlObjs})
   }
 
+  errorSignOut(){
+    console.log("signout on error");
+  }
+
   render () {
     return(
       <PageStyleS>
@@ -306,7 +310,7 @@ class NewDreamPage extends Component {
         <form
           onSubmit={ (e) => {e.preventDefault()} }
         >
-        <BlobContainer2S>
+        <BlobContainer2S className="changingBlob">
           <ColorBlob
             watchValue={this.state.content}
             leftAlign={-11}
@@ -320,7 +324,7 @@ class NewDreamPage extends Component {
           />
         </BlobContainer2S>
         <br/>
-        <BlobContainer2S>
+        <BlobContainer2S className="InputBlob2">
           <ColorBlob
             leftAlign={-9}
             topAlign={6}
@@ -364,14 +368,6 @@ class NewDreamPage extends Component {
                 />
               )}
             </ThumbsDivS>
-            {!!this.state.elizaArchs.length && 
-              <Link
-                to={{
-                  pathname: ROUTES.CHAT,
-                  state: this.state.elizaArchs
-                }}
-              >Discuss with Shaman</Link>
-            }
           </div>
         }
         {(!!this.state.title && !!this.state.content) &&
@@ -414,13 +410,14 @@ const mapStateToProps = state => {
   }
 };
 
-const mapDispatchToProps = dispatch => ({
+const mapDispatchToProps = (dispatch) => ({
   addNewOrUpdateDream: (newDream) => dispatch(addNewOrUpdateDream(newDream)),
   deleteDream: (id) => dispatch(deleteDream(id)),
-  saveDream: (dream, isNew, promise) => dispatch(saveDream(dream, isNew, promise))
+  saveDream: (dream, isNew, promise, props) => dispatch(saveDream(dream, isNew, promise, props)),
+  errorOnSignOut: (history) => dispatch(errorOnSignOut(history))
 });
 
 export default connect(
   mapStateToProps,
-  mapDispatchToProps,
+  mapDispatchToProps
 )(authWrap)

@@ -67,6 +67,9 @@ const NavigationAuth = () => (
       <DreamOptionS tag={Link} to={ROUTES.NEW_DREAM}>New <br/> Dream</DreamOptionS>
     </NavItem>
     <NavItem>
+      <DreamOptionS tag={Link} to={ROUTES.LITERATURE}>Explore</DreamOptionS>
+    </NavItem>
+    <NavItem>
       <ArchiveOptionS tag={Link} to={ROUTES.DREAM_ARCHIVE}>Archive</ArchiveOptionS>
     </NavItem>
     <DropDownS nav inNavbar>

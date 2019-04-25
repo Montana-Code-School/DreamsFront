@@ -22,6 +22,6 @@ export const AuthButtonS = styled.button`
   }
   &:hover{
   transition: 1s ease-in-out;
-  background-color: turquoise;;
+  background-color: turquoise;
   }
 `
