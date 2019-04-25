@@ -74,7 +74,7 @@ class SignUpFormBase extends Component {
 
     return (
       <form onSubmit={this.onSubmit}>
-        <BlobContainer1S id='happy'>
+        <BlobContainer1S>
           <ColorBlob
           leftAlign={-3}
           topAlign={2}

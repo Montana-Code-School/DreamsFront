@@ -1,17 +1,20 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { withRouter } from 'react-router';
+
 import axios from 'axios';
 
 // styles
 import { InputS } from '../styledComponents/inputs';
-import { DefaultArticleSectionS, LabelS, PS, SrchOptionsDivS, RadioButtonS, LinkS } from './styled';
+import { DefaultArticleSectionS, LabelS, PS, SrchOptionsDivS, RadioButtonS, FavoritesButtonS, BlobContainer1S } from './styled';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import ColorBlob from '../ColorBlob';
+import { AuthButtonS } from '../styledComponents/authButtons';
 
 import { AuthUserContext, withAuthorization } from '../Session';
 import * as ROUTES from '../../Constants/routes';
 import ArticleView from '../ArticleView';
-import { AuthButtonS } from '../styledComponents/authButtons';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 const baseURL = `https://api.nytimes.com/svc/search/v2/articlesearch.json?`
@@ -101,6 +104,10 @@ class LitPage extends Component {
     })
   }
 
+GoToFavPage = () => {
+  this.props.history.push(ROUTES.FAVORITES);
+}
+
   //what about URLSearchParams?
 
   render() {
@@ -108,12 +115,9 @@ class LitPage extends Component {
       <AuthUserContext.Consumer>
         {authUser => (
           <div>
-            <LinkS
-              to={ROUTES.FAVORITES}
-            ><FontAwesomeIcon color='springgreen' icon={faHeart} />
-            Your Favorite Articles
-            </LinkS>
-            <br/>
+            <BlobContainer1S>
+            <ColorBlob/>
+            </BlobContainer1S>
             <InputS
               type="text" id="userSrch"
               placeholder="Search.."
@@ -145,7 +149,13 @@ class LitPage extends Component {
             </SrchOptionsDivS>
             <AuthButtonS
               onClick={this.onClickSearch}
-            >Search Articles</AuthButtonS>
+            >Search Articles
+            </AuthButtonS>
+            <FavoritesButtonS
+              onClick={this.GoToFavPage}
+            >
+            See Favorites
+            </FavoritesButtonS>
             {!this.state.searchResults && <PS>Sorry, your search turned up empty.</PS>}
             {!!this.state.articles.length &&
               <DefaultArticleSectionS>

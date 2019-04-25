@@ -1,9 +1,14 @@
 import React, { Component } from 'react';
-import ArticleView from '../../ArticleView';
 
+//styles
+import ColorBlob from '../ColorBlob';
+import { AuthButtonS } from '../styledComponents/authButtons';
+import { DefaultArticleSectionS, BlobContainer1S } from './styled';
+
+import ArticleView from '../ArticleView';
 import { AuthUserContext, withAuthorization } from '../Session';
+import * as ROUTES from '../../Constants/routes';
 
-import { DefaultArticleSectionS } from './styled';
 
 const { REACT_APP_BACKEND_URL } = process.env;
 
@@ -43,18 +48,29 @@ class FavoritePage extends Component {
     })
   }
 
+  GoToArticlePage = () => {
+    this.props.history.push(ROUTES.LITERATURE);
+  }
+
   render(){
     return(
       <AuthUserContext.Consumer>
         {authUser => (
           <div>
-            <h1>Your Favorites</h1>
+            <BlobContainer1S>
+              <ColorBlob/>
+            </BlobContainer1S>
+            <h1 style={{fontFamily:"serif", color:"snow"}}>Your Favorites</h1>
+            <AuthButtonS
+              onClick={this.GoToArticlePage}
+            >Back To Article Search
+            </AuthButtonS>
             <DefaultArticleSectionS>
               {this.state.articles.map((article) =>
-                <ArticleView 
-                  key={article._id} 
+                <ArticleView
+                  key={article._id}
                   _id={article._id}
-                  {...article} 
+                  {...article}
                   addFavDreamArticle={this.addFavDreamArticle}
                   deFavorite={this.deFavorite}
                 />
